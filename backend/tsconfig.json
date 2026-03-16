@@ -13,8 +13,10 @@
     "resolveJsonModule": true,
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["node"],
+    "moduleResolution": "node"
   },
-  "include": ["src/**/*", "api/**/*"],
+  "include": ["src/**/*", "api/**/*", "prisma.config.ts"],
   "exclude": ["node_modules", "dist"]
 }
