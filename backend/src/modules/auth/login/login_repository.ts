@@ -1,4 +1,4 @@
-import { prisma } from "@/common/lib/prisma";
+import { prisma } from "../../../common/lib/prisma";
 import type { UserResponse } from "./login_dto";
 
 type UserWithSecrets = UserResponse & {
