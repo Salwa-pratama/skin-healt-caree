@@ -6,8 +6,10 @@ export class AuthController {
   constructor(private readonly service: AuthService = new AuthService()) {}
 
   register = async (req: Request, res: Response): Promise<void> => {
+    console.log("📩 register hit");
     const payload = req.body as RegisterRequest;
     const result = await this.service.registerAsync(payload);
+    console.log("📤 result:", result);
     res.status(result.statusCode).json(result);
   };
 

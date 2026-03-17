@@ -1,15 +1,10 @@
 // api/index.ts
-import "tsconfig-paths/register";
+
 import app from "../src/app";
 import serverless from "serverless-http";
 
 console.log("🚀 Initializing Vercel serverless function...");
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 export default serverless(app);
 
