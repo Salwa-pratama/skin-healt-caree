@@ -9,13 +9,13 @@ import type {
 import {
   ServiceResponse,
   ServiceResponseSchema,
-} from "@/common/models/service_response";
+} from "../../../common/models/service_response";
 import {
   hashPassword,
   sanitizeUser,
   verifyPassword,
-} from "@/utils/password_util";
-import { generateTokens } from "@/utils/token_utils";
+} from "../../../utils/password_util";
+import { generateTokens } from "../../../utils/token_utils";
 
 export class AuthService {
   constructor(
