@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import { Request, Response } from "express";
 import { AuthService } from "./login_service";
 import type { LoginRequest, RegisterRequest } from "./login_dto";
 
