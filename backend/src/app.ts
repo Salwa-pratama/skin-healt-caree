@@ -18,7 +18,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 try {
   console.log("🔄 Setting up middleware...");
   app.use(cors());
-  app.use(express.json());
+  app.use(express.json({ limit: "10mb" }));
+  app.use(express.urlencoded({ extended: true }));
   console.log("✅ Middleware configured");
 } catch (error: any) {
   console.error("❌ Error setting up middleware:", error.message);
