@@ -5,6 +5,12 @@ import serverless from "serverless-http";
 
 console.log("🚀 Initializing Vercel serverless function...");
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 export default serverless(app);
 
 console.log("✅ Serverless function ready!");
