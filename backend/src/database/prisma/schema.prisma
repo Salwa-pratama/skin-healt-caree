@@ -6,6 +6,8 @@ datasource db {
     provider = "postgresql"
 }
 
+
+//  ================= User Schema =================
 model UserPublic {
     id               Int      @id @default(autoincrement())
     email            String   @unique
@@ -15,4 +17,17 @@ model UserPublic {
     refreshTokenHash String?
     createdAt        DateTime @default(now())
     updatedAt        DateTime @updatedAt
+    acneProblems AcneProblem[]
 }
+
+//  ================= Acne Problem Schema =================
+model AcneProblem {
+    id Int @id @default(autoincrement())
+    citra String
+    name String
+    // acne_solution_id
+    userId Int
+    user UserPublic @relation(fields: [userId], references: [id])
+}
+
+//
