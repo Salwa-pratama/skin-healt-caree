@@ -30,4 +30,4 @@ model AcneProblem {
     user UserPublic @relation(fields: [userId], references: [id])
 }
 
-//
+//  ================= Acne Problem Schema =================
