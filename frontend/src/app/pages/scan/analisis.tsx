@@ -72,8 +72,8 @@ export default function Analisis() {
             </span>
           </Link>
           {[
-            { icon: "history", label: "History", href: "#" },
-            { icon: "settings", label: "Settings", href: "#" },
+            { icon: "history", label: "History", href: "/pages/history" },
+            { icon: "settings", label: "Settings", href: "/pages/dashboard" },
           ].map((item) => (
             <Link
               key={item.label}
@@ -119,8 +119,8 @@ export default function Analisis() {
           </div>
         </div>
 
-        <Link href="/pages/scan">
-          <span className="material-symbols-outlined text-white active:scale-90 transition-transform">biotech</span>
+        <Link href="/pages/history">
+          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">history</span>
         </Link>
       </nav>
 
