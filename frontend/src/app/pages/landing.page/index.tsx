@@ -1,15 +1,12 @@
 "use client";
-import React from 'react';
 import Link from 'next/link';
-import Navbar from './pages/landing.page/Navbar';
-
+import Navbar from './Navbar';
 
 export default function LandingPage() {
     return (
         <div className="bg-surface font-body text-on-surface antialiased min-h-screen">
             {/* Top Navigation */}
             <Navbar />
-
             {/* Hero Section */}
             <header className="relative pt-32 pb-16 md:pt-48 md:pb-32 px-6 md:px-8 overflow-hidden bg-surface">
                 <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">

@@ -1,0 +1,20 @@
+/* Authentication Transitions & Animations */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.auth-animate-in {
+  animation: slide-up 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Base layout padding to avoid navbar overlap */
+.auth-page-container {
+  padding-top: 80px; /* Offset for the fixed navbar */
+}
