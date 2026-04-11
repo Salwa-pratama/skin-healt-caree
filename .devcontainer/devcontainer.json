@@ -1,0 +1,7 @@
+{
+  "name": "e-taqwa-dev",
+  "dockerComposeFile": "compose.yml",
+  "service": "frontend",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose"
+}

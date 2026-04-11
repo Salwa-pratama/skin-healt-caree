@@ -1,0 +1,35 @@
+@keyframes scan {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(400px); }
+}
+
+.scanning-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #84F75E, transparent);
+  animation: scan 4s ease-in-out infinite;
+}
+
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(1.1); }
+}
+
+.status-pulse {
+  animation: status-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.tab-active {
+  color: #1c6d00 !important;
+  background: #ffffff !important;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1) !important;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.signature-gradient {
+  background: linear-gradient(135deg, #84F75E 0%, #1C6D00 100%);
+}
