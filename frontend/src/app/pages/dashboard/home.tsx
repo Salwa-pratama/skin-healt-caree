@@ -25,9 +25,11 @@ export default function HomeDashboard() {
               search
             </span>
           </div>
-          <button className="text-[#6f7b67] hover:text-[#1c6d00] transition-colors duration-200">
-            <span className="material-symbols-outlined">notifications</span>
-          </button>
+          <Link href="/pages/notifikasi">
+            <button className="text-[#6f7b67] hover:text-[#1c6d00] transition-colors duration-200">
+              <span className="material-symbols-outlined">notifications</span>
+            </button>
+          </Link>
           <Link href="/pages/profil">
             <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-[#84f75e] cursor-pointer hover:opacity-80 transition-opacity">
               <img

@@ -28,9 +28,11 @@ export default function Analisis() {
               search
             </span>
           </div>
-          <button className="text-[#6f7b67] hover:text-[#1c6d00] transition-colors duration-200">
-            <span className="material-symbols-outlined">notifications</span>
-          </button>
+          <Link href="/pages/notifikasi">
+            <button className="text-[#6f7b67] hover:text-[#1c6d00] transition-colors duration-200">
+              <span className="material-symbols-outlined">notifications</span>
+            </button>
+          </Link>
           <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-[#84f75e]">
             <img
               alt="User Medical Profile"
