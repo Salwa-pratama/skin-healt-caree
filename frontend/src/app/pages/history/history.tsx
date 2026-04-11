@@ -61,12 +61,19 @@ export default function HistoryPage() {
               search
             </span>
           </div>
+<<<<<<< HEAD
           <Link href="/pages/notifikasi">
             <button className="text-[#6f7b67] hover:text-[#1c6d00] transition-colors duration-200">
               <span className="material-symbols-outlined">notifications</span>
             </button>
           </Link>
           <Link href="/pages/profil">
+=======
+          <button className="text-[#6f7b67] hover:text-[#1c6d00] transition-colors duration-200">
+            <span className="material-symbols-outlined">notifications</span>
+          </button>
+          <Link href="/pages/auth/login">
+>>>>>>> backend-feature/predict
             <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-[#84f75e] cursor-pointer hover:opacity-80 transition-opacity">
               <img
                 alt="Profil Medis Pengguna"
@@ -77,12 +84,20 @@ export default function HistoryPage() {
         </div>
       </header>
 
+<<<<<<< HEAD
       {/* Sidebar Navigation - Synchronized with Analisis */}
+=======
+      {/* Sidebar Navigation (Desktop Only) */}
+>>>>>>> backend-feature/predict
       <aside className="hidden lg:flex flex-col h-screen py-10 bg-white w-72 fixed left-0 top-0 border-r border-[#edeeef] z-40">
         <div className="px-8 mb-12 mt-20">
           <div className="flex flex-col">
             <span className="uppercase tracking-[0.1em] text-[10px] font-extrabold text-[#6f7b67]">
+<<<<<<< HEAD
               Clinical Precision
+=======
+              Presisi Klinis
+>>>>>>> backend-feature/predict
             </span>
             <span className="text-[#1c6d00] font-extrabold text-xl tracking-tight">
               Luminous Lab
@@ -95,24 +110,33 @@ export default function HistoryPage() {
             href="/pages/dashboard"
           >
             <span className="material-symbols-outlined text-xl">dashboard</span>
+<<<<<<< HEAD
             <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
               Dashboard
             </span>
+=======
+            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Dashboard</span>
+>>>>>>> backend-feature/predict
           </Link>
           <Link
             className="flex items-center gap-4 text-[#6f7b67] py-4 px-8 hover:text-[#1c6d00] hover:bg-[#f3fbf0] border-l-4 border-transparent hover:border-[#1c6d00] transition-all"
             href="/pages/scan"
           >
             <span className="material-symbols-outlined text-xl">biotech</span>
+<<<<<<< HEAD
             <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
               Analysis
             </span>
+=======
+            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Analisis</span>
+>>>>>>> backend-feature/predict
           </Link>
           <Link
             className="flex items-center gap-4 text-[#1c6d00] py-4 px-8 bg-[#f3fbf0] border-l-4 border-[#1c6d00] transition-all"
             href="/pages/history"
           >
             <span className="material-symbols-outlined text-xl">history</span>
+<<<<<<< HEAD
             <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
               History
             </span>
@@ -125,20 +149,38 @@ export default function HistoryPage() {
             <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
               Settings
             </span>
+=======
+            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Riwayat</span>
+          </Link>
+          <Link
+            className="flex items-center gap-4 text-[#6f7b67] py-4 px-8 hover:text-[#1c6d00] hover:bg-[#f3fbf0] border-l-4 border-transparent hover:border-[#1c6d00] transition-all"
+            href="/pages/dashboard"
+          >
+            <span className="material-symbols-outlined text-xl">settings</span>
+            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Pengaturan</span>
+>>>>>>> backend-feature/predict
           </Link>
         </nav>
         <div className="px-8 mt-auto">
           <Link href="/pages/scan">
             <button className="w-full signature-gradient text-white font-bold py-4 px-6 rounded-full shadow-md hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
               <span className="material-symbols-outlined">add_circle</span>
+<<<<<<< HEAD
               <span className="text-sm">New Scan</span>
+=======
+              <span className="text-sm">Scan Baru</span>
+>>>>>>> backend-feature/predict
             </button>
           </Link>
           <div className="mt-8 flex items-center gap-4 text-[#6f7b67] py-4 cursor-pointer hover:text-[#1c6d00]">
             <span className="material-symbols-outlined">help</span>
+<<<<<<< HEAD
             <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
               Support
             </span>
+=======
+            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Bantuan</span>
+>>>>>>> backend-feature/predict
           </div>
         </div>
       </aside>
@@ -148,9 +190,12 @@ export default function HistoryPage() {
         <Link href="/pages/dashboard">
           <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">grid_view</span>
         </Link>
+<<<<<<< HEAD
         <Link href="/pages/scan">
           <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">biotech</span>
         </Link>
+=======
+>>>>>>> backend-feature/predict
         <div className="relative -top-6">
           <div className="p-1 bg-white rounded-full shadow-xl">
             <Link href="/pages/scan">
@@ -163,9 +208,12 @@ export default function HistoryPage() {
         <Link href="/pages/history">
           <span className="material-symbols-outlined text-white active:scale-90 transition-transform">history</span>
         </Link>
+<<<<<<< HEAD
         <Link href="/pages/setting">
           <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">settings</span>
         </Link>
+=======
+>>>>>>> backend-feature/predict
       </nav>
 
       {/* Main Content */}

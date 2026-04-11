@@ -83,6 +83,7 @@
 }
 
 .glass-panel {
+<<<<<<< HEAD
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -102,6 +103,12 @@
 @keyframes scan {
   0% { background-position: 0% 100%; }
   100% { background-position: 0% -100%; }
+=======
+
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+>>>>>>> backend-feature/predict
 }
 
 .ambient-shadow {
