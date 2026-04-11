@@ -117,7 +117,7 @@ export default function HistoryPage() {
           </Link>
           <Link
             className="flex items-center gap-4 text-[#6f7b67] py-4 px-8 hover:text-[#1c6d00] hover:bg-[#f3fbf0] border-l-4 border-transparent hover:border-[#1c6d00] transition-all"
-            href="/pages/dashboard"
+            href="/pages/setting"
           >
             <span className="material-symbols-outlined text-xl">settings</span>
             <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
@@ -146,6 +146,9 @@ export default function HistoryPage() {
         <Link href="/pages/dashboard">
           <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">grid_view</span>
         </Link>
+        <Link href="/pages/scan">
+          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">biotech</span>
+        </Link>
         <div className="relative -top-6">
           <div className="p-1 bg-white rounded-full shadow-xl">
             <Link href="/pages/scan">
@@ -157,6 +160,9 @@ export default function HistoryPage() {
         </div>
         <Link href="/pages/history">
           <span className="material-symbols-outlined text-white active:scale-90 transition-transform">history</span>
+        </Link>
+        <Link href="/pages/setting">
+          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">settings</span>
         </Link>
       </nav>
 
