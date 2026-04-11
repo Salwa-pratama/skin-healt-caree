@@ -64,7 +64,7 @@ export default function HomeDashboard() {
           {[
             { icon: "biotech", label: "Analysis", href: "/pages/scan" },
             { icon: "history", label: "History", href: "/pages/history" },
-            { icon: "settings", label: "Settings", href: "/pages/dashboard" },
+            { icon: "settings", label: "Settings", href: "/pages/setting" },
           ].map((item) => (
             <Link
               key={item.label}
@@ -266,7 +266,9 @@ export default function HomeDashboard() {
         <Link href="/pages/dashboard">
           <span className="material-symbols-outlined text-white active:scale-90 transition-transform">grid_view</span>
         </Link>
-        
+        <Link href="/pages/scan">
+          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">biotech</span>
+        </Link>
         <div className="relative -top-6">
           <div className="p-1 bg-white rounded-full shadow-xl">
             <Link href="/pages/scan">
@@ -276,9 +278,11 @@ export default function HomeDashboard() {
             </Link>
           </div>
         </div>
-
         <Link href="/pages/history">
           <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">history</span>
+        </Link>
+        <Link href="/pages/setting">
+          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">settings</span>
         </Link>
       </nav>
     </div>
