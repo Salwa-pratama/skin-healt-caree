@@ -83,10 +83,25 @@
 }
 
 .glass-panel {
-
   background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.dot-grid {
+  background-image: radial-gradient(rgba(132, 247, 94, 0.2) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.scan-overlay {
+  background: linear-gradient(0deg, transparent 0%, rgba(132, 247, 94, 0.2) 50%, transparent 100%);
+  background-size: 100% 200%;
+  animation: scan 3s linear infinite;
+}
+
+@keyframes scan {
+  0% { background-position: 0% 100%; }
+  100% { background-position: 0% -100%; }
 }
 
 .ambient-shadow {
