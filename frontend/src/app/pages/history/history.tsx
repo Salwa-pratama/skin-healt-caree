@@ -75,12 +75,12 @@ export default function HistoryPage() {
         </div>
       </header>
 
-      {/* Sidebar Navigation (Desktop Only) */}
+      {/* Sidebar Navigation - Synchronized with Analisis */}
       <aside className="hidden lg:flex flex-col h-screen py-10 bg-white w-72 fixed left-0 top-0 border-r border-[#edeeef] z-40">
         <div className="px-8 mb-12 mt-20">
           <div className="flex flex-col">
             <span className="uppercase tracking-[0.1em] text-[10px] font-extrabold text-[#6f7b67]">
-              Presisi Klinis
+              Clinical Precision
             </span>
             <span className="text-[#1c6d00] font-extrabold text-xl tracking-tight">
               Luminous Lab
@@ -93,40 +93,50 @@ export default function HistoryPage() {
             href="/pages/dashboard"
           >
             <span className="material-symbols-outlined text-xl">dashboard</span>
-            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Dashboard</span>
+            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
+              Dashboard
+            </span>
           </Link>
           <Link
             className="flex items-center gap-4 text-[#6f7b67] py-4 px-8 hover:text-[#1c6d00] hover:bg-[#f3fbf0] border-l-4 border-transparent hover:border-[#1c6d00] transition-all"
             href="/pages/scan"
           >
             <span className="material-symbols-outlined text-xl">biotech</span>
-            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Analisis</span>
+            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
+              Analysis
+            </span>
           </Link>
           <Link
             className="flex items-center gap-4 text-[#1c6d00] py-4 px-8 bg-[#f3fbf0] border-l-4 border-[#1c6d00] transition-all"
             href="/pages/history"
           >
             <span className="material-symbols-outlined text-xl">history</span>
-            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Riwayat</span>
+            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
+              History
+            </span>
           </Link>
           <Link
             className="flex items-center gap-4 text-[#6f7b67] py-4 px-8 hover:text-[#1c6d00] hover:bg-[#f3fbf0] border-l-4 border-transparent hover:border-[#1c6d00] transition-all"
             href="/pages/dashboard"
           >
             <span className="material-symbols-outlined text-xl">settings</span>
-            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Pengaturan</span>
+            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
+              Settings
+            </span>
           </Link>
         </nav>
         <div className="px-8 mt-auto">
           <Link href="/pages/scan">
             <button className="w-full signature-gradient text-white font-bold py-4 px-6 rounded-full shadow-md hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
               <span className="material-symbols-outlined">add_circle</span>
-              <span className="text-sm">Scan Baru</span>
+              <span className="text-sm">New Scan</span>
             </button>
           </Link>
           <div className="mt-8 flex items-center gap-4 text-[#6f7b67] py-4 cursor-pointer hover:text-[#1c6d00]">
             <span className="material-symbols-outlined">help</span>
-            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Bantuan</span>
+            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
+              Support
+            </span>
           </div>
         </div>
       </aside>
