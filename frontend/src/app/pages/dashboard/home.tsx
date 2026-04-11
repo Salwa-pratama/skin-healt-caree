@@ -25,7 +25,7 @@ export default function HomeDashboard() {
               search
             </span>
           </div>
-<<<<<<< HEAD
+
           <Link href="/pages/notifikasi">
             <button className="text-[#6f7b67] hover:text-[#1c6d00] transition-colors duration-200">
               <span className="material-symbols-outlined">notifications</span>
@@ -39,17 +39,7 @@ export default function HomeDashboard() {
               />
             </div>
           </Link>
-=======
-          <button className="text-[#6f7b67] hover:text-[#1c6d00] transition-colors duration-200">
-            <span className="material-symbols-outlined">notifications</span>
-          </button>
-          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-[#84f75e]">
-            <img
-              alt="User Medical Profile"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEn4HazQ2JPJoF2zKyTSqb9V8Md24ll0JNrzbPnz8Y34Ag94EwJh0y6c3E0zG9cSLOF3pafjfuiziCBtzvgck3_DfbO7D8ydx0r63uuVzQVgWLh0QQICPVLBsE63LTlT-3hPapCkbNE946COlqln_K43fr41a3C96qSk62cLc_G186RPZo6KC7LbT-RV0kgehO7sog0GbIGaoSuS-qLOk94GPnP3NJ-mrGAbjw_GHKm842lRLupT3MVKSsQH4vY4TOBE7MfG_Z-b2Y"
-            />
-          </div>
->>>>>>> backend-feature/predict
+
         </div>
       </header>
 
@@ -78,11 +68,9 @@ export default function HomeDashboard() {
           {[
             { icon: "biotech", label: "Analysis", href: "/pages/scan" },
             { icon: "history", label: "History", href: "/pages/history" },
-<<<<<<< HEAD
+
             { icon: "settings", label: "Settings", href: "/pages/setting" },
-=======
-            { icon: "settings", label: "Settings", href: "/pages/dashboard" },
->>>>>>> backend-feature/predict
+
           ].map((item) => (
             <Link
               key={item.label}
@@ -284,13 +272,11 @@ export default function HomeDashboard() {
         <Link href="/pages/dashboard">
           <span className="material-symbols-outlined text-white active:scale-90 transition-transform">grid_view</span>
         </Link>
-<<<<<<< HEAD
+
         <Link href="/pages/scan">
           <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">biotech</span>
         </Link>
-=======
-        
->>>>>>> backend-feature/predict
+
         <div className="relative -top-6">
           <div className="p-1 bg-white rounded-full shadow-xl">
             <Link href="/pages/scan">
@@ -300,19 +286,14 @@ export default function HomeDashboard() {
             </Link>
           </div>
         </div>
-<<<<<<< HEAD
+
         <Link href="/pages/history">
           <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">history</span>
         </Link>
         <Link href="/pages/setting">
           <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">settings</span>
         </Link>
-=======
 
-        <Link href="/pages/history">
-          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">history</span>
-        </Link>
->>>>>>> backend-feature/predict
       </nav>
     </div>
   );

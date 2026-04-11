@@ -20,7 +20,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={`login-page ${manrope.variable} font-manrope selection:bg-[#84F75E]/30 selection:text-[#1c6d00] min-h-screen flex flex-col auth-animate-in`}>
+    <div
+      className={`login-page ${manrope.variable} font-manrope selection:bg-[#84F75E]/30 selection:text-[#1c6d00] min-h-screen flex flex-col auth-animate-in`}
+    >
       {/* Main Content */}
       <main className="flex-grow flex flex-col lg:flex-row pt-20 lg:pt-0">
         {/* Left: Login Form */}
@@ -29,7 +31,9 @@ export default function LoginPage() {
           <div className="w-full max-w-md relative z-10">
             <div className="mb-10 sm:mb-12">
               <div className="flex items-center gap-2 mb-8">
-                <span className="text-2xl font-black tracking-tighter text-[#1c6d00]">DermaScan</span>
+                <span className="text-2xl font-black tracking-tighter text-[#1c6d00]">
+                  DermaScan
+                </span>
               </div>
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#191c1d] mb-4 tracking-tight leading-tight">
                 Vitalitas Digital <br />
@@ -108,11 +112,15 @@ export default function LoginPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <button className="flex items-center justify-center gap-3 py-3 rounded-2xl border border-[#edeeef] hover:bg-[#f3f4f5] transition-colors font-bold text-xs uppercase tracking-widest text-[#595c5d]">
-                  <span className="material-symbols-outlined text-xl">medical_services</span>
+                  <span className="material-symbols-outlined text-xl">
+                    medical_services
+                  </span>
                   SSO
                 </button>
                 <button className="flex items-center justify-center gap-3 py-3 rounded-2xl border border-[#edeeef] hover:bg-[#f3f4f5] transition-colors font-bold text-xs uppercase tracking-widest text-[#595c5d]">
-                  <span className="material-symbols-outlined text-xl">fingerprint</span>
+                  <span className="material-symbols-outlined text-xl">
+                    fingerprint
+                  </span>
                   Biometrik
                 </button>
               </div>
@@ -130,82 +138,56 @@ export default function LoginPage() {
           </div>
         </section>
 
-<<<<<<< HEAD
         {/* Right: AI Acne Detection Analysis Panel */}
         <section className="hidden lg:flex w-1/2 bg-[#f0f4f0] relative flex-col items-center justify-center overflow-hidden">
           {/* Background Elements */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(132,247,94,0.05)_0%,transparent_70%)]"></div>
           <div className="absolute top-0 right-0 w-full h-full opacity-30 pointer-events-none dot-grid"></div>
-=======
-        {/* Right: AI Skin Analysis Panel */}
-        <section className="hidden lg:flex w-1/2 bg-[#f8f9fa] relative flex-col items-center justify-center overflow-hidden border-l border-[#edeeef]">
-          {/* Background Elements */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(28,109,0,0.03)_0%,transparent_70%)]"></div>
->>>>>>> backend-feature/predict
-          
+
           <div className="relative z-10 w-full max-w-2xl px-8 flex flex-col gap-6">
             <div className="flex items-end justify-between px-2">
               <div>
-<<<<<<< HEAD
                 <h2 className="text-xs font-black uppercase tracking-[0.2em] text-on-surface-variant mb-1">
                   Mode Diagnostik
                 </h2>
                 <p className="text-2xl font-black text-on-surface">
-                  Deteksi Jerawat AI <span className="text-[#1c6d00]">v4.2</span>
+                  Deteksi Jerawat AI{" "}
+                  <span className="text-[#1c6d00]">v4.2</span>
                 </p>
               </div>
               <div className="flex items-center gap-2 bg-white/50 backdrop-blur px-3 py-1.5 rounded-full border border-white">
                 <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
                 <span className="text-[10px] font-bold uppercase text-on-surface-variant">
                   Mesin Neural Aktif
-=======
-                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#595c5d] mb-1">
-                  Mode Diagnostik
-                </h2>
-                <p className="text-2xl font-black text-[#191c1d]">
-                  DermaScan AI <span className="text-[#1c6d00]">v1.0</span>
-                </p>
-              </div>
-              <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-white shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-[#1c6d00] login-status-pulse"></span>
-                <span className="text-[10px] font-black uppercase tracking-widest text-[#595c5d]">
-                  Lab Neural Aktif
->>>>>>> backend-feature/predict
                 </span>
               </div>
             </div>
 
             <div className="grid grid-cols-12 gap-5">
               {/* Main Facial Scan Visual */}
-<<<<<<< HEAD
+
               <div className="col-span-8 glass-panel rounded-3xl p-5 border border-white shadow-xl shadow-black/5 relative overflow-hidden">
                 <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
                   <div className="bg-black/60 backdrop-blur text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-2">
-                    <span className="w-1 h-1 bg-red-500 rounded-full"></span> PAPULA TERDETEKSI
+                    <span className="w-1 h-1 bg-red-500 rounded-full"></span>{" "}
+                    PAPULA TERDETEKSI
                   </div>
                   <div className="bg-black/60 backdrop-blur text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-2">
-                    <span className="w-1 h-1 bg-yellow-500 rounded-full"></span> PUSTULA (MODERAT)
-=======
-              <div className="col-span-8 login-glass-panel rounded-[2rem] p-5 shadow-2xl shadow-black/5 relative overflow-hidden">
-                <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
-                  <div className="bg-black/70 backdrop-blur-md text-white text-[9px] font-black px-2.5 py-1 rounded-full flex items-center gap-2 tracking-widest">
-                    <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>{" "}
-                    EPIDERMAL_ANOMALY
->>>>>>> backend-feature/predict
+                    <span className="w-1 h-1 bg-yellow-500 rounded-full"></span>{" "}
+                    PUSTULA (MODERAT)
                   </div>
                 </div>
 
                 <div className="relative rounded-2xl overflow-hidden aspect-square bg-[#0a0f0a]">
                   <img
                     alt="Pemetaan kulit wajah"
-<<<<<<< HEAD
                     className="w-full h-full object-cover opacity-80"
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj8vstHE3kvGuWTr4d4AcvKL9k3I8szQJxsaSZhaiGLHBzMmRidXxNPkSt7pqMxqQO_JMP4d5QjA_25IsCs_eCjB-sFjU785I_1rdtiDdemukClWDj5SXvud6REA-dUsN2S-_Y94n9VM1-b7u_lhCejGCXLrurNRwLBxRyptmf7HmDWhs2iKLL1FJEfQ4Aw96jNQGtlyma8Zr2tzYlsPvsRxKRpSKTDqItNMjJIbkpIftcxwL_IO2MGphVQ9PfLLBdUVHL-njH1gk"
                   />
                   {/* Futuristic Scanning Overlays */}
                   <div className="absolute inset-0 scan-overlay opacity-50"></div>
                   <div className="absolute inset-0 border-[0.5px] border-primary/20"></div>
-                  
+
                   {/* Mapping Points */}
                   <div className="absolute top-1/3 left-1/4 w-4 h-4 border border-red-500 rounded-full animate-ping"></div>
                   <div className="absolute top-[40%] left-[28%] w-1.5 h-1.5 bg-red-500 rounded-full"></div>
@@ -213,33 +195,39 @@ export default function LoginPage() {
                   <div className="absolute top-1/2 right-1/3 w-4 h-4 border border-yellow-500 rounded-full animate-ping"></div>
                   <div className="absolute top-[55%] right-[30%] w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>
 
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-40" viewBox="0 0 100 100">
-=======
-                    className="w-full h-full object-cover opacity-70 mix-blend-luminosity"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj8vstHE3kvGuWTr4d4AcvKL9k3I8szQJxsaSZhaiGLHBzMmRidXxNPkSt7pqMxqQO_JMP4d5QjA_25IsCs_eCjB-sFjU785I_1rdtiDdemukClWDj5SXvud6REA-dUsN2S-_Y94n9VM1-b7u_lhCejGCXLrurNRwLBxRyptmf7HmDWhs2iKLL1FJEfQ4Aw96jNQGtlyma8Zr2tzYlsPvsRxKRpSKTDqItNMjJIbkpIftcxwL_IO2MGphVQ9PfLLBdUVHL-njH1gk"
-                  />
-                  {/* Futuristic Scanning Overlays */}
-                  <div className="absolute inset-0 login-scan-overlay opacity-40"></div>
-                  
-                  {/* Mapping Points */}
-                  <div className="absolute top-1/3 left-1/4 w-4 h-4 border-2 border-primary rounded-full login-status-pulse"></div>
-                  <div className="absolute top-[40%] left-[28%] w-2 h-2 bg-primary rounded-full"></div>
-
-                  <div className="absolute top-1/2 right-1/3 w-4 h-4 border-2 border-primary rounded-full login-status-pulse" style={{ animationDelay: '1s' }}></div>
-                  <div className="absolute top-[55%] right-[30%] w-2 h-2 bg-primary rounded-full"></div>
-
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-30" viewBox="0 0 100 100">
->>>>>>> backend-feature/predict
-                    <path d="M20 20 L30 20 M20 20 L20 30" fill="none" stroke="#84F75E" strokeWidth="0.5" />
-                    <path d="M80 20 L70 20 M80 20 L80 30" fill="none" stroke="#84F75E" strokeWidth="0.5" />
-                    <path d="M20 80 L30 80 M20 80 L20 70" fill="none" stroke="#84F75E" strokeWidth="0.5" />
-                    <path d="M80 80 L70 80 M80 80 L80 70" fill="none" stroke="#84F75E" strokeWidth="0.5" />
+                  <svg
+                    className="absolute inset-0 w-full h-full pointer-events-none opacity-40"
+                    viewBox="0 0 100 100"
+                  >
+                    <path
+                      d="M20 20 L30 20 M20 20 L20 30"
+                      fill="none"
+                      stroke="#84F75E"
+                      strokeWidth="0.5"
+                    />
+                    <path
+                      d="M80 20 L70 20 M80 20 L80 30"
+                      fill="none"
+                      stroke="#84F75E"
+                      strokeWidth="0.5"
+                    />
+                    <path
+                      d="M20 80 L30 80 M20 80 L20 70"
+                      fill="none"
+                      stroke="#84F75E"
+                      strokeWidth="0.5"
+                    />
+                    <path
+                      d="M80 80 L70 80 M80 80 L80 70"
+                      fill="none"
+                      stroke="#84F75E"
+                      strokeWidth="0.5"
+                    />
                   </svg>
                 </div>
 
                 <div className="mt-4 flex justify-between items-center px-1">
                   <div>
-<<<<<<< HEAD
                     <p className="text-[10px] font-bold text-on-surface-variant uppercase">
                       Keyakinan Deteksi
                     </p>
@@ -250,31 +238,18 @@ export default function LoginPage() {
                       Waktu Analisis
                     </p>
                     <p className="text-lg font-black text-on-surface">1.2d</p>
-=======
-                    <p className="text-[10px] font-black text-[#595c5d] uppercase tracking-widest">
-                      Biometrik
-                    </p>
-                    <p className="text-xl font-black text-[#191c1d]">98.4%</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[10px] font-black text-[#595c5d] uppercase tracking-widest">
-                      Analisis
-                    </p>
-                    <p className="text-xl font-black text-[#191c1d]">1.2s</p>
->>>>>>> backend-feature/predict
                   </div>
                 </div>
               </div>
 
               {/* Metrics Column */}
               <div className="col-span-4 flex flex-col gap-4">
-<<<<<<< HEAD
                 {/* Condition Metrics */}
                 <div className="glass-panel rounded-3xl p-5 border border-white shadow-lg flex flex-col gap-4">
                   {[
                     { label: "Hidrasi", val: 72, color: "bg-blue-400" },
                     { label: "Kadar Minyak", val: 84, color: "bg-yellow-400" },
-                    { label: "Inflamasi", val: 38, color: "bg-red-400" }
+                    { label: "Inflamasi", val: 38, color: "bg-red-400" },
                   ].map((metric) => (
                     <div key={metric.label}>
                       <div className="flex justify-between items-end mb-1.5">
@@ -289,27 +264,6 @@ export default function LoginPage() {
                         <div
                           className={`h-full rounded-full ${metric.color}`}
                           style={{ width: `${metric.val}%` }}
-=======
-                <div className="login-glass-panel rounded-[2rem] p-5 shadow-lg border border-white flex flex-col gap-4">
-                  {[
-                    { label: "Hidrasi", val: 72, color: "bg-blue-400" },
-                    { label: "Minyak", val: 45, color: "bg-amber-400" },
-                    { label: "Inflamasi", val: 38, color: "bg-rose-400" }
-                  ].map((m) => (
-                    <div key={m.label}>
-                      <div className="flex justify-between items-end mb-1.5">
-                        <span className="text-[9px] font-black text-[#595c5d] uppercase tracking-widest">
-                          {m.label}
-                        </span>
-                        <span className="text-[10px] font-black text-[#191c1d]">
-                          {m.val}%
-                        </span>
-                      </div>
-                      <div className="h-1.5 w-full bg-[#edeeef] rounded-full overflow-hidden">
-                        <div
-                          className={`h-full ${m.color} rounded-full`}
-                          style={{ width: `${m.val}%` }}
->>>>>>> backend-feature/predict
                         ></div>
                       </div>
                     </div>
@@ -317,7 +271,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* Recommended Regimen */}
-<<<<<<< HEAD
+
                 <div className="flex-grow glass-panel rounded-3xl p-5 border border-white shadow-lg flex flex-col">
                   <p className="text-[10px] font-bold text-on-surface-variant uppercase mb-4">
                     Regimen Direkomendasikan
@@ -325,113 +279,86 @@ export default function LoginPage() {
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-tertiary text-lg">sanitizer</span>
+                        <span className="material-symbols-outlined text-tertiary text-lg">
+                          sanitizer
+                        </span>
                       </div>
                       <div>
-                        <p className="text-[10px] font-bold text-on-surface">Pembersih BHA</p>
-                        <p className="text-[9px] text-on-surface-variant">Pagi / Malam</p>
+                        <p className="text-[10px] font-bold text-on-surface">
+                          Pembersih BHA
+                        </p>
+                        <p className="text-[9px] text-on-surface-variant">
+                          Pagi / Malam
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-secondary text-lg">science</span>
+                        <span className="material-symbols-outlined text-secondary text-lg">
+                          science
+                        </span>
                       </div>
                       <div>
-                        <p className="text-[10px] font-bold text-on-surface">Asam Azelaic 10%</p>
-                        <p className="text-[9px] text-on-surface-variant">Malam saja</p>
+                        <p className="text-[10px] font-bold text-on-surface">
+                          Asam Azelaic 10%
+                        </p>
+                        <p className="text-[9px] text-on-surface-variant">
+                          Malam saja
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-blue-600 text-lg">opacity</span>
+                        <span className="material-symbols-outlined text-blue-600 text-lg">
+                          opacity
+                        </span>
                       </div>
                       <div>
-                        <p className="text-[10px] font-bold text-on-surface">Hidrator Bebas Minyak</p>
-                        <p className="text-[9px] text-on-surface-variant">Sesuai kebutuhan</p>
+                        <p className="text-[10px] font-bold text-on-surface">
+                          Hidrator Bebas Minyak
+                        </p>
+                        <p className="text-[9px] text-on-surface-variant">
+                          Sesuai kebutuhan
+                        </p>
                       </div>
                     </div>
                   </div>
                   <button className="mt-auto w-full py-2 bg-on-surface text-white text-[10px] font-bold rounded-xl hover:bg-tertiary transition-colors">
                     LIHAT RENCANA LENGKAP
                   </button>
-=======
-                <div className="flex-grow login-glass-panel rounded-[2rem] p-5 shadow-lg flex flex-col">
-                  <p className="text-[9px] font-black text-[#595c5d] uppercase tracking-widest mb-4">
-                    Regimen Klinis
-                  </p>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-[#84F75E]/10 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-[#1c6d00] text-lg">sanitizer</span>
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-black text-[#191c1d]">BHA Serum</p>
-                        <p className="text-[9px] font-bold text-[#595c5d]">AM/PM</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-purple-600 text-lg">science</span>
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-black text-[#191c1d]">Azelaic 10%</p>
-                        <p className="text-[9px] font-bold text-[#595c5d]">PM ONLY</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-auto pt-4 border-t border-[#edeeef]">
-                    <p className="text-[10px] font-black text-[#1c6d00] text-center tracking-widest">LAB_PRECISION_V4</p>
-                  </div>
->>>>>>> backend-feature/predict
                 </div>
               </div>
             </div>
 
             {/* Bottom Summary */}
-<<<<<<< HEAD
+
             <div className="glass-panel rounded-3xl p-6 border border-white shadow-lg flex items-center justify-between">
               <div className="flex items-center gap-5">
                 <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
-                  <span className="material-symbols-outlined text-on-primary">clinical_notes</span>
+                  <span className="material-symbols-outlined text-on-primary">
+                    clinical_notes
+                  </span>
                 </div>
                 <div>
                   <p className="text-sm font-black text-on-surface">
                     Indeks Kesehatan Kulit Keseluruhan
                   </p>
                   <p className="text-xs text-on-surface-variant">
-                    Jerawat moderat terdeteksi. Intervensi klinis direkomendasikan.
-=======
-            <div className="login-glass-panel rounded-[2rem] p-6 shadow-xl flex items-center justify-between border border-white">
-              <div className="flex items-center gap-5">
-                <div className="w-12 h-12 rounded-2xl login-signature-gradient flex items-center justify-center shadow-lg shadow-[#1c6d00]/20">
-                  <span className="material-symbols-outlined text-white">clinical_notes</span>
-                </div>
-                <div>
-                  <p className="text-sm font-black text-[#191c1d]">
-                    Skin Health Index
-                  </p>
-                  <p className="text-[10px] font-bold text-[#595c5d] uppercase tracking-widest">
-                    Status: Optimal Dermis
->>>>>>> backend-feature/predict
+                    Jerawat moderat terdeteksi. Intervensi klinis
+                    direkomendasikan.
                   </p>
                 </div>
               </div>
               <div className="text-right">
-<<<<<<< HEAD
                 <p className="text-3xl font-black text-tertiary leading-none">
-                  64<span className="text-xs font-bold text-on-surface-variant ml-1">/100</span>
+                  64
+                  <span className="text-xs font-bold text-on-surface-variant ml-1">
+                    /100
+                  </span>
                 </p>
                 <span className="text-[9px] font-bold bg-yellow-500/10 text-yellow-700 px-2 py-0.5 rounded-full uppercase">
                   Perlu Tindakan
                 </span>
-=======
-                <p className="text-3xl font-black text-[#1c6d00] leading-none">
-                  94
-                  <span className="text-xs font-bold text-[#595c5d] ml-1">
-                    /100
-                  </span>
-                </p>
->>>>>>> backend-feature/predict
               </div>
             </div>
           </div>
@@ -445,7 +372,12 @@ export default function LoginPage() {
             © 2024 DERMASCAN CLINICAL TECH. DATA DIAGNOSTIK TERENKRIPSI AES-256.
           </p>
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 order-1 lg:order-2">
-            {["Protokol Privasi", "Ketentuan Layanan", "Kepatuhan Medis", "Lab Keamanan"].map((link) => (
+            {[
+              "Protokol Privasi",
+              "Ketentuan Layanan",
+              "Kepatuhan Medis",
+              "Lab Keamanan",
+            ].map((link) => (
               <Link
                 key={link}
                 className="text-[9px] uppercase tracking-[0.2em] font-black text-[#595c5d] hover:text-[#1c6d00] transition-colors"

@@ -28,17 +28,13 @@ export default function Analisis() {
               search
             </span>
           </div>
-<<<<<<< HEAD
+
           <Link href="/pages/notifikasi">
             <button className="text-[#6f7b67] hover:text-[#1c6d00] transition-colors duration-200">
               <span className="material-symbols-outlined">notifications</span>
             </button>
           </Link>
-=======
-          <button className="text-[#6f7b67] hover:text-[#1c6d00] transition-colors duration-200">
-            <span className="material-symbols-outlined">notifications</span>
-          </button>
->>>>>>> backend-feature/predict
+
           <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-[#84f75e]">
             <img
               alt="User Medical Profile"
@@ -81,11 +77,9 @@ export default function Analisis() {
           </Link>
           {[
             { icon: "history", label: "History", href: "/pages/history" },
-<<<<<<< HEAD
+
             { icon: "settings", label: "Settings", href: "/pages/setting" },
-=======
-            { icon: "settings", label: "Settings", href: "/pages/dashboard" },
->>>>>>> backend-feature/predict
+
           ].map((item) => (
             <Link
               key={item.label}
@@ -120,13 +114,11 @@ export default function Analisis() {
         <Link href="/pages/dashboard">
           <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">grid_view</span>
         </Link>
-<<<<<<< HEAD
+
         <Link href="/pages/scan">
           <span className="material-symbols-outlined text-white active:scale-90 transition-transform">biotech</span>
         </Link>
-=======
-        
->>>>>>> backend-feature/predict
+
         <div className="relative -top-6">
           <div className="p-1 bg-white rounded-full shadow-xl">
             <Link href="/pages/scan">
@@ -136,19 +128,14 @@ export default function Analisis() {
             </Link>
           </div>
         </div>
-<<<<<<< HEAD
+
         <Link href="/pages/history">
           <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">history</span>
         </Link>
         <Link href="/pages/setting">
           <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">settings</span>
         </Link>
-=======
 
-        <Link href="/pages/history">
-          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">history</span>
-        </Link>
->>>>>>> backend-feature/predict
       </nav>
 
       {/* Main Content */}

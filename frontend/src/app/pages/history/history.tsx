@@ -61,19 +61,13 @@ export default function HistoryPage() {
               search
             </span>
           </div>
-<<<<<<< HEAD
+
           <Link href="/pages/notifikasi">
             <button className="text-[#6f7b67] hover:text-[#1c6d00] transition-colors duration-200">
               <span className="material-symbols-outlined">notifications</span>
             </button>
           </Link>
           <Link href="/pages/profil">
-=======
-          <button className="text-[#6f7b67] hover:text-[#1c6d00] transition-colors duration-200">
-            <span className="material-symbols-outlined">notifications</span>
-          </button>
-          <Link href="/pages/auth/login">
->>>>>>> backend-feature/predict
             <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-[#84f75e] cursor-pointer hover:opacity-80 transition-opacity">
               <img
                 alt="Profil Medis Pengguna"
@@ -84,20 +78,13 @@ export default function HistoryPage() {
         </div>
       </header>
 
-<<<<<<< HEAD
       {/* Sidebar Navigation - Synchronized with Analisis */}
-=======
-      {/* Sidebar Navigation (Desktop Only) */}
->>>>>>> backend-feature/predict
+
       <aside className="hidden lg:flex flex-col h-screen py-10 bg-white w-72 fixed left-0 top-0 border-r border-[#edeeef] z-40">
         <div className="px-8 mb-12 mt-20">
           <div className="flex flex-col">
             <span className="uppercase tracking-[0.1em] text-[10px] font-extrabold text-[#6f7b67]">
-<<<<<<< HEAD
               Clinical Precision
-=======
-              Presisi Klinis
->>>>>>> backend-feature/predict
             </span>
             <span className="text-[#1c6d00] font-extrabold text-xl tracking-tight">
               Luminous Lab
@@ -110,33 +97,27 @@ export default function HistoryPage() {
             href="/pages/dashboard"
           >
             <span className="material-symbols-outlined text-xl">dashboard</span>
-<<<<<<< HEAD
+
             <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
               Dashboard
             </span>
-=======
-            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Dashboard</span>
->>>>>>> backend-feature/predict
           </Link>
           <Link
             className="flex items-center gap-4 text-[#6f7b67] py-4 px-8 hover:text-[#1c6d00] hover:bg-[#f3fbf0] border-l-4 border-transparent hover:border-[#1c6d00] transition-all"
             href="/pages/scan"
           >
             <span className="material-symbols-outlined text-xl">biotech</span>
-<<<<<<< HEAD
+
             <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
               Analysis
             </span>
-=======
-            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Analisis</span>
->>>>>>> backend-feature/predict
           </Link>
           <Link
             className="flex items-center gap-4 text-[#1c6d00] py-4 px-8 bg-[#f3fbf0] border-l-4 border-[#1c6d00] transition-all"
             href="/pages/history"
           >
             <span className="material-symbols-outlined text-xl">history</span>
-<<<<<<< HEAD
+
             <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
               History
             </span>
@@ -149,38 +130,22 @@ export default function HistoryPage() {
             <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
               Settings
             </span>
-=======
-            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Riwayat</span>
-          </Link>
-          <Link
-            className="flex items-center gap-4 text-[#6f7b67] py-4 px-8 hover:text-[#1c6d00] hover:bg-[#f3fbf0] border-l-4 border-transparent hover:border-[#1c6d00] transition-all"
-            href="/pages/dashboard"
-          >
-            <span className="material-symbols-outlined text-xl">settings</span>
-            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Pengaturan</span>
->>>>>>> backend-feature/predict
           </Link>
         </nav>
         <div className="px-8 mt-auto">
           <Link href="/pages/scan">
             <button className="w-full signature-gradient text-white font-bold py-4 px-6 rounded-full shadow-md hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
               <span className="material-symbols-outlined">add_circle</span>
-<<<<<<< HEAD
+
               <span className="text-sm">New Scan</span>
-=======
-              <span className="text-sm">Scan Baru</span>
->>>>>>> backend-feature/predict
             </button>
           </Link>
           <div className="mt-8 flex items-center gap-4 text-[#6f7b67] py-4 cursor-pointer hover:text-[#1c6d00]">
             <span className="material-symbols-outlined">help</span>
-<<<<<<< HEAD
+
             <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
               Support
             </span>
-=======
-            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">Bantuan</span>
->>>>>>> backend-feature/predict
           </div>
         </div>
       </aside>
@@ -188,32 +153,37 @@ export default function HistoryPage() {
       {/* Mobile Bottom Nav */}
       <nav className="lg:hidden fixed bottom-6 left-6 right-6 h-16 bg-[#191c1d]/95 backdrop-blur-xl rounded-full flex items-center justify-between px-8 z-50 shadow-2xl border border-white/10">
         <Link href="/pages/dashboard">
-          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">grid_view</span>
+          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">
+            grid_view
+          </span>
         </Link>
-<<<<<<< HEAD
         <Link href="/pages/scan">
-          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">biotech</span>
+          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">
+            biotech
+          </span>
         </Link>
-=======
->>>>>>> backend-feature/predict
+        feature/predict
         <div className="relative -top-6">
           <div className="p-1 bg-white rounded-full shadow-xl">
             <Link href="/pages/scan">
               <div className="w-12 h-12 signature-gradient rounded-full flex items-center justify-center active:scale-90 transition-transform">
-                <span className="material-symbols-outlined text-white font-bold">add</span>
+                <span className="material-symbols-outlined text-white font-bold">
+                  add
+                </span>
               </div>
             </Link>
           </div>
         </div>
         <Link href="/pages/history">
-          <span className="material-symbols-outlined text-white active:scale-90 transition-transform">history</span>
+          <span className="material-symbols-outlined text-white active:scale-90 transition-transform">
+            history
+          </span>
         </Link>
-<<<<<<< HEAD
         <Link href="/pages/setting">
-          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">settings</span>
+          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">
+            settings
+          </span>
         </Link>
-=======
->>>>>>> backend-feature/predict
       </nav>
 
       {/* Main Content */}
@@ -228,14 +198,17 @@ export default function HistoryPage() {
               Riwayat <span className="text-[#1c6d00]">Pemindaian</span>
             </h1>
             <p className="mt-4 text-[#6f7b67] max-w-2xl leading-relaxed text-sm md:text-base">
-              Kelola dan tinjau hasil analisis dermatologi 3D Anda secara mendalam dengan akurasi klinis tinggi.
+              Kelola dan tinjau hasil analisis dermatologi 3D Anda secara
+              mendalam dengan akurasi klinis tinggi.
             </p>
           </div>
 
           {/* Search & Actions Bar */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-8 md:mb-10">
             <div className="flex-grow max-w-md bg-[#f3f4f5] rounded-full px-6 py-3 flex items-center gap-4 focus-within:ring-2 focus-within:ring-[#1c6d00] transition-all">
-              <span className="material-symbols-outlined text-slate-400">search</span>
+              <span className="material-symbols-outlined text-slate-400">
+                search
+              </span>
               <input
                 className="bg-transparent border-none focus:ring-0 w-full text-sm text-[#191c1d] placeholder:text-slate-400"
                 placeholder="Cari ID atau tanggal..."
@@ -244,7 +217,9 @@ export default function HistoryPage() {
             </div>
             <div className="flex gap-3">
               <button className="flex-1 sm:flex-none bg-[#f3f4f5] text-[#191c1d] px-6 py-3 rounded-full font-bold hover:bg-[#e7e8e9] transition-colors flex items-center justify-center gap-2 text-sm border border-[#becab4]/30">
-                <span className="material-symbols-outlined text-lg">filter_list</span>
+                <span className="material-symbols-outlined text-lg">
+                  filter_list
+                </span>
                 Filter
               </button>
               <Link href="/pages/scan">
@@ -271,7 +246,9 @@ export default function HistoryPage() {
                       src={scan.img}
                     />
                   </div>
-                  <span className={`${scan.statusClass} px-3 py-1 rounded-full text-[10px] font-extrabold tracking-widest uppercase`}>
+                  <span
+                    className={`${scan.statusClass} px-3 py-1 rounded-full text-[10px] font-extrabold tracking-widest uppercase`}
+                  >
                     {scan.status}
                   </span>
                 </div>
@@ -280,19 +257,28 @@ export default function HistoryPage() {
                     <p className="text-[10px] font-extrabold tracking-widest uppercase text-slate-400 mb-1">
                       ID Pemindaian
                     </p>
-                    <p className="text-lg font-bold text-[#191c1d]">{scan.id}</p>
+                    <p className="text-lg font-bold text-[#191c1d]">
+                      {scan.id}
+                    </p>
                   </div>
                   <div>
                     <p className="text-[10px] font-extrabold tracking-widest uppercase text-slate-400 mb-1">
                       Tanggal Analisis
                     </p>
-                    <p className="text-sm font-medium text-[#6f7b67]">{scan.date}</p>
+                    <p className="text-sm font-medium text-[#6f7b67]">
+                      {scan.date}
+                    </p>
                   </div>
                 </div>
                 <div className="mt-8 pt-6 border-t border-[#edeeef] flex items-center justify-between">
-                  <Link href="/pages/scan" className="text-[#1c6d00] font-extrabold text-[10px] md:text-xs uppercase tracking-widest hover:translate-x-1 transition-transform flex items-center gap-2">
+                  <Link
+                    href="/pages/scan"
+                    className="text-[#1c6d00] font-extrabold text-[10px] md:text-xs uppercase tracking-widest hover:translate-x-1 transition-transform flex items-center gap-2"
+                  >
                     {scan.action}
-                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    <span className="material-symbols-outlined text-sm">
+                      arrow_forward
+                    </span>
                   </Link>
                   <span className="material-symbols-outlined text-slate-400 cursor-pointer hover:text-[#1c6d00] transition-colors">
                     more_horiz
