@@ -1,9 +1,33 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useLogoutMutation } from "@/features/auth/api/auth.api";
 import "./dashboard.css";
 
 export default function HomeDashboard() {
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const logoutMutation = useLogoutMutation();
+
+  useEffect(() => {
+    // Intercept back button
+    window.history.pushState(null, "", window.location.href);
+    const handlePopState = () => {
+      window.history.pushState(null, "", window.location.href);
+      setShowLogoutModal(true);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
+  const handleLogoutConfirm = () => {
+    logoutMutation.mutate();
+    setShowLogoutModal(false);
+  };
+
   return (
     <div className="bg-[#f8f9fa] text-[#191c1d] antialiased overflow-x-hidden min-h-screen font-manrope">
       {/* TopNavBar - Synchronized & Responsive */}
@@ -90,11 +114,23 @@ export default function HomeDashboard() {
               <span className="text-sm">New Scan</span>
             </button>
           </Link>
-          <div className="mt-8 flex items-center gap-4 text-[#6f7b67] py-4 cursor-pointer hover:text-[#1c6d00]">
-            <span className="material-symbols-outlined">help</span>
-            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
-              Support
-            </span>
+          <div className="mt-8 flex flex-col gap-2">
+            <div className="flex items-center gap-4 text-[#6f7b67] py-4 cursor-pointer hover:text-[#1c6d00]">
+              <span className="material-symbols-outlined">help</span>
+              <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
+                Support
+              </span>
+            </div>
+            <button 
+              onClick={() => setShowLogoutModal(true)} 
+              disabled={logoutMutation.isPending}
+              className="w-full flex items-center justify-start gap-4 text-red-400 py-4 hover:text-red-600 transition-colors disabled:opacity-50"
+            >
+              <span className="material-symbols-outlined">logout</span>
+              <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
+                {logoutMutation.isPending ? "Logging out..." : "Logout Session"}
+              </span>
+            </button>
           </div>
         </div>
       </aside>
@@ -359,6 +395,37 @@ export default function HomeDashboard() {
           </span>
         </Link>
       </nav>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl flex flex-col items-center text-center animate-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-500 mb-6">
+              <span className="material-symbols-outlined text-3xl">logout</span>
+            </div>
+            <h3 className="text-xl font-extrabold text-[#191c1d] mb-2 tracking-tight">Keluar Sesi?</h3>
+            <p className="text-sm font-medium text-slate-500 mb-8">
+              Apakah Anda yakin ingin keluar dari DermaScan? Anda harus masuk kembali untuk melanjutkan analisis.
+            </p>
+            <div className="w-full grid grid-cols-2 gap-4 outline-none">
+              <button 
+                onClick={() => setShowLogoutModal(false)}
+                className="py-3 rounded-2xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                disabled={logoutMutation.isPending}
+              >
+                Batal
+              </button>
+              <button 
+                onClick={handleLogoutConfirm}
+                className="py-3 rounded-2xl font-bold bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-50"
+                disabled={logoutMutation.isPending}
+              >
+                {logoutMutation.isPending ? "Keluar..." : "Ya, Keluar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

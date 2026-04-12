@@ -3,6 +3,9 @@
 import { Manrope } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useLoginMutation } from "@/features/auth/api/auth.api";
+import Cookies from "js-cookie";
 import "./login.css";
 
 const manrope = Manrope({
@@ -13,10 +16,37 @@ const manrope = Manrope({
 
 export default function LoginPage() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  
+  const loginMutation = useLoginMutation();
+
+  useEffect(() => {
+    if (Cookies.get("access_token")) {
+      router.replace("/pages/dashboard");
+    }
+  }, [router]);
+
+  const showToast = (message: string, type: "success" | "error") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/pages/dashboard");
+    loginMutation.mutate({ email, password }, {
+      onSuccess: () => {
+        showToast("Login berhasil! Mengalihkan ke dasbor...", "success");
+        setTimeout(() => {
+          router.push("/pages/dashboard");
+        }, 1000);
+      },
+      onError: (err) => {
+        showToast("Login gagal! Cek kembali email dan password Anda.", "error");
+      }
+    });
   };
 
   return (
@@ -54,6 +84,9 @@ export default function LoginPage() {
                     className="w-full bg-[#f3f4f5] border-none rounded-2xl py-4 px-5 text-[#191c1d] placeholder:text-slate-400 focus:ring-2 focus:ring-[#84f75e] focus:outline-none font-medium"
                     placeholder="dr.smith@dermascan.com"
                     type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                   />
                 </div>
               </div>
@@ -70,12 +103,24 @@ export default function LoginPage() {
                     Lupa Kata Sandi?
                   </Link>
                 </div>
-                <div className="login-input-focus-accent transition-all">
+                <div className="login-input-focus-accent transition-all relative">
                   <input
-                    className="w-full bg-[#f3f4f5] border-none rounded-2xl py-4 px-5 text-[#191c1d] placeholder:text-slate-400 focus:ring-2 focus:ring-[#84f75e] focus:outline-none font-medium"
+                    className="w-full bg-[#f3f4f5] border-none rounded-2xl py-4 px-5 pr-12 text-[#191c1d] placeholder:text-slate-400 focus:ring-2 focus:ring-[#84f75e] focus:outline-none font-medium"
                     placeholder="••••••••"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
                   />
+                  <button 
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#1c6d00] transition-colors focus:outline-none"
+                  >
+                    <span className="material-symbols-outlined text-xl">
+                      {showPassword ? "visibility_off" : "visibility"}
+                    </span>
+                  </button>
                 </div>
               </div>
 
@@ -96,10 +141,11 @@ export default function LoginPage() {
               </div>
 
               <button
-                className="w-full login-signature-gradient text-white py-4 rounded-2xl font-black text-lg shadow-lg shadow-[#1c6d00]/20 hover:shadow-[#1c6d00]/40 transition-all hover:-translate-y-0.5 active:scale-95"
+                className="w-full login-signature-gradient text-white py-4 rounded-2xl font-black text-lg shadow-lg shadow-[#1c6d00]/20 hover:shadow-[#1c6d00]/40 transition-all hover:-translate-y-0.5 active:scale-95 disabled:opacity-70 disabled:cursor-wait"
                 type="submit"
+                disabled={loginMutation.isPending}
               >
-                Masuk
+                {loginMutation.isPending ? "Sedang masuk..." : "Masuk"}
               </button>
             </form>
 
@@ -389,6 +435,15 @@ export default function LoginPage() {
           </div>
         </div>
       </footer>
+
+      {toast && (
+        <div className={`fixed bottom-6 right-6 px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 z-50 animate-in slide-in-from-bottom-5 ${toast.type === "success" ? "bg-green-100 text-green-800 border border-green-200" : "bg-red-100 text-red-800 border border-red-200"}`}>
+          <span className="material-symbols-outlined text-2xl">
+            {toast.type === "success" ? "check_circle" : "error"}
+          </span>
+          <span className="font-bold text-sm tracking-wide">{toast.message}</span>
+        </div>
+      )}
     </div>
   );
 }
