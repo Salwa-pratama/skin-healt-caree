@@ -1,12 +1,61 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { usePredictMutation } from "@/features/scan/api/scan.api";
+import { useLogoutMutation } from "@/features/auth/api/auth.api";
 import "./scan.css";
 import "../dashboard/dashboard.css";
 
 export default function Analisis() {
   const [activeTab, setActiveTab] = useState<"live" | "upload">("live");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [predictionResult, setPredictionResult] = useState<string | null>(null);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  
+  const predictMutation = usePredictMutation();
+  const logoutMutation = useLogoutMutation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    window.history.pushState(null, "", window.location.href);
+    const handlePopState = () => {
+      window.history.pushState(null, "", window.location.href);
+      setShowLogoutModal(true);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  const handleLogoutConfirm = () => {
+    logoutMutation.mutate();
+    setShowLogoutModal(false);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedFile(e.target.files[0]);
+      setPredictionResult(null); // Reset hasil prediksi setiap ganti file baru
+    }
+  };
+
+  const handleSubmit = () => {
+    if (selectedFile) {
+      predictMutation.mutate(selectedFile, {
+        onSuccess: (resData: any) => {
+          console.log("Prediction Result:", resData);
+          if (resData?.data?.jerawat) {
+             setPredictionResult(resData.data.jerawat);
+          } else {
+             alert("Data tidak valid dari server.");
+          }
+        },
+        onError: () => {
+          alert("Gagal melakukan analisis kulit.");
+        }
+      });
+    }
+  };
 
   return (
     <div className="bg-surface text-on-surface antialiased overflow-x-hidden font-manrope min-h-screen">
@@ -28,11 +77,13 @@ export default function Analisis() {
               search
             </span>
           </div>
+
           <Link href="/pages/notifikasi">
             <button className="text-[#6f7b67] hover:text-[#1c6d00] transition-colors duration-200">
               <span className="material-symbols-outlined">notifications</span>
             </button>
           </Link>
+
           <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-[#84f75e]">
             <img
               alt="User Medical Profile"
@@ -75,7 +126,9 @@ export default function Analisis() {
           </Link>
           {[
             { icon: "history", label: "History", href: "/pages/history" },
+
             { icon: "settings", label: "Settings", href: "/pages/setting" },
+
           ].map((item) => (
             <Link
               key={item.label}
@@ -96,11 +149,23 @@ export default function Analisis() {
               <span className="text-sm">New Scan</span>
             </button>
           </Link>
-          <div className="mt-8 flex items-center gap-4 text-[#6f7b67] py-4 cursor-pointer hover:text-[#1c6d00]">
-            <span className="material-symbols-outlined">help</span>
-            <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
-              Support
-            </span>
+          <div className="mt-8 flex flex-col gap-2">
+            <div className="flex items-center gap-4 text-[#6f7b67] py-4 cursor-pointer hover:text-[#1c6d00]">
+              <span className="material-symbols-outlined">help</span>
+              <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
+                Support
+              </span>
+            </div>
+            <button 
+              onClick={() => setShowLogoutModal(true)} 
+              disabled={logoutMutation.isPending}
+              className="w-full flex items-center justify-start gap-4 text-red-400 py-4 hover:text-red-600 transition-colors disabled:opacity-50"
+            >
+              <span className="material-symbols-outlined">logout</span>
+              <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
+                {logoutMutation.isPending ? "Logging out..." : "Logout Session"}
+              </span>
+            </button>
           </div>
         </div>
       </aside>
@@ -110,9 +175,11 @@ export default function Analisis() {
         <Link href="/pages/dashboard">
           <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">grid_view</span>
         </Link>
+
         <Link href="/pages/scan">
           <span className="material-symbols-outlined text-white active:scale-90 transition-transform">biotech</span>
         </Link>
+
         <div className="relative -top-6">
           <div className="p-1 bg-white rounded-full shadow-xl">
             <Link href="/pages/scan">
@@ -122,12 +189,14 @@ export default function Analisis() {
             </Link>
           </div>
         </div>
+
         <Link href="/pages/history">
           <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">history</span>
         </Link>
         <Link href="/pages/setting">
           <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">settings</span>
         </Link>
+
       </nav>
 
       {/* Main Content */}
@@ -210,30 +279,72 @@ export default function Analisis() {
                 {/* Upload View */}
                 {activeTab === "upload" && (
                   <div className="relative flex-grow bg-slate-50 flex flex-col items-center justify-center p-12 min-h-[400px]">
-                    <div className="w-full max-w-md aspect-video glass-panel rounded-3xl border-2 border-dashed border-primary/30 flex flex-col items-center justify-center p-8 cursor-pointer group hover:border-primary/60 transition-all">
-                      <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
-                        <span className="material-symbols-outlined text-4xl text-primary">
-                          add_a_photo
+                    <input 
+                      type="file" 
+                      ref={fileInputRef} 
+                      className="hidden" 
+                      onChange={handleFileChange} 
+                      accept="image/jpeg, image/png"
+                    />
+                    {!selectedFile ? (
+                      <div 
+                        onClick={() => fileInputRef.current?.click()}
+                        className="w-full max-w-md aspect-video glass-panel rounded-3xl border-2 border-dashed border-primary/30 flex flex-col items-center justify-center p-8 cursor-pointer group hover:border-primary/60 transition-all"
+                      >
+                        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+                          <span className="material-symbols-outlined text-4xl text-primary">
+                            add_a_photo
+                          </span>
+                        </div>
+                        <h3 className="text-xl font-extrabold text-on-surface mb-2">
+                          Unggah Foto Pasien
+                        </h3>
+                        <p className="text-sm text-on-surface/50 text-center font-medium">
+                          Tarik dan lepas file di sini atau{" "}
+                          <span className="text-primary font-bold">
+                            cari file
+                          </span>{" "}
+                          untuk memulai analisis.
+                        </p>
+                        <div className="mt-8 flex gap-3 text-[10px] font-black uppercase tracking-widest text-on-surface/30">
+                          <span>JPG</span>
+                          <span className="w-1 h-1 bg-on-surface/20 rounded-full self-center"></span>
+                          <span>PNG</span>
+                          <span className="w-1 h-1 bg-on-surface/20 rounded-full self-center"></span>
+                          <span>Maks 10MB</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="w-full max-w-md glass-panel rounded-3xl border-2 border-primary/60 p-8 flex flex-col items-center shadow-lg">
+                        <div className="w-full max-h-64 bg-slate-100 rounded-xl mb-6 overflow-hidden flex justify-center">
+                          <img src={URL.createObjectURL(selectedFile)} alt="Preview" className="h-full object-cover" />
+                        </div>
+                        <p className="text-sm font-bold text-slate-700 truncate w-full text-center mb-6">{selectedFile.name}</p>
+                        <div className="flex gap-4 w-full">
+                          <button onClick={() => setSelectedFile(null)} className="flex-1 py-3 bg-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-300 transition-colors">
+                            Batal
+                          </button>
+                          <button 
+                            onClick={handleSubmit} 
+                            disabled={predictMutation.isPending}
+                            className="flex-1 py-3 bg-primary text-white rounded-xl font-bold hover:bg-[#1c6d00] transition-colors disabled:opacity-50"
+                          >
+                            {predictMutation.isPending ? "Menganalisis..." : "Proses Analisis"}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {predictionResult && (
+                      <div className="mt-6 w-full max-w-md bg-green-50 border-2 border-green-500 rounded-3xl p-6 flex flex-col items-center shadow-xl shadow-green-500/10 animate-in slide-in-from-bottom-4">
+                        <span className="material-symbols-outlined text-green-500 text-4xl mb-2">
+                          health_and_safety
                         </span>
+                        <p className="text-[10px] font-black text-green-700 uppercase tracking-[0.2em] mb-2">Hasil Diagnostik AI</p>
+                        <p className="text-2xl font-black text-green-900 text-center">{predictionResult}</p>
                       </div>
-                      <h3 className="text-xl font-extrabold text-on-surface mb-2">
-                        Unggah Foto Pasien
-                      </h3>
-                      <p className="text-sm text-on-surface/50 text-center font-medium">
-                        Tarik dan lepas file di sini atau{" "}
-                        <span className="text-primary font-bold">
-                          cari file
-                        </span>{" "}
-                        untuk memulai analisis.
-                      </p>
-                      <div className="mt-8 flex gap-3 text-[10px] font-black uppercase tracking-widest text-on-surface/30">
-                        <span>JPG</span>
-                        <span className="w-1 h-1 bg-on-surface/20 rounded-full self-center"></span>
-                        <span>PNG</span>
-                        <span className="w-1 h-1 bg-on-surface/20 rounded-full self-center"></span>
-                        <span>Maks 10MB</span>
-                      </div>
-                    </div>
+                    )}
+
                     <p className="mt-8 text-[10px] font-bold text-on-surface/40 uppercase tracking-[0.2em] flex items-center gap-2">
                       <span className="material-symbols-outlined text-xs">
                         verified_user
@@ -459,6 +570,37 @@ export default function Analisis() {
           </div>
         </div>
       </footer>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl flex flex-col items-center text-center animate-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-500 mb-6">
+              <span className="material-symbols-outlined text-3xl">logout</span>
+            </div>
+            <h3 className="text-xl font-extrabold text-[#191c1d] mb-2 tracking-tight">Keluar Sesi?</h3>
+            <p className="text-sm font-medium text-slate-500 mb-8">
+              Apakah Anda yakin ingin keluar dari DermaScan? Hasil scan yang belum disimpan mungkin akan hilang.
+            </p>
+            <div className="w-full grid grid-cols-2 gap-4 outline-none">
+              <button 
+                onClick={() => setShowLogoutModal(false)}
+                className="py-3 rounded-2xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                disabled={logoutMutation.isPending}
+              >
+                Batal
+              </button>
+              <button 
+                onClick={handleLogoutConfirm}
+                className="py-3 rounded-2xl font-bold bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-50"
+                disabled={logoutMutation.isPending}
+              >
+                {logoutMutation.isPending ? "Keluar..." : "Ya, Keluar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
