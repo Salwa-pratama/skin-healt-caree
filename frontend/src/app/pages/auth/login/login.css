@@ -1,0 +1,59 @@
+/* login.css */
+
+.login-page {
+  background-color: #f8f9fa;
+}
+
+.login-input-focus-accent:focus-within {
+  transform: scale(1.02);
+  box-shadow: 0 10px 30px rgba(132, 247, 94, 0.15);
+}
+
+.auth-animate-in {
+  animation: auth-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes auth-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-glass-panel {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.login-scan-overlay {
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    rgba(132, 247, 94, 0.2) 50%, 
+    transparent 100%);
+  background-size: 100% 200%;
+  animation: login-scan 6s linear infinite;
+}
+
+@keyframes login-scan {
+  0% { background-position: 0 -100%; }
+  100% { background-position: 0 100%; }
+}
+
+.login-status-pulse {
+  animation: login-status-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes login-status-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(1.1); }
+}
+
+.login-signature-gradient {
+  background: linear-gradient(135deg, #84F75E 0%, #1C6D00 100%);
+}

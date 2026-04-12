@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { authRouter } from "./modules/auth/login/login_router";
+import { predictRouter } from "./modules/feature/predict/router";
 
 console.log("🚀 Initializing Express app...");
 
@@ -36,6 +37,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/feature", predictRouter);
 console.log("✅ Express app initialization complete!");
 
 export default app;

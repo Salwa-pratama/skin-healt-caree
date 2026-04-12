@@ -5,3 +5,6 @@ scikit-learn
 pandas
 pillow
 seaborn
+flask
+flask-cors
+

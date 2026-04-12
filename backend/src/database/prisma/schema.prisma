@@ -6,6 +6,8 @@ datasource db {
     provider = "postgresql"
 }
 
+
+//  ================= User Schema =================
 model UserPublic {
     id               Int      @id @default(autoincrement())
     email            String   @unique
@@ -15,4 +17,103 @@ model UserPublic {
     refreshTokenHash String?
     createdAt        DateTime @default(now())
     updatedAt        DateTime @updatedAt
+    acneProblems AcneProblem[]
+
+    acneProblemSolutions AcneProblemSolution[]
 }
+
+// ================= ACNE PROBLEM =================
+model AcneProblem {
+  id     Int    @id @default(autoincrement())
+  citra  String
+  name   String
+
+  userId Int
+  user   UserPublic @relation(fields: [userId], references: [id])
+
+  acneProblemSolutions AcneProblemSolution[]
+  badIngredients BadIngredient[]
+}
+
+// ================= ACNE SOLUTION =================
+model AcneSolution {
+  id            Int @id @default(autoincrement())
+
+  skincareId    Int
+  skincare      ProductSkincare @relation(fields: [skincareId], references: [id])
+
+  habitsTreatments HabitAndTreatment[]
+  acneProblemSolutions AcneProblemSolution[]
+}
+
+// ================= TREATMENTS =================
+model Treatment {
+  id   Int    @id @default(autoincrement())
+  name String
+  time String
+
+  habitsTreatments HabitAndTreatment[]
+}
+
+// ================= HABITS =================
+model Habit {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  habitsTreatments HabitAndTreatment[]
+}
+
+// ================= HABIT & TREATMENT (PIVOT) =================
+model HabitAndTreatment {
+  id Int @id @default(autoincrement())
+
+  habitId     Int
+  treatmentId Int
+  solutionId  Int
+
+  habit     Habit     @relation(fields: [habitId], references: [id])
+  treatment Treatment @relation(fields: [treatmentId], references: [id])
+  solution  AcneSolution @relation(fields: [solutionId], references: [id])
+}
+
+// ================= ACNE PROBLEM SOLUTION (PIVOT) =================
+model AcneProblemSolution {
+  id Int @id @default(autoincrement())
+
+  userId          Int
+  acneSolutionId  Int
+  acneProblemId   Int
+
+  user          UserPublic          @relation(fields: [userId], references: [id])
+  acneSolution  AcneSolution @relation(fields: [acneSolutionId], references: [id])
+  acneProblem   AcneProblem  @relation(fields: [acneProblemId], references: [id])
+}
+
+// ================= PRODUCT SKINCARE =================
+model ProductSkincare {
+  id    Int    @id @default(autoincrement())
+  name  String
+  jenis String
+
+  goodIngredients GoodIngredient[]
+  acneSolutions   AcneSolution[]
+}
+
+// ================= GOOD INGREDIENT =================
+model GoodIngredient {
+  id Int @id @default(autoincrement())
+  name String
+
+  productId Int
+  product   ProductSkincare @relation(fields: [productId], references: [id])
+}
+
+// ================= BAD INGREDIENT =================
+model BadIngredient {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  acneProblemId Int
+  acneProblem   AcneProblem @relation(fields: [acneProblemId], references: [id])
+}
+
