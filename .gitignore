@@ -9,10 +9,8 @@
 /node_modules
 node_modules/
 **/node_modules/
-<<<<<<< HEAD
-=======
 **/venv
->>>>>>> backend-feature/predict
+
 /.pnp
 .pnp.*
 .yarn/*
