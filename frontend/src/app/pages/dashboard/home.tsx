@@ -1,6 +1,5 @@
 "use client";
 
-
 import Link from "next/link";
 import "./dashboard.css";
 
@@ -39,7 +38,6 @@ export default function HomeDashboard() {
               />
             </div>
           </Link>
-
         </div>
       </header>
 
@@ -70,14 +68,15 @@ export default function HomeDashboard() {
             { icon: "history", label: "History", href: "/pages/history" },
 
             { icon: "settings", label: "Settings", href: "/pages/setting" },
-
           ].map((item) => (
             <Link
               key={item.label}
               className="flex items-center gap-4 text-[#6f7b67] py-4 px-8 hover:text-[#1c6d00] hover:bg-[#f3fbf0] border-l-4 border-transparent hover:border-[#1c6d00] transition-all"
               href={item.href}
             >
-              <span className="material-symbols-outlined text-xl">{item.icon}</span>
+              <span className="material-symbols-outlined text-xl">
+                {item.icon}
+              </span>
               <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
                 {item.label}
               </span>
@@ -119,7 +118,9 @@ export default function HomeDashboard() {
                 </div>
                 <div className="mt-6">
                   <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#84f75e] text-[#135200] rounded-full text-[10px] font-black uppercase tracking-wider">
-                    <span className="material-symbols-outlined text-sm">trending_up</span>
+                    <span className="material-symbols-outlined text-sm">
+                      trending_up
+                    </span>
                     Luminous Score
                   </span>
                 </div>
@@ -132,22 +133,51 @@ export default function HomeDashboard() {
               {/* Stacked Metric Cards */}
               <div className="space-y-4">
                 {[
-                  { icon: "water_drop", label: "Hydration", val: "82%", color: "bg-blue-400" },
-                  { icon: "opacity", label: "Oil Level", val: "45%", color: "bg-amber-400" },
-                  { icon: "emergency", label: "Acne Severity", val: "8%", color: "bg-rose-400" },
+                  {
+                    icon: "water_drop",
+                    label: "Hydration",
+                    val: "82%",
+                    color: "bg-blue-400",
+                  },
+                  {
+                    icon: "opacity",
+                    label: "Oil Level",
+                    val: "45%",
+                    color: "bg-amber-400",
+                  },
+                  {
+                    icon: "emergency",
+                    label: "Acne Severity",
+                    val: "8%",
+                    color: "bg-rose-400",
+                  },
                 ].map((m) => (
-                  <div key={m.label} className="bg-white rounded-2xl p-5 flex items-center justify-between border border-[#eff1f2] hover:shadow-md transition-shadow">
+                  <div
+                    key={m.label}
+                    className="bg-white rounded-2xl p-5 flex items-center justify-between border border-[#eff1f2] hover:shadow-md transition-shadow"
+                  >
                     <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${m.color.replace('bg-', 'bg-')}/10 text-${m.color.replace('bg-', 'text-')}`}>
-                        <span className="material-symbols-outlined">{m.icon}</span>
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center ${m.color.replace("bg-", "bg-")}/10 text-${m.color.replace("bg-", "text-")}`}
+                      >
+                        <span className="material-symbols-outlined">
+                          {m.icon}
+                        </span>
                       </div>
                       <div>
-                        <h4 className="font-bold text-xs uppercase tracking-tight">{m.label}</h4>
-                        <span className="text-[10px] text-slate-500">Optimal ({m.val})</span>
+                        <h4 className="font-bold text-xs uppercase tracking-tight">
+                          {m.label}
+                        </h4>
+                        <span className="text-[10px] text-slate-500">
+                          Optimal ({m.val})
+                        </span>
                       </div>
                     </div>
                     <div className="w-16 h-1.5 bg-[#f3f4f5] rounded-full overflow-hidden">
-                      <div className={`h-full ${m.color}`} style={{ width: m.val }}></div>
+                      <div
+                        className={`h-full ${m.color}`}
+                        style={{ width: m.val }}
+                      ></div>
                     </div>
                   </div>
                 ))}
@@ -173,12 +203,20 @@ export default function HomeDashboard() {
                   />
                   {/* Overlay labels */}
                   <div className="absolute top-4 right-4 bg-white/90 backdrop-blur p-3 rounded-xl shadow-lg border border-slate-100 flex flex-col">
-                    <span className="text-[8px] font-black text-[#1c6d00] uppercase">Zone Alpha</span>
-                    <span className="text-[10px] font-extrabold whitespace-nowrap text-[#191c1d]">Active Regeneration</span>
+                    <span className="text-[8px] font-black text-[#1c6d00] uppercase">
+                      Zone Alpha
+                    </span>
+                    <span className="text-[10px] font-extrabold whitespace-nowrap text-[#191c1d]">
+                      Active Regeneration
+                    </span>
                   </div>
                   <div className="absolute bottom-12 left-0 bg-white/90 backdrop-blur p-3 rounded-xl shadow-lg border border-slate-100 flex flex-col">
-                    <span className="text-[8px] font-black text-slate-400 uppercase">Zone Delta</span>
-                    <span className="text-[10px] font-extrabold whitespace-nowrap text-[#191c1d]">Pore Refinement 82%</span>
+                    <span className="text-[8px] font-black text-slate-400 uppercase">
+                      Zone Delta
+                    </span>
+                    <span className="text-[10px] font-extrabold whitespace-nowrap text-[#191c1d]">
+                      Pore Refinement 82%
+                    </span>
                   </div>
                 </div>
                 <div className="mt-auto relative z-10 text-center">
@@ -199,20 +237,28 @@ export default function HomeDashboard() {
               {/* AI Prescriptive */}
               <div className="bg-white rounded-[2rem] p-6 sm:p-8 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[#edeeef]">
                 <div className="flex items-center gap-2 mb-6 text-[#1c6d00]">
-                  <span className="material-symbols-outlined text-[20px]">auto_awesome</span>
-                  <h3 className="font-black text-xs uppercase tracking-widest">AI Prescriptive</h3>
+                  <span className="material-symbols-outlined text-[20px]">
+                    auto_awesome
+                  </span>
+                  <h3 className="font-black text-xs uppercase tracking-widest">
+                    AI Prescriptive
+                  </h3>
                 </div>
                 <div className="space-y-6">
                   <div className="relative pl-6">
                     <div className="absolute left-0 top-0 w-1 h-full signature-gradient rounded-full"></div>
-                    <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Morning Routine</p>
+                    <p className="text-[9px] font-black text-slate-400 uppercase mb-1">
+                      Morning Routine
+                    </p>
                     <p className="text-xs font-semibold leading-relaxed text-[#191c1d]">
                       Increase SPF-50 application; UV sensitivity rising.
                     </p>
                   </div>
                   <div className="relative pl-6">
                     <div className="absolute left-0 top-0 w-1 h-full bg-slate-100 rounded-full"></div>
-                    <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Evening Treatment</p>
+                    <p className="text-[9px] font-black text-slate-400 uppercase mb-1">
+                      Evening Treatment
+                    </p>
                     <p className="text-xs font-semibold leading-relaxed text-[#191c1d]">
                       Apply Niacinamide serum for pore control.
                     </p>
@@ -225,19 +271,25 @@ export default function HomeDashboard() {
 
               {/* Weekly Progress */}
               <div className="bg-white rounded-[2rem] p-6 sm:p-8 border border-[#edeeef] shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col h-full">
-                <h3 className="font-black text-xs uppercase tracking-widest text-[#191c1d] mb-6">Weekly Progress</h3>
+                <h3 className="font-black text-xs uppercase tracking-widest text-[#191c1d] mb-6">
+                  Weekly Progress
+                </h3>
                 <div className="flex-1 flex items-end justify-between gap-1.5 min-h-[120px]">
                   {[60, 45, 80, 70, 95, 85, 98].map((h, i) => (
                     <div
                       key={i}
-                      className={`w-full rounded-t-lg transition-all ${i === 6 ? 'signature-gradient h-full shadow-[0_-4px_12px_rgba(132,247,94,0.3)]' : 'bg-[#84f75e]/20 hover:bg-[#84f75e]'}`}
+                      className={`w-full rounded-t-lg transition-all ${i === 6 ? "signature-gradient h-full shadow-[0_-4px_12px_rgba(132,247,94,0.3)]" : "bg-[#84f75e]/20 hover:bg-[#84f75e]"}`}
                       style={{ height: `${h}%` }}
                     ></div>
                   ))}
                 </div>
                 <div className="flex justify-between mt-4">
-                  <span className="text-[8px] font-black text-slate-400">MON</span>
-                  <span className="text-[8px] font-black text-[#191c1d]">SUN</span>
+                  <span className="text-[8px] font-black text-slate-400">
+                    MON
+                  </span>
+                  <span className="text-[8px] font-black text-[#191c1d]">
+                    SUN
+                  </span>
                 </div>
               </div>
             </div>
@@ -259,7 +311,10 @@ export default function HomeDashboard() {
                   {s.val}
                 </span>
                 <div className="w-full h-1.5 bg-[#eff1f2] rounded-full overflow-hidden">
-                  <div className="h-full bg-[#1c6d00] transition-all" style={{ width: `${s.progress}%` }}></div>
+                  <div
+                    className="h-full bg-[#1c6d00] transition-all"
+                    style={{ width: `${s.progress}%` }}
+                  ></div>
                 </div>
               </div>
             ))}
@@ -270,30 +325,39 @@ export default function HomeDashboard() {
       {/* Mobile Bottom Nav - Synchronized and Responsive */}
       <nav className="lg:hidden fixed bottom-6 left-6 right-6 h-16 bg-[#191c1d]/95 backdrop-blur-xl rounded-full flex items-center justify-between px-8 z-50 shadow-2xl border border-white/10">
         <Link href="/pages/dashboard">
-          <span className="material-symbols-outlined text-white active:scale-90 transition-transform">grid_view</span>
+          <span className="material-symbols-outlined text-white active:scale-90 transition-transform">
+            grid_view
+          </span>
         </Link>
 
         <Link href="/pages/scan">
-          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">biotech</span>
+          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">
+            biotech
+          </span>
         </Link>
 
         <div className="relative -top-6">
           <div className="p-1 bg-white rounded-full shadow-xl">
             <Link href="/pages/scan">
               <div className="w-12 h-12 signature-gradient rounded-full flex items-center justify-center active:scale-90 transition-transform">
-                <span className="material-symbols-outlined text-white font-bold">add</span>
+                <span className="material-symbols-outlined text-white font-bold">
+                  add
+                </span>
               </div>
             </Link>
           </div>
         </div>
 
         <Link href="/pages/history">
-          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">history</span>
+          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">
+            history
+          </span>
         </Link>
         <Link href="/pages/setting">
-          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">settings</span>
+          <span className="material-symbols-outlined text-slate-400 active:scale-90 transition-transform">
+            settings
+          </span>
         </Link>
-
       </nav>
     </div>
   );
