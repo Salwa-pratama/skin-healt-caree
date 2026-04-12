@@ -3,6 +3,9 @@
 import { Manrope } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRegisterMutation } from "@/features/auth/api/auth.api";
+import Cookies from "js-cookie";
 import "./register.css";
 
 const manrope = Manrope({
@@ -13,9 +16,44 @@ const manrope = Manrope({
 
 export default function RegisterPage() {
   const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  
+  const registerMutation = useRegisterMutation();
+
+  useEffect(() => {
+    if (Cookies.get("access_token")) {
+      router.replace("/pages/dashboard");
+    }
+  }, [router]);
+
+  const showToast = (message: string, type: "success" | "error") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/pages/auth/login");
+    if (password !== confirmPassword) {
+      showToast("Gagal: Kata sandi tidak cocok!", "error");
+      return;
+    }
+    registerMutation.mutate({ name: username, email, password }, {
+      onSuccess: () => {
+        showToast("Registrasi sukses! Silakan masuk.", "success");
+        setTimeout(() => {
+          router.push("/pages/auth/login");
+        }, 1500);
+      },
+      onError: () => {
+        showToast("Gagal melakukan registrasi! Email mungkin sudah dipakai.", "error");
+      }
+    });
   };
 
   return (
@@ -56,6 +94,8 @@ export default function RegisterPage() {
                     className="w-full bg-[#f1f5f2] border-none rounded-lg py-3.5 px-5 text-[#1a1c1a] placeholder:text-[#c1c9be] focus:ring-0 focus:outline-none font-body text-sm"
                     placeholder="Johnathan Doe"
                     type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     required
                   />
                 </div>
@@ -70,6 +110,8 @@ export default function RegisterPage() {
                     className="w-full bg-[#f1f5f2] border-none rounded-lg py-3.5 px-5 text-[#1a1c1a] placeholder:text-[#c1c9be] focus:ring-0 focus:outline-none font-body text-sm"
                     placeholder="dr.smith@aethermed.com"
                     type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
@@ -80,26 +122,48 @@ export default function RegisterPage() {
                   <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-[#414941] ml-1">
                     Kata Sandi
                   </label>
-                  <div className="register-input-focus-accent transition-all">
+                  <div className="register-input-focus-accent transition-all relative">
                     <input
-                      className="w-full bg-[#f1f5f2] border-none rounded-lg py-3.5 px-5 text-[#1a1c1a] placeholder:text-[#c1c9be] focus:ring-0 focus:outline-none font-body text-sm"
+                      className="w-full bg-[#f1f5f2] border-none rounded-lg py-3.5 px-5 pr-12 text-[#1a1c1a] placeholder:text-[#c1c9be] focus:ring-0 focus:outline-none font-body text-sm"
                       placeholder="••••••••"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       required
                     />
+                    <button 
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#386a20] transition-colors focus:outline-none"
+                    >
+                      <span className="material-symbols-outlined text-lg">
+                        {showPassword ? "visibility_off" : "visibility"}
+                      </span>
+                    </button>
                   </div>
                 </div>
                 <div className="space-y-1.5">
                   <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-[#414941] ml-1">
                     Konfirmasi Kata Sandi
                   </label>
-                  <div className="register-input-focus-accent transition-all">
+                  <div className="register-input-focus-accent transition-all relative">
                     <input
-                      className="w-full bg-[#f1f5f2] border-none rounded-lg py-3.5 px-5 text-[#1a1c1a] placeholder:text-[#c1c9be] focus:ring-0 focus:outline-none font-body text-sm"
+                      className="w-full bg-[#f1f5f2] border-none rounded-lg py-3.5 px-5 pr-12 text-[#1a1c1a] placeholder:text-[#c1c9be] focus:ring-0 focus:outline-none font-body text-sm"
                       placeholder="••••••••"
-                      type="password"
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                       required
                     />
+                    <button 
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#386a20] transition-colors focus:outline-none"
+                    >
+                      <span className="material-symbols-outlined text-lg">
+                        {showConfirmPassword ? "visibility_off" : "visibility"}
+                      </span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -122,10 +186,11 @@ export default function RegisterPage() {
               </div>
 
               <button
-                className="w-full bg-[#84F75E] text-[#0a3900] py-4 rounded-xl font-bold text-base shadow-lg shadow-[#84F75E]/20 hover:shadow-[#84F75E]/30 hover:-translate-y-0.5 transition-all mt-4"
+                className="w-full bg-[#84F75E] text-[#0a3900] py-4 rounded-xl font-bold text-base shadow-lg shadow-[#84F75E]/20 hover:shadow-[#84F75E]/30 hover:-translate-y-0.5 transition-all mt-4 disabled:opacity-70 disabled:cursor-wait"
                 type="submit"
+                disabled={registerMutation.isPending}
               >
-                Buat Akun
+                {registerMutation.isPending ? "Memproses..." : "Buat Akun"}
               </button>
             </form>
 
@@ -426,6 +491,15 @@ export default function RegisterPage() {
           </div>
         </div>
       </footer>
+
+      {toast && (
+        <div className={`fixed bottom-6 right-6 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 z-50 animate-in slide-in-from-bottom-5 ${toast.type === "success" ? "bg-green-100 text-green-800 border border-green-200" : "bg-red-100 text-red-800 border border-red-200"}`}>
+          <span className="material-symbols-outlined text-2xl">
+            {toast.type === "success" ? "check_circle" : "error"}
+          </span>
+          <span className="font-bold text-sm tracking-wide">{toast.message}</span>
+        </div>
+      )}
     </div>
   );
 }
