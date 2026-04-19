@@ -121,8 +121,8 @@ export default function HomeDashboard() {
                 Support
               </span>
             </div>
-            <button 
-              onClick={() => setShowLogoutModal(true)} 
+            <button
+              onClick={() => setShowLogoutModal(true)}
               disabled={logoutMutation.isPending}
               className="w-full flex items-center justify-start gap-4 text-red-400 py-4 hover:text-red-600 transition-colors disabled:opacity-50"
             >
@@ -403,19 +403,22 @@ export default function HomeDashboard() {
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-500 mb-6">
               <span className="material-symbols-outlined text-3xl">logout</span>
             </div>
-            <h3 className="text-xl font-extrabold text-[#191c1d] mb-2 tracking-tight">Keluar Sesi?</h3>
+            <h3 className="text-xl font-extrabold text-[#191c1d] mb-2 tracking-tight">
+              Keluar Sesi?
+            </h3>
             <p className="text-sm font-medium text-slate-500 mb-8">
-              Apakah Anda yakin ingin keluar dari DermaScan? Anda harus masuk kembali untuk melanjutkan analisis.
+              Apakah Anda yakin ingin keluar dari DermaScan? Anda harus masuk
+              kembali untuk melanjutkan analisis.
             </p>
             <div className="w-full grid grid-cols-2 gap-4 outline-none">
-              <button 
+              <button
                 onClick={() => setShowLogoutModal(false)}
                 className="py-3 rounded-2xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
                 disabled={logoutMutation.isPending}
               >
                 Batal
               </button>
-              <button 
+              <button
                 onClick={handleLogoutConfirm}
                 className="py-3 rounded-2xl font-bold bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-50"
                 disabled={logoutMutation.isPending}
