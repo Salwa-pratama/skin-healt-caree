@@ -1,4 +1,4 @@
-<!-- Build image front end dan backend -->
+# Build image front end dan backend
 
 ```
 shell
@@ -6,7 +6,7 @@ podman build -t frontend-image .
 podman build -t backend-image .
 ```
 
-<!-- Aturan seblum melakukan pengembangan -->
+# Aturan seblum melakukan pengembangan
 
 1. Pastikan sudah pull local versi terbaru dari branch, development, main, maupun production
 2. Membuat branch dengan nama yang sesuai dengan fitur yang akan dikembangkan
