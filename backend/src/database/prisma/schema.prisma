@@ -24,9 +24,11 @@ model UserPublic {
 
 // ================= ACNE PROBLEM =================
 model AcneProblem {
-  id     Int    @id @default(autoincrement())
-  citra  String
-  name   String
+  id          Int      @id @default(autoincrement())
+  citra       String
+  name        String
+  predictions Json?
+  createdAt   DateTime @default(now())
 
   userId Int
   user   UserPublic @relation(fields: [userId], references: [id])

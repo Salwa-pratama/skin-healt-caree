@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { authRouter } from "./modules/auth/login/login_router";
 import { predictRouter } from "./modules/feature/predict/router";
+import { historyRouter } from "./modules/feature/history/router";
 
 // Middleware
 import { authMiddleware } from "./middleware/auth.middleware";
@@ -40,6 +41,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/feature", authMiddleware, predictRouter);
+app.use("/api/history", authMiddleware, historyRouter);
 console.log("✅ Express app initialization complete!");
 
 export default app;

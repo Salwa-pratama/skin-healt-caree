@@ -16,12 +16,12 @@ export class PredictService {
     mimetype: string,
   ): Promise<ServiceResponseSchema<PredictResponseSchema | null>> {
     try {
-      const jerawat = await this.repository.sendToFlaskAsync(
+      const result = await this.repository.sendToFlaskAsync(
         fileBuffer,
         mimetype,
       );
 
-      return ServiceResponse.success("Prediksi berhasil", { jerawat });
+      return ServiceResponse.success("Prediksi berhasil", result);
     } catch (error) {
       return ServiceResponse.failure(
         "An error occurred while predicting.",
