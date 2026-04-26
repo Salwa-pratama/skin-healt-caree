@@ -29,18 +29,28 @@ def predict():
         img_array = np.expand_dims(img_array, axis=0)
 
         # Hasil prediksi
-        prediction = model.predict(img_array)
+        prediction = model.predict(img_array)[0]
 
-        predicted_class = np.argmax(prediction, axis=1)
         # Proses open class json untuk clasifikasi
         with open(CLASS_PATH, "r") as f:
             class_names = json.load(f)
+
+        # Buat list hasil dengan presentase
+        results = []
+        for i in range(len(class_names)):
+            results.append({
+                "label": class_names[i],
+                "confidence": float(prediction[i] * 100)
+            })
+
+        predicted_class_index = np.argmax(prediction)
 
         return jsonify({
             "kode" : 200,
             "status" : "success",
             "data" : {
-                "jenis-jerawat": f"{class_names[predicted_class[0]]}"
+                "top_prediction": class_names[predicted_class_index],
+                "all_predictions": results
             }
         })
     
