@@ -1,0 +1,36 @@
+/* Aether Med Register Page Styles */
+
+.register-page {
+  background-color: #f8faf9;
+  color: #1a1c1a;
+}
+
+.register-glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.register-input-focus-accent:focus-within {
+  border-left: 3px solid #84f75e;
+}
+
+.register-scan-overlay {
+  background: linear-gradient(
+    0deg,
+    transparent 0%,
+    rgba(132, 247, 94, 0.15) 50%,
+    transparent 100%
+  );
+  background-size: 100% 200%;
+  animation: register-scan 4s linear infinite;
+}
+
+@keyframes register-scan {
+  0% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% -100%;
+  }
+}

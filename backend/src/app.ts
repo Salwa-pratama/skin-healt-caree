@@ -1,7 +1,12 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { authRouter } from "./modules/auth/login/login_router";
+import { predictRouter } from "./modules/feature/predict/router";
+import { historyRouter } from "./modules/feature/history/router";
+import { profileRouter } from "./modules/feature/profile/router";
 
+// Middleware
+import { authMiddleware } from "./middleware/auth.middleware";
 console.log("🚀 Initializing Express app...");
 
 const app = express();
@@ -18,7 +23,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 try {
   console.log("🔄 Setting up middleware...");
   app.use(cors());
-  app.use(express.json());
+  app.use(express.json({ limit: "10mb" }));
+  app.use(express.urlencoded({ extended: true }));
   console.log("✅ Middleware configured");
 } catch (error: any) {
   console.error("❌ Error setting up middleware:", error.message);
@@ -35,6 +41,9 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/feature", authMiddleware, predictRouter);
+app.use("/api/feature/profile", authMiddleware, profileRouter);
+app.use("/api/history", authMiddleware, historyRouter);
 console.log("✅ Express app initialization complete!");
 
 export default app;
