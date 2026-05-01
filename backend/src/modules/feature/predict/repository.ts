@@ -7,7 +7,7 @@ export class PredictRepository {
   async sendToFlaskAsync(
     fileBuffer: Buffer,
     mimetype: string,
-  ): Promise<{ jerawat: string; predictions: { label: string; confidence: number }[] }> {
+  ): Promise<{ jerawat: string; predictions: { label: string; persentase: string }[] }> {
     const form = new FormData();
     form.append("file", fileBuffer, {
       filename: "image",
