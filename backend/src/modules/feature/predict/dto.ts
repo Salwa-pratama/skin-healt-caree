@@ -4,7 +4,7 @@ export const PredictResponseSchema = z.object({
   jerawat: z.string(),
   predictions: z.array(z.object({
     label: z.string(),
-    confidence: z.number()
+    persentase: z.string()
   })).optional(),
 });
 
