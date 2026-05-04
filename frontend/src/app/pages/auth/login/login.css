@@ -1,12 +1,12 @@
 /* login.css */
 
 .login-page {
-  background-color: #f8f9fa;
+  background-color: #f8faf9;
+  color: #1a1c1a;
 }
 
 .login-input-focus-accent:focus-within {
-  transform: scale(1.02);
-  box-shadow: 0 10px 30px rgba(132, 247, 94, 0.15);
+  border-left: 3px solid #84f75e;
 }
 
 .auth-animate-in {
@@ -25,24 +25,29 @@
 }
 
 .login-glass-panel {
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .login-scan-overlay {
-  background: linear-gradient(to bottom, 
-    transparent 0%, 
-    rgba(132, 247, 94, 0.2) 50%, 
-    transparent 100%);
+  background: linear-gradient(
+    0deg,
+    transparent 0%,
+    rgba(132, 247, 94, 0.15) 50%,
+    transparent 100%
+  );
   background-size: 100% 200%;
-  animation: login-scan 6s linear infinite;
+  animation: login-scan 4s linear infinite;
 }
 
 @keyframes login-scan {
-  0% { background-position: 0 -100%; }
-  100% { background-position: 0 100%; }
+  0% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% -100%;
+  }
 }
 
 .login-status-pulse {
@@ -54,6 +59,67 @@
   50% { opacity: .5; transform: scale(1.1); }
 }
 
-.login-signature-gradient {
-  background: linear-gradient(135deg, #84F75E 0%, #1C6D00 100%);
+/* Modal Styles */
+.modal-backdrop {
+  background: rgba(26, 28, 26, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-content-glass {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+}
+
+.animate-scale-in {
+  animation: scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.notification-pill {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.08);
+}
+
+.success-check-draw {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: check-draw 0.6s 0.3s ease-in-out forwards;
+}
+
+@keyframes check-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
 }

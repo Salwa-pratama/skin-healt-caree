@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google"; // Using Manrope for the landing page
 import { ReactQueryProvider } from "@/lib/react-query-provider";
 import "./globals.css";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/Header";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -33,8 +33,8 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} antialiased`}
       >
-        <Navbar/>
         <ReactQueryProvider>
+          <Navbar />
           {children}
         </ReactQueryProvider>
       </body>

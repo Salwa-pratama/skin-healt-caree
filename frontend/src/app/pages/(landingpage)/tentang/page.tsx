@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import Navbar from '../../../components/Navbar';
+
 
 export default function TentangPage() {
     return (
@@ -12,7 +12,7 @@ export default function TentangPage() {
                     {/* Background glows */}
                     <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[80px] -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
                     <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#84f75e]/5 rounded-full blur-[100px] translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
-                    
+
                     <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center relative z-10">
                         <div className="text-center lg:text-left">
                             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-[10px] md:text-xs tracking-widest uppercase mb-6 border border-primary/20 shadow-sm">
