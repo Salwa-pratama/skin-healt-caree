@@ -1,4 +1,4 @@
-import AuthNavbar from "./Navbar";
+// import AuthNavbar from "./Navbar";
 import "./auth.css";
 
 export default function AuthLayout({
@@ -8,7 +8,7 @@ export default function AuthLayout({
 }) {
   return (
     <div className="min-h-screen flex flex-col">
-      <AuthNavbar />
+      {/* <AuthNavbar /> */}
       <div className="flex-grow flex flex-col">
         {children}
       </div>
