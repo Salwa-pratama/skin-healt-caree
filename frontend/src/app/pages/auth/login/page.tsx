@@ -19,8 +19,11 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
-  
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
+
   const loginMutation = useLoginMutation();
   const [modalType, setModalType] = useState<"success" | "error" | null>(null);
   const [redirectCountdown, setRedirectCountdown] = useState(3);
@@ -38,24 +41,27 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    loginMutation.mutate({ email, password }, {
-      onSuccess: () => {
-        setModalType("success");
-        let count = 3;
-        const timer = setInterval(() => {
-          count -= 1;
-          setRedirectCountdown(count);
-          if (count <= 0) {
-            clearInterval(timer);
-            router.push("/pages/dashboard");
-          }
-        }, 1000);
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: () => {
+          setModalType("success");
+          let count = 3;
+          const timer = setInterval(() => {
+            count -= 1;
+            setRedirectCountdown(count);
+            if (count <= 0) {
+              clearInterval(timer);
+              router.push("/pages/dashboard");
+            }
+          }, 1000);
+        },
+        onError: () => {
+          setModalType("error");
+          setTimeout(() => setModalType(null), 4000);
+        },
       },
-      onError: () => {
-        setModalType("error");
-        setTimeout(() => setModalType(null), 4000);
-      }
-    });
+    );
   };
 
   return (
@@ -121,7 +127,7 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
-                  <button 
+                  <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#386a20] transition-colors focus:outline-none"
@@ -167,17 +173,28 @@ export default function LoginPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <button className="flex items-center justify-center gap-2 py-2 rounded-xl border border-[#c1c9be]/50 hover:bg-[#f1f5f2] transition-colors font-bold text-[10px] uppercase tracking-widest text-[#414941]">
-                  <span className="material-symbols-outlined text-lg text-[#386a20]">medical_services</span> SSO
+                  <span className="material-symbols-outlined text-lg text-[#386a20]">
+                    medical_services
+                  </span>{" "}
+                  SSO
                 </button>
                 <button className="flex items-center justify-center gap-2 py-2 rounded-xl border border-[#c1c9be]/50 hover:bg-[#f1f5f2] transition-colors font-bold text-[10px] uppercase tracking-widest text-[#414941]">
-                  <span className="material-symbols-outlined text-lg text-[#386a20]">fingerprint</span> Biometrik
+                  <span className="material-symbols-outlined text-lg text-[#386a20]">
+                    fingerprint
+                  </span>{" "}
+                  Biometrik
                 </button>
               </div>
             </div>
 
             <div className="mt-6 flex items-center justify-center gap-4 text-xs font-medium text-[#414941]">
               <span>Belum punya akun?</span>
-              <Link className="text-[#386a20] font-bold hover:underline" href="/pages/auth/register">Daftar</Link>
+              <Link
+                className="text-[#386a20] font-bold hover:underline"
+                href="/pages/auth/register"
+              >
+                Daftar
+              </Link>
             </div>
           </div>
         </section>
@@ -186,7 +203,7 @@ export default function LoginPage() {
         <section className="hidden lg:flex w-1/2 bg-[#f0f4f2] relative flex-col items-center justify-center overflow-hidden border-l border-[#c1c9be]/30 h-full">
           {/* Background Elements */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(132,247,94,0.08)_0%,transparent_70%)]"></div>
-          <div 
+          <div
             className="absolute top-0 right-0 w-full h-full opacity-10 pointer-events-none"
             style={{
               backgroundImage: "radial-gradient(#1a1c1a 1px, transparent 1px)",
@@ -201,12 +218,17 @@ export default function LoginPage() {
                   Mode Diagnostik
                 </h2>
                 <p className="text-lg font-black text-[#1a1c1a]">
-                  Deteksi Jerawat AI <span className="text-[#386a20] font-medium text-sm">v4.2</span>
+                  Deteksi Jerawat AI{" "}
+                  <span className="text-[#386a20] font-medium text-sm">
+                    v4.2
+                  </span>
                 </p>
               </div>
               <div className="flex items-center gap-1.5 bg-white/60 backdrop-blur-sm px-2 py-0.5 rounded-full border border-white shadow-sm">
                 <span className="w-1 h-1 rounded-full bg-[#84F75E] animate-pulse"></span>
-                <span className="text-[8px] font-bold uppercase tracking-wider text-[#414941]">Neural Aktif</span>
+                <span className="text-[8px] font-bold uppercase tracking-wider text-[#414941]">
+                  Neural Aktif
+                </span>
               </div>
             </div>
 
@@ -215,7 +237,8 @@ export default function LoginPage() {
               <div className="col-span-7 login-glass-panel rounded-2xl p-3 border border-white shadow-xl shadow-black/[0.03] relative overflow-hidden flex flex-col">
                 <div className="absolute top-3 left-3 z-20 flex flex-col gap-1">
                   <div className="bg-black/70 backdrop-blur-sm text-white text-[8px] font-bold px-2 py-0.5 rounded-md flex items-center gap-2">
-                    <span className="w-1 h-1 bg-red-500 rounded-full"></span> PAPULA
+                    <span className="w-1 h-1 bg-red-500 rounded-full"></span>{" "}
+                    PAPULA
                   </div>
                 </div>
 
@@ -231,12 +254,20 @@ export default function LoginPage() {
 
                 <div className="mt-3 flex justify-between items-center px-1">
                   <div>
-                    <p className="text-[8px] font-bold text-[#414941] uppercase tracking-wider">Keyakinan</p>
-                    <p className="text-sm font-extrabold text-[#1a1c1a]">98.4%</p>
+                    <p className="text-[8px] font-bold text-[#414941] uppercase tracking-wider">
+                      Keyakinan
+                    </p>
+                    <p className="text-sm font-extrabold text-[#1a1c1a]">
+                      98.4%
+                    </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[8px] font-bold text-[#414941] uppercase tracking-wider">Waktu</p>
-                    <p className="text-sm font-extrabold text-[#1a1c1a]">1.2d</p>
+                    <p className="text-[8px] font-bold text-[#414941] uppercase tracking-wider">
+                      Waktu
+                    </p>
+                    <p className="text-sm font-extrabold text-[#1a1c1a]">
+                      1.2d
+                    </p>
                   </div>
                 </div>
               </div>
@@ -251,33 +282,52 @@ export default function LoginPage() {
                   ].map((metric) => (
                     <div key={metric.label}>
                       <div className="flex justify-between items-end mb-1">
-                        <span className="text-[8px] font-bold text-[#414941] uppercase">{metric.label}</span>
-                        <span className="text-[9px] font-extrabold text-[#1a1c1a]">{metric.val}%</span>
+                        <span className="text-[8px] font-bold text-[#414941] uppercase">
+                          {metric.label}
+                        </span>
+                        <span className="text-[9px] font-extrabold text-[#1a1c1a]">
+                          {metric.val}%
+                        </span>
                       </div>
                       <div className="h-1 w-full bg-[#f1f5f2] rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${metric.color}`} style={{ width: `${metric.val}%` }}></div>
+                        <div
+                          className={`h-full rounded-full ${metric.color}`}
+                          style={{ width: `${metric.val}%` }}
+                        ></div>
                       </div>
                     </div>
                   ))}
                 </div>
 
                 <div className="flex-grow login-glass-panel rounded-2xl p-3 border border-white shadow-lg flex flex-col">
-                  <p className="text-[8px] font-bold text-[#414941] uppercase mb-2 tracking-wider">Regimen</p>
+                  <p className="text-[8px] font-bold text-[#414941] uppercase mb-2 tracking-wider">
+                    Regimen
+                  </p>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-lg bg-[#84F75E]/15 flex items-center justify-center shrink-0">
-                        <span className="material-symbols-outlined text-[#386a20] text-xs">sanitizer</span>
+                        <span className="material-symbols-outlined text-[#386a20] text-xs">
+                          sanitizer
+                        </span>
                       </div>
-                      <p className="text-[8px] font-bold text-[#1a1c1a]">BHA Cleanser</p>
+                      <p className="text-[8px] font-bold text-[#1a1c1a]">
+                        BHA Cleanser
+                      </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-lg bg-[#bc01ec]/10 flex items-center justify-center shrink-0">
-                        <span className="material-symbols-outlined text-[#bc01ec] text-xs">science</span>
+                        <span className="material-symbols-outlined text-[#bc01ec] text-xs">
+                          science
+                        </span>
                       </div>
-                      <p className="text-[8px] font-bold text-[#1a1c1a]">Azelaic Acid</p>
+                      <p className="text-[8px] font-bold text-[#1a1c1a]">
+                        Azelaic Acid
+                      </p>
                     </div>
                   </div>
-                  <button className="mt-auto pt-3 w-full text-[#386a20] text-[8px] font-black uppercase tracking-widest hover:underline">DETAIL LENGKAP</button>
+                  <button className="mt-auto pt-3 w-full text-[#386a20] text-[8px] font-black uppercase tracking-widest hover:underline">
+                    DETAIL LENGKAP
+                  </button>
                 </div>
               </div>
             </div>
@@ -286,15 +336,26 @@ export default function LoginPage() {
             <div className="login-glass-panel rounded-xl p-3 border border-white shadow-lg flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-[#84F75E] flex items-center justify-center shadow-sm">
-                  <span className="material-symbols-outlined text-[#0a3900] text-lg">clinical_notes</span>
+                  <span className="material-symbols-outlined text-[#0a3900] text-lg">
+                    clinical_notes
+                  </span>
                 </div>
                 <div>
-                  <p className="text-[10px] font-black text-[#1a1c1a]">Indeks Kesehatan Kulit</p>
-                  <p className="text-[8px] text-[#414941]">Intervensi klinis direkomendasikan.</p>
+                  <p className="text-[10px] font-black text-[#1a1c1a]">
+                    Indeks Kesehatan Kulit
+                  </p>
+                  <p className="text-[8px] text-[#414941]">
+                    Intervensi klinis direkomendasikan.
+                  </p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-xl font-black text-[#386a20] leading-none">64<span className="text-[8px] font-bold text-[#414941] ml-0.5">/100</span></p>
+                <p className="text-xl font-black text-[#386a20] leading-none">
+                  64
+                  <span className="text-[8px] font-bold text-[#414941] ml-0.5">
+                    /100
+                  </span>
+                </p>
               </div>
             </div>
           </div>
@@ -309,7 +370,13 @@ export default function LoginPage() {
           </p>
           <div className="flex gap-x-4">
             {["Privasi", "Ketentuan", "Kepatuhan Medis"].map((link) => (
-              <Link key={link} className="text-[7px] uppercase tracking-[0.15em] font-black text-[#414941] hover:text-[#386a20]" href="#">{link}</Link>
+              <Link
+                key={link}
+                className="text-[7px] uppercase tracking-[0.15em] font-black text-[#414941] hover:text-[#386a20]"
+                href="#"
+              >
+                {link}
+              </Link>
             ))}
           </div>
         </div>
@@ -318,11 +385,26 @@ export default function LoginPage() {
       {/* Notification Pill */}
       {modalType && (
         <div className="fixed top-[4.4rem] left-1/2 -translate-x-1/2 z-[200] w-full max-w-xs px-4">
-          <div className={`notification-pill rounded-full p-1.5 flex items-center gap-3 animate-slide-down overflow-hidden relative ${modalType === "success" ? "border-[#84F75E]/50" : "border-red-200"}`}>
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${modalType === "success" ? "bg-[#84F75E]/20 text-[#386a20]" : "bg-red-50 text-red-500"}`}>
+          <div
+            className={`notification-pill rounded-full p-1.5 flex items-center gap-3 animate-slide-down overflow-hidden relative ${modalType === "success" ? "border-[#84F75E]/50" : "border-red-200"}`}
+          >
+            <div
+              className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${modalType === "success" ? "bg-[#84F75E]/20 text-[#386a20]" : "bg-red-50 text-red-500"}`}
+            >
               {modalType === "success" ? (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
-                  <path className="success-check-draw" strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                >
+                  <path
+                    className="success-check-draw"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               ) : (
                 <span className="material-symbols-outlined text-xl">error</span>
@@ -333,14 +415,14 @@ export default function LoginPage() {
                 {modalType === "success" ? "Login Berhasil" : "Akses Ditolak"}
               </h3>
               <p className="text-[#414941] text-[9px] leading-tight font-medium">
-                {modalType === "success" 
-                  ? `Mengarahkan Anda dalam ${redirectCountdown}s...` 
+                {modalType === "success"
+                  ? `Mengarahkan Anda dalam ${redirectCountdown}s...`
                   : "Email atau password tidak valid."}
               </p>
             </div>
             {modalType === "success" && (
               <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#f1f5f2]">
-                <div 
+                <div
                   className="h-full bg-[#84F75E] transition-all duration-1000 ease-linear"
                   style={{ width: `${(redirectCountdown / 3) * 100}%` }}
                 ></div>
@@ -355,7 +437,9 @@ export default function LoginPage() {
         <div className="fixed inset-0 z-[110] flex items-center justify-center modal-backdrop">
           <div className="flex flex-col items-center gap-4">
             <div className="w-12 h-12 border-4 border-[#84F75E]/30 border-t-[#84F75E] rounded-full animate-spin"></div>
-            <p className="text-white font-bold tracking-widest text-xs uppercase">Mengautentikasi...</p>
+            <p className="text-white font-bold tracking-widest text-xs uppercase">
+              Mengautentikasi...
+            </p>
           </div>
         </div>
       )}
