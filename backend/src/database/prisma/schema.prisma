@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
     provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 
@@ -42,8 +43,8 @@ model AcneSolution {
   id            Int @id @default(autoincrement())
 
   skincareId    Int
-  skincare      ProductSkincare @relation(fields: [skincareId], references: [id])
 
+  goodIngredient GoodIngredient[]
   habitsTreatments HabitAndTreatment[]
   acneProblemSolutions AcneProblemSolution[]
 }
@@ -91,15 +92,6 @@ model AcneProblemSolution {
   acneProblem   AcneProblem  @relation(fields: [acneProblemId], references: [id])
 }
 
-// ================= PRODUCT SKINCARE =================
-model ProductSkincare {
-  id    Int    @id @default(autoincrement())
-  name  String
-  jenis String
-
-  goodIngredients GoodIngredient[]
-  acneSolutions   AcneSolution[]
-}
 
 // ================= GOOD INGREDIENT =================
 model GoodIngredient {
@@ -107,7 +99,7 @@ model GoodIngredient {
   name String
 
   productId Int
-  product   ProductSkincare @relation(fields: [productId], references: [id])
+  acneSolution AcneSolution[]
 }
 
 // ================= BAD INGREDIENT =================
