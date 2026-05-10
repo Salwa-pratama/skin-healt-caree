@@ -22,6 +22,10 @@ export const acneRecommendations = [
       "Jangan sering dipencet",
       "Jangan over exfoliate",
       "Sabar"
+    ],
+    treatments: [
+      { name: "Kompres hangat", time: "Kapan saja" },
+      { name: "Spot Treatment BHA/Benzoyl Peroxide", time: "Malam" }
     ]
   },
   {
@@ -47,6 +51,10 @@ export const acneRecommendations = [
       "Jangan sering dipencet",
       "Jangan over exfoliate",
       "Sabar"
+    ],
+    treatments: [
+      { name: "Pimple patch", time: "Kapan saja" },
+      { name: "Spot Treatment Benzoyl Peroxide / Sulfur", time: "Malam" }
     ]
   },
   {
@@ -72,6 +80,10 @@ export const acneRecommendations = [
       "Jangan sering dipencet",
       "Jangan over exfoliate",
       "Sabar"
+    ],
+    treatments: [
+      { name: "Double cleansing", time: "Malam" },
+      { name: "Eksfoliasi ringan BHA", time: "Malam" }
     ]
   },
   {
@@ -96,6 +108,11 @@ export const acneRecommendations = [
       "Jangan sering dipencet",
       "Jangan over exfoliate",
       "Sabar"
+    ],
+    treatments: [
+      { name: "Double cleansing", time: "Malam" },
+      { name: "Clay mask", time: "Seminggu 1-2 kali" },
+      { name: "Eksfoliasi BHA/AHA", time: "Malam" }
     ]
   }
 ];

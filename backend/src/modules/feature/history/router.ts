@@ -1,6 +1,9 @@
 import express, { type Router } from "express";
+import multer from "multer";
 import { HistoryController } from "./controller";
+import { authMiddleware } from "../../../middleware/auth.middleware";
 
+const upload = multer({ storage: multer.memoryStorage() });
 const historyController = new HistoryController();
 export const historyRouter: Router = express.Router();
 
@@ -65,23 +68,26 @@ historyRouter.get("/", historyController.getHistory);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
- *               - citra
- *               - name
+ *               - file
+ *               - jerawat
  *               - predictions
  *             properties:
- *               citra:
+ *               file:
  *                 type: string
- *                 example: "https://example.com/image.jpg"
- *               name:
+ *                 format: binary
+ *                 description: Image file to be uploaded
+ *               jerawat:
  *                 type: string
- *                 example: "Acne Scan 1"
+ *                 description: Top prediction acne type
+ *                 example: "Papules"
  *               predictions:
- *                 type: object
- *                 example: {"top_prediction": "Papules", "all_predictions": []}
+ *                 type: string
+ *                 description: JSON string of prediction array
+ *                 example: '[{"label":"Papules","persentase":"90%"},{"label":"Cyst","persentase":"5%"}]'
  *     responses:
  *       200:
  *         description: Successfully saved history
@@ -110,8 +116,12 @@ historyRouter.get("/", historyController.getHistory);
  *                     createdAt:
  *                       type: string
  *                       format: date-time
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
  */
-historyRouter.post("/", historyController.saveHistory);
+historyRouter.post("/", authMiddleware, upload.single("file"), historyController.saveHistory);
 
 /**
  * @openapi

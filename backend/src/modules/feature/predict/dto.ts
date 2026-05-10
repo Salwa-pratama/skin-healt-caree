@@ -12,6 +12,10 @@ export const PredictResponseSchema = z.object({
     goodIngredients: z.array(z.string()),
     badIngredients: z.array(z.string()),
     habits: z.array(z.string()),
+    treatments: z.array(z.object({
+      name: z.string(),
+      time: z.string()
+    })).optional(),
     catatan_tambahan: z.string().optional()
   }).optional()
 });
