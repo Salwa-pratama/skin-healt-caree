@@ -33,7 +33,7 @@ export class HistoryService {
     let mainRec = acneRecommendations.find(r => {
       const typeLower = r.type.toLowerCase();
       const topPrediction = jerawat.toLowerCase();
-      return typeLower.includes(topPrediction) || topPrediction.includes(typeLower) || 
+      return typeLower.includes(topPrediction) || topPrediction.includes(typeLower) ||
              (typeLower === "whitehead / blackhead" && (topPrediction.includes("whitehead") || topPrediction.includes("blackhead")));
     });
 

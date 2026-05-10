@@ -22,7 +22,7 @@ export class HistoryController {
     try {
       const file = req.file;
       const userId = (req as any).user.userId || (req as any).user.id;
-      const { jerawat, predictions } = req.body;
+      const { jerawat, predictions} = req.body;
 
       if (!file) {
         res.status(400).json({ kode: 400, status: "error", message: "File gambar tidak ditemukan" });
@@ -35,7 +35,7 @@ export class HistoryController {
       }
 
       const saved = await this.service.saveHistoryAsync(file.buffer, userId, jerawat, predictions);
-      
+
       res.json({
         kode: 200,
         status: "success",
