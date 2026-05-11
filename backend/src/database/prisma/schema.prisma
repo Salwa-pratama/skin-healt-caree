@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
     provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 
@@ -34,17 +35,16 @@ model AcneProblem {
   user   UserPublic @relation(fields: [userId], references: [id])
 
   acneProblemSolutions AcneProblemSolution[]
-  badIngredients BadIngredient[]
 }
 
 // ================= ACNE SOLUTION =================
 model AcneSolution {
   id            Int @id @default(autoincrement())
 
-  skincareId    Int
-  skincare      ProductSkincare @relation(fields: [skincareId], references: [id])
-
-  habitsTreatments HabitAndTreatment[]
+  goodIngredient GoodIngredient[]
+  badIngredient  BadIngredient[]
+  habits         Habit[]
+  treatments     Treatment[]
   acneProblemSolutions AcneProblemSolution[]
 }
 
@@ -54,7 +54,7 @@ model Treatment {
   name String
   time String
 
-  habitsTreatments HabitAndTreatment[]
+  acneSolution AcneSolution[]
 }
 
 // ================= HABITS =================
@@ -62,20 +62,7 @@ model Habit {
   id   Int    @id @default(autoincrement())
   name String
 
-  habitsTreatments HabitAndTreatment[]
-}
-
-// ================= HABIT & TREATMENT (PIVOT) =================
-model HabitAndTreatment {
-  id Int @id @default(autoincrement())
-
-  habitId     Int
-  treatmentId Int
-  solutionId  Int
-
-  habit     Habit     @relation(fields: [habitId], references: [id])
-  treatment Treatment @relation(fields: [treatmentId], references: [id])
-  solution  AcneSolution @relation(fields: [solutionId], references: [id])
+  acneSolution AcneSolution[]
 }
 
 // ================= ACNE PROBLEM SOLUTION (PIVOT) =================
@@ -91,23 +78,13 @@ model AcneProblemSolution {
   acneProblem   AcneProblem  @relation(fields: [acneProblemId], references: [id])
 }
 
-// ================= PRODUCT SKINCARE =================
-model ProductSkincare {
-  id    Int    @id @default(autoincrement())
-  name  String
-  jenis String
-
-  goodIngredients GoodIngredient[]
-  acneSolutions   AcneSolution[]
-}
 
 // ================= GOOD INGREDIENT =================
 model GoodIngredient {
   id Int @id @default(autoincrement())
   name String
 
-  productId Int
-  product   ProductSkincare @relation(fields: [productId], references: [id])
+  acneSolution AcneSolution[]
 }
 
 // ================= BAD INGREDIENT =================
@@ -115,7 +92,6 @@ model BadIngredient {
   id   Int    @id @default(autoincrement())
   name String
 
-  acneProblemId Int
-  acneProblem   AcneProblem @relation(fields: [acneProblemId], references: [id])
+  acneSolution AcneSolution[]
 }
 

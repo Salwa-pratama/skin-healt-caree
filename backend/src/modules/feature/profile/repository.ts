@@ -10,7 +10,7 @@ export class ProfileRepository {
         email: true,
         name: true,
         role: true,
-        skintype: true,
+        // skintype: true,
         createdAt: true,
         updatedAt: true,
       },
