@@ -1,113 +1,77 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-
-//  ================= User Schema =================
 model UserPublic {
-    id               Int      @id @default(autoincrement())
-    email            String   @unique
-    name             String
-    role             String   @default("user")
-    passwordHash     String
-    refreshTokenHash String?
-    skintype         String  @default("normal")
-    createdAt        DateTime @default(now())
-    updatedAt        DateTime @updatedAt
-    acneProblems     AcneProblem[]
-    acneProblemSolutions AcneProblemSolution[]
+  id                   Int                   @id @default(autoincrement())
+  email                String                @unique
+  name                 String
+  role                 String                @default("user")
+  passwordHash         String
+  refreshTokenHash     String?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  skintype             String                @default("normal")
+  acneProblems         AcneProblem[]
+  acneProblemSolutions AcneProblemSolution[]
 }
 
-// ================= ACNE PROBLEM =================
 model AcneProblem {
-  id          Int      @id @default(autoincrement())
-  citra       String
-  name        String
-  predictions Json?
-  createdAt   DateTime @default(now())
-
-  userId Int
-  user   UserPublic @relation(fields: [userId], references: [id])
-
+  id                   Int                   @id @default(autoincrement())
+  citra                String
+  name                 String
+  userId               Int
+  createdAt            DateTime              @default(now())
+  predictions          Json?
+  user                 UserPublic            @relation(fields: [userId], references: [id])
   acneProblemSolutions AcneProblemSolution[]
-  badIngredients BadIngredient[]
 }
 
-// ================= ACNE SOLUTION =================
 model AcneSolution {
-  id            Int @id @default(autoincrement())
-
-  skincareId    Int
-
-  goodIngredient GoodIngredient[]
-  habitsTreatments HabitAndTreatment[]
+  id                   Int                   @id @default(autoincrement())
   acneProblemSolutions AcneProblemSolution[]
+  BadIngredient        BadIngredient[]
+  goodIngredient       GoodIngredient[]      @relation("AcneSolutionToGoodIngredient")
+  Habit                Habit[]
+  Treatment            Treatment[]
 }
 
-// ================= TREATMENTS =================
 model Treatment {
-  id   Int    @id @default(autoincrement())
-  name String
-  time String
-
-  habitsTreatments HabitAndTreatment[]
+  id           Int            @id @default(autoincrement())
+  name         String
+  time         String
+  AcneSolution AcneSolution[]
 }
 
-// ================= HABITS =================
 model Habit {
-  id   Int    @id @default(autoincrement())
-  name String
-
-  habitsTreatments HabitAndTreatment[]
+  id           Int            @id @default(autoincrement())
+  name         String
+  AcneSolution AcneSolution[]
 }
 
-// ================= HABIT & TREATMENT (PIVOT) =================
-model HabitAndTreatment {
-  id Int @id @default(autoincrement())
-
-  habitId     Int
-  treatmentId Int
-  solutionId  Int
-
-  habit     Habit     @relation(fields: [habitId], references: [id])
-  treatment Treatment @relation(fields: [treatmentId], references: [id])
-  solution  AcneSolution @relation(fields: [solutionId], references: [id])
-}
-
-// ================= ACNE PROBLEM SOLUTION (PIVOT) =================
 model AcneProblemSolution {
-  id Int @id @default(autoincrement())
-
-  userId          Int
-  acneSolutionId  Int
-  acneProblemId   Int
-
-  user          UserPublic          @relation(fields: [userId], references: [id])
-  acneSolution  AcneSolution @relation(fields: [acneSolutionId], references: [id])
-  acneProblem   AcneProblem  @relation(fields: [acneProblemId], references: [id])
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  acneSolutionId Int
+  acneProblemId  Int
+  acneProblem    AcneProblem  @relation(fields: [acneProblemId], references: [id])
+  acneSolution   AcneSolution @relation(fields: [acneSolutionId], references: [id])
+  user           UserPublic   @relation(fields: [userId], references: [id])
 }
 
-
-// ================= GOOD INGREDIENT =================
 model GoodIngredient {
-  id Int @id @default(autoincrement())
-  name String
-
-  productId Int
-  acneSolution AcneSolution[]
+  id           Int            @id @default(autoincrement())
+  name         String
+  acneSolution AcneSolution[] @relation("AcneSolutionToGoodIngredient")
 }
 
-// ================= BAD INGREDIENT =================
 model BadIngredient {
-  id   Int    @id @default(autoincrement())
-  name String
-
-  acneProblemId Int
-  acneProblem   AcneProblem @relation(fields: [acneProblemId], references: [id])
+  id           Int            @id @default(autoincrement())
+  name         String
+  AcneSolution AcneSolution[]
 }
-

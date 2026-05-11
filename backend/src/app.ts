@@ -43,7 +43,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/auth", authRouter);
 app.use("/api/feature", authMiddleware, predictRouter);
 app.use("/api/feature/profile", authMiddleware, profileRouter);
-app.use("/api/history", authMiddleware, historyRouter);
+app.use("/api/feature/history", authMiddleware, historyRouter);
 console.log("✅ Express app initialization complete!");
 
 export default app;
