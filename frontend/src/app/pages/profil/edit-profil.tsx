@@ -1,10 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useProfile } from "@/features/auth/api/profile.api";
 
 export default function ProfilePage() {
   const [is2FAEnabled, setIs2FAEnabled] = useState(true);
+  const { data, isLoading, error } = useProfile();
+  console.log("Profile Data:", data);
+  
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#f8f9fa]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-[#1c6d00] border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm font-bold text-[#1c6d00] animate-pulse">Memuat Profil...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if(error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#f8f9fa]">
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-sm font-bold text-[#1c6d00]">Error memuat profil</p>
+          <p className="text-xs text-[#1c6d00]">{error?.message}</p>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="bg-[#f8f9fa] text-[#191c1d] antialiased min-h-screen font-sans selection:bg-[#84F75E]/30 selection:text-[#1c6d00]">
@@ -67,11 +93,13 @@ export default function ProfilePage() {
                 </div>
                 <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
                   <div className="space-y-1 sm:space-y-2">
-                    <label className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-[#3f4a39] px-1">Nama Lengkap</label>
+                    <label className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-[#3f4a39] px-1">
+                      Nama Lengkap
+                    </label>
                     <input
                       className="w-full bg-[#f3f4f5] border-none rounded-xl sm:rounded-2xl px-5 py-3 sm:py-4 focus:ring-2 focus:ring-[#1c6d00] transition-all outline-none text-[#191c1d] font-medium text-sm sm:text-base"
                       type="text"
-                      defaultValue="Dr. Sarah Luminous"
+                      value={data?.name || ""}
                     />
                   </div>
                   <div className="space-y-1 sm:space-y-2">
@@ -80,7 +108,7 @@ export default function ProfilePage() {
                       className="w-full bg-[#edeeef] border-none rounded-xl sm:rounded-2xl px-5 py-3 sm:py-4 text-[#3f4a39] font-medium cursor-not-allowed opacity-70 text-sm sm:text-base"
                       readOnly
                       type="email"
-                      defaultValue="sarah.luminous@dermascan.com"
+                      value={data?.email || ""}
                     />
                   </div>
                   <div className="space-y-1 sm:space-y-2 sm:col-span-2">
@@ -108,11 +136,10 @@ export default function ProfilePage() {
                     {["Kering", "Berminyak", "Kombinasi", "Normal"].map((type) => (
                       <button
                         key={type}
-                        className={`flex-1 min-w-[100px] sm:flex-none px-4 sm:px-8 py-2.5 sm:py-3 rounded-full border-2 transition-all hover:scale-95 font-bold text-xs sm:text-sm ${
-                          type === "Kering"
-                            ? "border-[#84f75e] bg-[#84f75e] text-[#1d7000]"
-                            : "border-transparent bg-white text-[#3f4a39] hover:border-[#84f75e]"
-                        }`}
+                        className={`flex-1 min-w-[100px] sm:flex-none px-4 sm:px-8 py-2.5 sm:py-3 rounded-full border-2 transition-all hover:scale-95 font-bold text-xs sm:text-sm ${type === "Kering"
+                          ? "border-[#84f75e] bg-[#84f75e] text-[#1d7000]"
+                          : "border-transparent bg-white text-[#3f4a39] hover:border-[#84f75e]"
+                          }`}
                       >
                         {type}
                       </button>
@@ -125,11 +152,10 @@ export default function ProfilePage() {
                     {["Jerawat", "Penuaan", "Kusam", "Tekstur"].map((problem) => (
                       <button
                         key={problem}
-                        className={`flex-1 min-w-[100px] sm:flex-none px-4 sm:px-8 py-2.5 sm:py-3 rounded-full border-2 transition-all hover:scale-95 font-bold text-xs sm:text-sm ${
-                          ["Jerawat", "Penuaan"].includes(problem)
-                            ? "border-[#84f75e] bg-[#84f75e] text-[#1d7000]"
-                            : "border-transparent bg-white text-[#3f4a39] hover:border-[#84f75e]"
-                        }`}
+                        className={`flex-1 min-w-[100px] sm:flex-none px-4 sm:px-8 py-2.5 sm:py-3 rounded-full border-2 transition-all hover:scale-95 font-bold text-xs sm:text-sm ${["Jerawat", "Penuaan"].includes(problem)
+                          ? "border-[#84f75e] bg-[#84f75e] text-[#1d7000]"
+                          : "border-transparent bg-white text-[#3f4a39] hover:border-[#84f75e]"
+                          }`}
                       >
                         {problem}
                       </button>
@@ -165,15 +191,13 @@ export default function ProfilePage() {
                     </div>
                   </div>
                   <div
-                    className={`relative inline-flex items-center cursor-pointer w-12 sm:w-14 h-6 sm:h-8 rounded-full p-1 transition-colors flex-shrink-0 ${
-                      is2FAEnabled ? "bg-[#1c6d00]" : "bg-[#cbd5e1]"
-                    }`}
+                    className={`relative inline-flex items-center cursor-pointer w-12 sm:w-14 h-6 sm:h-8 rounded-full p-1 transition-colors flex-shrink-0 ${is2FAEnabled ? "bg-[#1c6d00]" : "bg-[#cbd5e1]"
+                      }`}
                     onClick={() => setIs2FAEnabled(!is2FAEnabled)}
                   >
                     <div
-                      className={`bg-white w-4 sm:w-6 h-4 sm:h-6 rounded-full shadow-sm transition-transform ${
-                        is2FAEnabled ? "translate-x-6" : "translate-x-0"
-                      }`}
+                      className={`bg-white w-4 sm:w-6 h-4 sm:h-6 rounded-full shadow-sm transition-transform ${is2FAEnabled ? "translate-x-6" : "translate-x-0"
+                        }`}
                     />
                   </div>
                 </div>
