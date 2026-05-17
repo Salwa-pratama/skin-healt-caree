@@ -1,6 +1,7 @@
 import express, { type Router } from "express";
 import multer from "multer";
 import { PredictController } from "./controller";
+import { authMiddleware } from "../../../middleware/auth.middleware";
 
 const upload = multer({ storage: multer.memoryStorage() });
 const predictController = new PredictController();

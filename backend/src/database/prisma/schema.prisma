@@ -7,6 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//  ================= User Schema =================
 model UserPublic {
   id                   Int                   @id @default(autoincrement())
   email                String                @unique
@@ -14,64 +15,80 @@ model UserPublic {
   role                 String                @default("user")
   passwordHash         String
   refreshTokenHash     String?
+  skintype             String                @default("normal")
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
-  skintype             String                @default("normal")
   acneProblems         AcneProblem[]
   acneProblemSolutions AcneProblemSolution[]
 }
 
+// ================= ACNE PROBLEM =================
 model AcneProblem {
-  id                   Int                   @id @default(autoincrement())
-  citra                String
-  name                 String
-  userId               Int
-  createdAt            DateTime              @default(now())
-  predictions          Json?
-  user                 UserPublic            @relation(fields: [userId], references: [id])
+  id          Int      @id @default(autoincrement())
+  citra       String
+  name        String
+  predictions Json?
+  createdAt   DateTime @default(now())
+
+  userId Int
+  user   UserPublic @relation(fields: [userId], references: [id])
+
   acneProblemSolutions AcneProblemSolution[]
 }
 
+// ================= ACNE SOLUTION =================
 model AcneSolution {
-  id                   Int                   @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+
+  goodIngredient       GoodIngredient[]
+  badIngredient        BadIngredient[]
+  habits               Habit[]
+  treatments           Treatment[]
   acneProblemSolutions AcneProblemSolution[]
-  BadIngredient        BadIngredient[]
-  goodIngredient       GoodIngredient[]      @relation("AcneSolutionToGoodIngredient")
-  Habit                Habit[]
-  Treatment            Treatment[]
 }
 
+// ================= TREATMENTS =================
 model Treatment {
-  id           Int            @id @default(autoincrement())
-  name         String
-  time         String
-  AcneSolution AcneSolution[]
+  id   Int    @id @default(autoincrement())
+  name String
+  time String
+
+  acneSolution AcneSolution[]
 }
 
+// ================= HABITS =================
 model Habit {
-  id           Int            @id @default(autoincrement())
-  name         String
-  AcneSolution AcneSolution[]
+  id   Int    @id @default(autoincrement())
+  name String
+
+  acneSolution AcneSolution[]
 }
 
+// ================= ACNE PROBLEM SOLUTION (PIVOT) =================
 model AcneProblemSolution {
-  id             Int          @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+
   userId         Int
   acneSolutionId Int
   acneProblemId  Int
-  acneProblem    AcneProblem  @relation(fields: [acneProblemId], references: [id])
-  acneSolution   AcneSolution @relation(fields: [acneSolutionId], references: [id])
-  user           UserPublic   @relation(fields: [userId], references: [id])
+
+  user         UserPublic   @relation(fields: [userId], references: [id])
+  acneSolution AcneSolution @relation(fields: [acneSolutionId], references: [id])
+  acneProblem  AcneProblem  @relation(fields: [acneProblemId], references: [id])
 }
 
+// ================= GOOD INGREDIENT =================
 model GoodIngredient {
-  id           Int            @id @default(autoincrement())
-  name         String
-  acneSolution AcneSolution[] @relation("AcneSolutionToGoodIngredient")
+  id   Int    @id @default(autoincrement())
+  name String
+
+  acneSolution AcneSolution[]
 }
 
+// ================= BAD INGREDIENT =================
 model BadIngredient {
-  id           Int            @id @default(autoincrement())
-  name         String
-  AcneSolution AcneSolution[]
+  id   Int    @id @default(autoincrement())
+  name String
+
+  acneSolution AcneSolution[]
 }
