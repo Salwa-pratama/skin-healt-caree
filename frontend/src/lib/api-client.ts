@@ -10,10 +10,14 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    // Read token from cookies
     const token = Cookies.get("access_token");
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
+    console.log("Isi token : ", token)
+    if (token) {
+      if (config.headers) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } else {
+      console.warn("⚠️ apiClient: No access_token found in cookies");
     }
     return config;
   },
