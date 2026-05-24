@@ -107,7 +107,8 @@ export const acneRecommendations = [
     habits: [
       "Jangan sering dipencet",
       "Jangan over exfoliate",
-      "Sabar"
+      "Sabar",
+      "Jangan telalu stress, relax"
     ],
     treatments: [
       { name: "Double cleansing", time: "Malam" },
