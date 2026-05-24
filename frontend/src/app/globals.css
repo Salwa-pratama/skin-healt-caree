@@ -1,17 +1,18 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #0a1f10;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+/*
+ * KEY FIX: Use @theme (WITHOUT "inline") so Tailwind v4 generates utilities
+ * like `bg-primary { background-color: var(--color-primary) }`.
+ * This means overriding --color-primary in .dark works at RUNTIME.
+ * @theme inline would bake values at build time, breaking dark mode.
+ */
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #0a1f10;
   --font-sans: var(--font-manrope), sans-serif;
   --font-mono: var(--font-geist-mono);
 
-  /* DermaScan Custom Colors */
+  /* Primary */
   --color-primary: #1c6d00;
   --color-primary-container: #84f75e;
   --color-on-primary: #ffffff;
@@ -21,6 +22,7 @@
   --color-primary-fixed: #89fd63;
   --color-primary-fixed-dim: #6edf49;
 
+  /* Secondary */
   --color-secondary: #1f6d04;
   --color-secondary-container: #a3f883;
   --color-on-secondary: #ffffff;
@@ -30,6 +32,7 @@
   --color-secondary-fixed: #a3f883;
   --color-secondary-fixed-dim: #88da6a;
 
+  /* Tertiary */
   --color-tertiary: #775650;
   --color-tertiary-container: #ffd3cb;
   --color-on-tertiary: #ffffff;
@@ -39,6 +42,7 @@
   --color-tertiary-fixed: #ffdad4;
   --color-tertiary-fixed-dim: #e7bdb5;
 
+  /* Surface */
   --color-surface: #ffffff;
   --color-on-surface: #0a1f10;
   --color-on-surface-variant: #475569;
@@ -51,6 +55,7 @@
   --color-surface-container-high: #e2e8f0;
   --color-surface-container-highest: #cbd5e1;
 
+  /* Outline */
   --color-outline: #94a3b8;
   --color-outline-variant: #e2e8f0;
   --color-inverse-surface: #0f172a;
@@ -58,10 +63,11 @@
   --color-inverse-primary: #34d399;
   --color-surface-tint: #059669;
 
+  /* Error */
   --color-error: #ba1a1a;
   --color-error-container: #ffdad6;
-  --on-error: #ffffff;
-  --on-error-container: #93000a;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
 
   /* Custom Fonts */
   --font-headline: var(--font-manrope), sans-serif;
@@ -69,7 +75,91 @@
   --font-label: var(--font-manrope), sans-serif;
 }
 
-/* Custom Utilities */
+/* ─── Dashboard-specific CSS variables (used via var() in JSX) ─── */
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --dashboard-bg: #f8f9fa;
+  --dashboard-card-bg: #ffffff;
+  --dashboard-text: #191c1d;
+  --dashboard-text-secondary: #3f4a39;
+  --dashboard-border: #eff1f2;
+  --dashboard-sidebar-bg: #ffffff;
+  --dashboard-sidebar-border: #edeeef;
+  --dashboard-sidebar-active-bg: #f3fbf0;
+  --dashboard-sidebar-active-text: #1c6d00;
+  --dashboard-header-bg: #ffffff;
+  --dashboard-header-scrolled-bg: rgba(255, 255, 255, 0.9);
+}
+
+/* ─── Dark Mode: overrides BOTH Tailwind color vars AND dashboard vars ─── */
+.dark {
+  /* Tailwind color overrides — bg-primary, text-on-surface, etc. now pick these up */
+  --color-background: #090e0b;
+  --color-foreground: #ecf3ee;
+
+  --color-primary: #84f75e;
+  --color-primary-container: #113805;
+  --color-on-primary: #042100;
+  --color-on-primary-container: #84f75e;
+  --color-on-primary-fixed: #84f75e;
+  --color-on-primary-fixed-variant: #113805;
+  --color-primary-fixed: #113805;
+  --color-primary-fixed-dim: #113805;
+
+  --color-secondary: #88da6a;
+  --color-secondary-container: #153c07;
+  --color-on-secondary: #042100;
+  --color-on-secondary-container: #a3f883;
+  --color-on-secondary-fixed: #a3f883;
+  --color-on-secondary-fixed-variant: #153c07;
+  --color-secondary-fixed: #153c07;
+  --color-secondary-fixed-dim: #153c07;
+
+  --color-tertiary: #ffd3cb;
+  --color-tertiary-container: #472b27;
+  --color-on-tertiary: #472b27;
+  --color-on-tertiary-container: #ffd3cb;
+
+  --color-surface: #0f1511;
+  --color-on-surface: #ecf3ee;
+  --color-on-surface-variant: #9aa89d;
+  --color-surface-variant: #16201a;
+  --color-surface-dim: #090e0b;
+  --color-surface-bright: #1c2721;
+  --color-surface-container-lowest: #050806;
+  --color-surface-container-low: #0f1511;
+  --color-surface-container: #16201a;
+  --color-surface-container-high: #212f26;
+  --color-surface-container-highest: #2d3e33;
+
+  --color-outline: #3d4f43;
+  --color-outline-variant: #212f26;
+  --color-inverse-surface: #ffffff;
+  --color-inverse-on-surface: #0a1f10;
+  --color-inverse-primary: #1c6d00;
+  --color-surface-tint: #84f75e;
+
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-on-error: #690005;
+  --color-on-error-container: #ffdad6;
+
+  /* Dashboard-specific overrides */
+  --glass-bg: rgba(15, 21, 17, 0.7);
+  --dashboard-bg: #050806;
+  --dashboard-card-bg: #0f1511;
+  --dashboard-text: #ecf3ee;
+  --dashboard-text-secondary: #9aa89d;
+  --dashboard-border: #212f26;
+  --dashboard-sidebar-bg: #0f1511;
+  --dashboard-sidebar-border: #212f26;
+  --dashboard-sidebar-active-bg: #113805;
+  --dashboard-sidebar-active-text: #84f75e;
+  --dashboard-header-bg: #0f1511;
+  --dashboard-header-scrolled-bg: rgba(15, 21, 17, 0.9);
+}
+
+/* ─── Custom Utilities ─── */
 .material-symbols-outlined {
   font-variation-settings:
     "FILL" 0,
@@ -87,7 +177,7 @@
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
@@ -112,22 +202,17 @@
 }
 
 @keyframes scan {
-  0% {
-    background-position: 0% 100%;
-  }
-  100% {
-    background-position: 0% -100%;
-  }
+  0% { background-position: 0% 100%; }
+  100% { background-position: 0% -100%; }
 }
 
 .ambient-shadow {
   box-shadow: 0 40px 60px -5px rgba(25, 28, 29, 0.04);
 }
 
-/* Dark mode disabled - forcing light theme */
-
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
   font-family: var(--font-manrope), sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

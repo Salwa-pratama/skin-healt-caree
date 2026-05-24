@@ -21,7 +21,16 @@ export class AuthController {
 
   logout = async (req: Request, res: Response): Promise<void> => {
     const userId = (req as any).user?.userId;
-    const result = await this.service.logoutAsync(userId);
+    if (!userId) {
+      res.status(401).json({
+        message: "Unauthorized - User ID not found in token",
+        status: "error",
+        statusCode: 401,
+        data: null
+      });
+      return;
+    }
+    const result = await this.service.logoutAsync(Number(userId));
     res.status(result.statusCode).json(result);
   };
 }

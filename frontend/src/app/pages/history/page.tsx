@@ -46,7 +46,7 @@ export default function HistoryPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   
   return (
-    <div className="bg-surface text-on-surface antialiased overflow-x-hidden font-manrope min-h-screen">
+    <div className="bg-[var(--dashboard-bg)] text-[var(--dashboard-text)] antialiased overflow-x-hidden font-manrope min-h-screen transition-colors duration-300">
       <DashboardHeader 
         isSidebarOpen={isSidebarOpen} 
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
@@ -61,13 +61,13 @@ export default function HistoryPage() {
         <div className="max-w-7xl mx-auto">
           {/* Header Section */}
           <div className="mb-8 md:mb-12">
-            <span className="uppercase tracking-[0.2em] text-[#1c6d00] font-extrabold text-[10px] md:text-xs">
+            <span className="uppercase tracking-[0.2em] text-primary font-extrabold text-[10px] md:text-xs">
               DermaScan Intelligence
             </span>
-            <h1 className="text-3xl md:text-5xl font-extrabold text-[#191c1d] mt-2 tracking-tight">
-              Riwayat <span className="text-[#1c6d00]">Pemindaian</span>
+            <h1 className="text-3xl md:text-5xl font-extrabold text-[var(--dashboard-text)] mt-2 tracking-tight">
+              Riwayat <span className="text-primary">Pemindaian</span>
             </h1>
-            <p className="mt-4 text-[#6f7b67] max-w-2xl leading-relaxed text-sm md:text-base">
+            <p className="mt-4 text-[var(--dashboard-text-secondary)] max-w-2xl leading-relaxed text-sm md:text-base">
               Kelola dan tinjau hasil analisis dermatologi 3D Anda secara
               mendalam dengan akurasi klinis tinggi.
             </p>
@@ -75,18 +75,18 @@ export default function HistoryPage() {
 
           {/* Search & Actions Bar */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-8 md:mb-10">
-            <div className="flex-grow max-w-md bg-[#f3f4f5] rounded-full px-6 py-3 flex items-center gap-4 focus-within:ring-2 focus-within:ring-[#1c6d00] transition-all">
-              <span className="material-symbols-outlined text-slate-400">
+            <div className="flex-grow max-w-md bg-[var(--dashboard-card-bg)] border border-[var(--dashboard-border)] rounded-full px-6 py-3 flex items-center gap-4 focus-within:ring-2 focus-within:ring-primary transition-all">
+              <span className="material-symbols-outlined text-on-surface-variant">
                 search
               </span>
               <input
-                className="bg-transparent border-none focus:ring-0 w-full text-sm text-[#191c1d] placeholder:text-slate-400"
+                className="bg-transparent border-none focus:ring-0 w-full text-sm text-[var(--dashboard-text)] placeholder:text-on-surface-variant/50"
                 placeholder="Cari ID atau tanggal..."
                 type="text"
               />
             </div>
             <div className="flex gap-3">
-              <button className="flex-1 sm:flex-none bg-[#f3f4f5] text-[#191c1d] px-6 py-3 rounded-full font-bold hover:bg-[#e7e8e9] transition-colors flex items-center justify-center gap-2 text-sm border border-[#becab4]/30">
+              <button className="flex-1 sm:flex-none bg-[var(--dashboard-card-bg)] text-[var(--dashboard-text)] px-6 py-3 rounded-full font-bold hover:bg-[var(--dashboard-border)] transition-colors flex items-center justify-center gap-2 text-sm border border-[var(--dashboard-border)]">
                 <span className="material-symbols-outlined text-lg">
                   filter_list
                 </span>
@@ -106,10 +106,10 @@ export default function HistoryPage() {
             {scanHistory.map((scan) => (
               <div
                 key={scan.id}
-                className="bg-white rounded-[2rem] p-6 md:p-8 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[#edeeef] group transition-all duration-300 hover:-translate-y-1"
+                className="bg-[var(--dashboard-card-bg)] rounded-[2rem] p-6 md:p-8 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[var(--dashboard-border)] group transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="flex justify-between items-start mb-6">
-                  <div className="w-20 h-20 rounded-xl overflow-hidden bg-[#f3f4f5] border-2 border-white shadow-sm">
+                  <div className="w-20 h-20 rounded-xl overflow-hidden bg-[var(--dashboard-bg)] border-2 border-[var(--dashboard-border)] shadow-sm">
                     <img
                       alt={`Analisis ${scan.id}`}
                       className="w-full h-full object-cover"
@@ -124,33 +124,33 @@ export default function HistoryPage() {
                 </div>
                 <div className="space-y-4">
                   <div>
-                    <p className="text-[10px] font-extrabold tracking-widest uppercase text-slate-400 mb-1">
+                    <p className="text-[10px] font-extrabold tracking-widest uppercase text-on-surface-variant mb-1">
                       ID Pemindaian
                     </p>
-                    <p className="text-lg font-bold text-[#191c1d]">
+                    <p className="text-lg font-bold text-[var(--dashboard-text)]">
                       {scan.id}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-extrabold tracking-widest uppercase text-slate-400 mb-1">
+                    <p className="text-[10px] font-extrabold tracking-widest uppercase text-on-surface-variant mb-1">
                       Tanggal Analisis
                     </p>
-                    <p className="text-sm font-medium text-[#6f7b67]">
+                    <p className="text-sm font-medium text-[var(--dashboard-text-secondary)]">
                       {scan.date}
                     </p>
                   </div>
                 </div>
-                <div className="mt-8 pt-6 border-t border-[#edeeef] flex items-center justify-between">
+                <div className="mt-8 pt-6 border-t border-[var(--dashboard-border)] flex items-center justify-between">
                   <Link
                     href="/pages/scan"
-                    className="text-[#1c6d00] font-extrabold text-[10px] md:text-xs uppercase tracking-widest hover:translate-x-1 transition-transform flex items-center gap-2"
+                    className="text-primary font-extrabold text-[10px] md:text-xs uppercase tracking-widest hover:translate-x-1 transition-transform flex items-center gap-2"
                   >
                     {scan.action}
                     <span className="material-symbols-outlined text-sm">
                       arrow_forward
                     </span>
                   </Link>
-                  <span className="material-symbols-outlined text-slate-400 cursor-pointer hover:text-[#1c6d00] transition-colors">
+                  <span className="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">
                     more_horiz
                   </span>
                 </div>
@@ -160,7 +160,7 @@ export default function HistoryPage() {
 
           {/* Load More Button */}
           <div className="mt-12 md:mt-16 flex justify-center">
-            <button className="w-full sm:w-auto px-10 py-4 border-2 border-[#1c6d00] text-[#1c6d00] rounded-full font-extrabold uppercase tracking-widest text-[10px] md:text-xs hover:bg-[#1c6d00] hover:text-white transition-all duration-300">
+            <button className="w-full sm:w-auto px-10 py-4 border-2 border-primary text-primary rounded-full font-extrabold uppercase tracking-widest text-[10px] md:text-xs hover:bg-primary hover:text-on-primary transition-all duration-300">
               Muat Lebih Banyak
             </button>
           </div>

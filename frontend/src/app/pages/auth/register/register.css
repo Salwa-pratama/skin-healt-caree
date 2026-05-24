@@ -3,12 +3,71 @@
 .register-page {
   background-color: #f8faf9;
   color: #1a1c1a;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.dark .register-page {
+  background-color: #090e0b;
+  color: #ecf3ee;
+}
+
+/* Left panel (form side) */
+.register-form-panel {
+  background-color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+.dark .register-form-panel {
+  background-color: #0f1511;
+}
+
+/* Right panel */
+.register-right-panel {
+  background-color: #f0f4f2;
+  border-left: 1px solid rgba(193, 201, 190, 0.3);
+  transition: background-color 0.3s ease;
+}
+.dark .register-right-panel {
+  background-color: #0a1009;
+  border-left: 1px solid rgba(33, 47, 38, 0.6);
+}
+
+/* Inputs */
+.register-input {
+  background-color: #f1f5f2;
+  color: #1a1c1a;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.dark .register-input {
+  background-color: #16201a;
+  color: #ecf3ee;
+}
+.register-input::placeholder {
+  color: #c1c9be;
+}
+.dark .register-input::placeholder {
+  color: #4a5c50;
+}
+
+/* Footer */
+.register-footer {
+  background-color: #f1f5f2;
+  border-top: 1px solid rgba(193, 201, 190, 0.3);
+  transition: background-color 0.3s ease;
+}
+.dark .register-footer {
+  background-color: #090e0b;
+  border-top: 1px solid rgba(33, 47, 38, 0.5);
+}
+
+/* Glass panel */
 .register-glass-panel {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+}
+.dark .register-glass-panel {
+  background: rgba(15, 21, 17, 0.75);
+  border-color: rgba(33, 47, 38, 0.6) !important;
 }
 
 .register-input-focus-accent:focus-within {
@@ -27,10 +86,6 @@
 }
 
 @keyframes register-scan {
-  0% {
-    background-position: 0% 100%;
-  }
-  100% {
-    background-position: 0% -100%;
-  }
+  0% { background-position: 0% 100%; }
+  100% { background-position: 0% -100%; }
 }
