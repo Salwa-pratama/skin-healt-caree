@@ -22,7 +22,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // Middleware
 try {
   console.log("🔄 Setting up middleware...");
-  app.use(cors());
+  app.use(cors({
+    origin: true, // Allow all origins in dev, or specify your frontend URL
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
+  }));
   app.use(express.json({ limit: "10mb" }));
   app.use(express.urlencoded({ extended: true }));
   console.log("✅ Middleware configured");

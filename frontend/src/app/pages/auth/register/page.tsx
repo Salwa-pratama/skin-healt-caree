@@ -61,7 +61,7 @@ export default function RegisterPage() {
 
       <main className="flex-grow flex flex-col lg:flex-row pt-20 lg:pt-0">
         {/* Left: Sign Up Form */}
-        <section className="w-full lg:w-1/2 flex items-center justify-center p-6 md:p-12 lg:p-16 bg-white relative overflow-hidden">
+        <section className="register-form-panel w-full lg:w-1/2 flex items-center justify-center p-6 md:p-12 lg:p-16 relative overflow-hidden">
           <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#84F75E]/5 rounded-full blur-[100px]"></div>
           <div className="w-full max-w-sm relative z-10">
             <div className="mb-8 sm:mb-10">
@@ -70,11 +70,11 @@ export default function RegisterPage() {
                   DermaScan
                 </span>
               </div>
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#1a1c1a] mb-3 tracking-tight leading-tight">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#1a1c1a] dark:text-[#ecf3ee] mb-3 tracking-tight leading-tight">
                 Sistem Deteksi <br />
                 <span className="text-[#386a20]">SkinCare AI.</span>
               </h1>
-              <p className="text-xs sm:text-sm text-[#414941] font-medium">
+              <p className="text-xs sm:text-sm text-[#414941] dark:text-[#9aa89d] font-medium">
                 Bergabunglah dengan kami untuk menganalisis kulit Anda dan
                 dapatkan rekomendasi perawatan jerawat pribadi.
               </p>
@@ -87,7 +87,7 @@ export default function RegisterPage() {
                 </label>
                 <div className="register-input-focus-accent transition-all">
                   <input
-                    className="w-full bg-[#f1f5f2] border-none rounded-xl py-3 px-4 text-sm text-[#1a1c1a] placeholder:text-[#c1c9be] focus:ring-0 focus:outline-none font-body"
+                    className="register-input w-full border-none rounded-xl py-3 px-4 text-sm focus:ring-0 focus:outline-none font-body"
                     placeholder="Johnathan Doe"
                     type="text"
                     value={username}
@@ -103,7 +103,7 @@ export default function RegisterPage() {
                 </label>
                 <div className="register-input-focus-accent transition-all">
                   <input
-                    className="w-full bg-[#f1f5f2] border-none rounded-xl py-3 px-4 text-sm text-[#1a1c1a] placeholder:text-[#c1c9be] focus:ring-0 focus:outline-none font-body"
+                    className="register-input w-full border-none rounded-xl py-3 px-4 text-sm focus:ring-0 focus:outline-none font-body"
                     placeholder="dr.smith@aethermed.com"
                     type="email"
                     value={email}
@@ -120,7 +120,7 @@ export default function RegisterPage() {
                   </label>
                   <div className="register-input-focus-accent transition-all relative">
                     <input
-                      className="w-full bg-[#f1f5f2] border-none rounded-xl py-3 px-4 pr-11 text-sm text-[#1a1c1a] placeholder:text-[#c1c9be] focus:ring-0 focus:outline-none font-body"
+                      className="register-input w-full border-none rounded-xl py-3 px-4 pr-11 text-sm focus:ring-0 focus:outline-none font-body"
                       placeholder="••••••••"
                       type={showPassword ? "text" : "password"}
                       value={password}
@@ -144,7 +144,7 @@ export default function RegisterPage() {
                   </label>
                   <div className="register-input-focus-accent transition-all relative">
                     <input
-                      className="w-full bg-[#f1f5f2] border-none rounded-xl py-3 px-4 pr-11 text-sm text-[#1a1c1a] placeholder:text-[#c1c9be] focus:ring-0 focus:outline-none font-body"
+                      className="register-input w-full border-none rounded-xl py-3 px-4 pr-11 text-sm focus:ring-0 focus:outline-none font-body"
                       placeholder="••••••••"
                       type={showConfirmPassword ? "text" : "password"}
                       value={confirmPassword}
@@ -190,7 +190,7 @@ export default function RegisterPage() {
               </button>
             </form>
 
-            <div className="mt-8 flex items-center justify-center gap-4 text-xs font-medium text-[#414941]">
+            <div className="mt-8 flex items-center justify-center gap-4 text-xs font-medium text-[#414941] dark:text-[#9aa89d]">
               <span>Sudah punya akun?</span>
               <Link
                 className="text-[#386a20] font-bold hover:underline"
@@ -203,7 +203,7 @@ export default function RegisterPage() {
         </section>
 
         {/* Right: AI Acne Detection Analysis Panel */}
-        <section className="hidden lg:flex w-1/2 bg-[#f0f4f2] relative flex-col items-center justify-center overflow-hidden border-l border-[#c1c9be]/30">
+        <section className="register-right-panel hidden lg:flex w-1/2 relative flex-col items-center justify-center overflow-hidden">
           {/* Background Elements */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(132,247,94,0.08)_0%,transparent_70%)]"></div>
           <div
@@ -218,10 +218,10 @@ export default function RegisterPage() {
           <div className="relative z-10 w-full max-w-xl px-6 flex flex-col gap-5">
             <div className="flex items-end justify-between px-1">
               <div>
-                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#414941] mb-1">
+                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#414941] dark:text-[#6b7f72] mb-1">
                   Dasbor Diagnostik
                 </h2>
-                <p className="text-xl font-black text-[#1a1c1a]">
+                <p className="text-xl font-black text-[#1a1c1a] dark:text-[#ecf3ee]">
                   Deteksi AI <span className="text-[#386a20] font-medium">v4.2.0</span>
                 </p>
               </div>
@@ -459,7 +459,7 @@ export default function RegisterPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-[#f1f5f2] py-8 border-t border-[#c1c9be]/30">
+      <footer className="register-footer w-full py-8">
         <div className="flex flex-col lg:flex-row justify-between items-center px-6 md:px-12 max-w-[1920px] mx-auto gap-6">
           <p className="text-[8px] font-black uppercase tracking-[0.15em] text-[#414941] text-center lg:text-left order-2 lg:order-1">
             © 2024 AETHER MED SYSTEMS. DATA DIAGNOSTIK TERENKRIPSI (AES-256).

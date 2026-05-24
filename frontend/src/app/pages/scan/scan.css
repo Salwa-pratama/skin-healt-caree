@@ -19,17 +19,35 @@
 }
 
 .tab-active {
-  color: #1c6d00 !important;
-  background: #ffffff !important;
+  color: var(--dashboard-sidebar-active-text) !important;
+  background: var(--dashboard-card-bg) !important;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1) !important;
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--dashboard-border);
 }
 
 .signature-gradient {
   background: linear-gradient(135deg, #84F75E 0%, #1C6D00 100%);
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+

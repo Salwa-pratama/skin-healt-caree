@@ -1,135 +1,335 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useProfile } from "@/features/auth/api/profile.api";
+import { useTheme } from "@/lib/theme-provider";
 
 export default function ProfilePage() {
   const [is2FAEnabled, setIs2FAEnabled] = useState(true);
+  const { data, isLoading, error } = useProfile();
+  const { theme, toggleTheme } = useTheme();
+
+  console.log("Profile Data:", data);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen" style={{ background: "var(--dashboard-bg)" }}>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-[#1c6d00] dark:border-[#84f75e] border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm font-bold text-[#1c6d00] dark:text-[#84f75e] animate-pulse">Memuat Profil...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen" style={{ background: "var(--dashboard-bg)" }}>
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-sm font-bold" style={{ color: "var(--dashboard-sidebar-active-text)" }}>Error memuat profil</p>
+          <p className="text-xs" style={{ color: "var(--dashboard-text-secondary)" }}>{error?.message}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-[#f8f9fa] text-[#191c1d] antialiased min-h-screen font-sans selection:bg-[#84F75E]/30 selection:text-[#1c6d00]">
-      {/* Top Navigation - Responsive */}
-      <nav className="sticky top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-zinc-200/50 px-4 sm:px-8 py-3 sm:py-4">
+    <div
+      className="antialiased min-h-screen font-sans transition-colors duration-300"
+      style={{
+        background: "var(--dashboard-bg)",
+        color: "var(--dashboard-text)",
+      }}
+    >
+      {/* ── Top Navigation ── */}
+      <nav
+        className="sticky top-0 w-full backdrop-blur-md z-50 border-b px-4 sm:px-8 py-3 sm:py-4 transition-colors duration-300"
+        style={{
+          background: "var(--dashboard-header-scrolled-bg)",
+          borderColor: "var(--dashboard-border)",
+        }}
+      >
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link href="/pages/dashboard" className="flex items-center gap-3">
             <div className="flex flex-col">
-              <h1 className="text-lg sm:text-xl font-extrabold text-zinc-900 tracking-tight">Luminous Lab</h1>
-              <p className="hidden xs:block text-[9px] sm:text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Clinical Portal</p>
+              <h1
+                className="text-lg sm:text-xl font-extrabold tracking-tight"
+                style={{ color: "var(--dashboard-text)" }}
+              >
+                Luminous Lab
+              </h1>
+              <p
+                className="hidden xs:block text-[9px] sm:text-[10px] uppercase tracking-widest font-bold"
+                style={{ color: "var(--dashboard-text-secondary)" }}
+              >
+                Clinical Portal
+              </p>
             </div>
           </Link>
-          <div className="flex items-center gap-1 sm:gap-6">
-            <Link className="p-2 text-zinc-500 hover:text-[#1c6d00] transition-colors" href="/pages/dashboard">
+
+          <div className="flex items-center gap-1 sm:gap-2">
+            <Link
+              className="p-2 transition-colors"
+              style={{ color: "var(--dashboard-text-secondary)" }}
+              href="/pages/dashboard"
+            >
               <span className="material-symbols-outlined text-xl sm:text-2xl">dashboard</span>
             </Link>
-            <Link className="hidden sm:block p-2 text-zinc-500 hover:text-[#1c6d00] transition-colors" href="/pages/scan">
+            <Link
+              className="hidden sm:block p-2 transition-colors"
+              style={{ color: "var(--dashboard-text-secondary)" }}
+              href="/pages/scan"
+            >
               <span className="material-symbols-outlined">biotech</span>
             </Link>
-            <Link className="hidden sm:block p-2 text-zinc-500 hover:text-[#1c6d00] transition-colors" href="/pages/history">
+            <Link
+              className="hidden sm:block p-2 transition-colors"
+              style={{ color: "var(--dashboard-text-secondary)" }}
+              href="/pages/history"
+            >
               <span className="material-symbols-outlined">history</span>
             </Link>
-            <Link className="p-2 text-[#1c6d00] bg-[#84f75e]/30 rounded-full" href="/pages/profil">
-              <span className="material-symbols-outlined text-xl sm:text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>settings</span>
+            <Link
+              className="p-2 rounded-full"
+              style={{
+                color: "var(--dashboard-sidebar-active-text)",
+                background: "var(--dashboard-sidebar-active-bg)",
+              }}
+              href="/pages/profil"
+            >
+              <span
+                className="material-symbols-outlined text-xl sm:text-2xl"
+                style={{ fontVariationSettings: "'FILL' 1" }}
+              >
+                settings
+              </span>
             </Link>
-            <div className="h-6 w-px bg-zinc-200 mx-1 sm:mx-2"></div>
-            <Link className="p-2 text-zinc-500 hover:text-red-500 transition-colors" href="/pages/auth/login">
+
+            {/* ── Theme Toggle ── */}
+            <button
+              id="profil-theme-toggle"
+              onClick={toggleTheme}
+              aria-label="Toggle dark/light mode"
+              className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
+              style={{
+                color: "var(--dashboard-sidebar-active-text)",
+                background: "var(--dashboard-sidebar-active-bg)",
+              }}
+            >
+              <span className="material-symbols-outlined text-xl sm:text-2xl">
+                {theme === "dark" ? "light_mode" : "dark_mode"}
+              </span>
+            </button>
+
+            <div className="h-6 w-px mx-1 sm:mx-2" style={{ background: "var(--dashboard-border)" }} />
+            <Link
+              className="p-2 transition-colors hover:text-red-500"
+              style={{ color: "var(--dashboard-text-secondary)" }}
+              href="/pages/auth/login"
+            >
               <span className="material-symbols-outlined text-xl sm:text-2xl">logout</span>
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* Main Content Canvas */}
-      <main className="min-h-screen pb-40 md:pb-52">
+      {/* ── Main Content ── */}
+      <main className="min-h-screen pb-28">
         <div className="max-w-5xl mx-auto">
-          {/* Header Section */}
+
+          {/* Header */}
           <header className="px-6 sm:px-10 lg:px-0 pt-10 sm:pt-16 pb-10 sm:pb-16 text-center md:text-left">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#191c1d] mb-4">Edit Profil</h2>
-            <p className="text-base sm:text-lg text-[#3f4a39] max-w-2xl mx-auto md:mx-0 leading-relaxed">
+            <h2
+              className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4"
+              style={{ color: "var(--dashboard-text)" }}
+            >
+              Edit Profil
+            </h2>
+            <p
+              className="text-base sm:text-lg max-w-2xl mx-auto md:mx-0 leading-relaxed"
+              style={{ color: "var(--dashboard-text-secondary)" }}
+            >
               Perbarui informasi akun dan preferensi klinis Anda untuk hasil analisis kulit yang lebih akurat.
             </p>
           </header>
 
           <div className="px-5 sm:px-10 lg:px-0 space-y-8 sm:space-y-12">
-            {/* Section 1: Profil Pengguna (Glassmorphism Card) */}
-            <section className="bg-white/70 backdrop-blur-[30px] rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-10 shadow-[0_40px_60px_-5px_rgba(25,28,29,0.04)] border border-white/50">
+
+            {/* ── Section 1: Profil Pengguna ── */}
+            <section
+              className="rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-10 border transition-colors duration-300"
+              style={{
+                background: "var(--glass-bg)",
+                backdropFilter: "blur(30px)",
+                WebkitBackdropFilter: "blur(30px)",
+                borderColor: "var(--dashboard-border)",
+                boxShadow: "0 40px 60px -5px rgba(0,0,0,0.06)",
+              }}
+            >
               <div className="flex flex-col md:flex-row gap-8 sm:gap-12 items-center md:items-start">
+                {/* Avatar */}
                 <div className="relative group flex-shrink-0">
-                  <div className="w-32 h-32 sm:w-48 sm:h-48 rounded-full overflow-hidden border-4 border-[#84f75e] shadow-lg">
+                  <div
+                    className="w-32 h-32 sm:w-48 sm:h-48 rounded-full overflow-hidden border-4 shadow-lg"
+                    style={{ borderColor: "var(--dashboard-sidebar-active-text)" }}
+                  >
                     <img
                       alt="User profile avatar"
                       className="w-full h-full object-cover"
                       src="https://lh3.googleusercontent.com/aida-public/AB6AXuASpIs7U2aIxSyaIMtvONfbkT2-D3eO2hifZYSbtM12iOArzKj_0fZkjawcx4xqygnEeFz45ouT79ASyf1EMzsqCVYFO25pAyDShRSVHIrk4V6cDN31pArjVrP_8A3I0NVNycgFHAtT4MEy3LAteBJxfBM4CkygCF2dHgQn1DftN63JJW7C4bTAmMW1znnb-dCfBmnzm7912q5W4v2pPNz1HHlcM4jRo2kUss9TMLFLiZ2CBrlO3Kx5F9crVR83GeC7W6X9SQxUgQMC"
                     />
                   </div>
-                  <button className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-[#1c6d00] text-white p-2 sm:p-3 rounded-full shadow-lg hover:scale-105 active:scale-90 transition-transform">
+                  <button
+                    className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 p-2 sm:p-3 rounded-full shadow-lg hover:scale-105 active:scale-90 transition-transform"
+                    style={{
+                      background: "var(--dashboard-sidebar-active-text)",
+                      color: theme === "dark" ? "#042100" : "#ffffff",
+                    }}
+                  >
                     <span className="material-symbols-outlined text-lg sm:text-base">photo_camera</span>
                   </button>
                 </div>
+
+                {/* Form Fields */}
                 <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
                   <div className="space-y-1 sm:space-y-2">
-                    <label className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-[#3f4a39] px-1">Nama Lengkap</label>
+                    <label
+                      className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest px-1"
+                      style={{ color: "var(--dashboard-text-secondary)" }}
+                    >
+                      Nama Lengkap
+                    </label>
                     <input
-                      className="w-full bg-[#f3f4f5] border-none rounded-xl sm:rounded-2xl px-5 py-3 sm:py-4 focus:ring-2 focus:ring-[#1c6d00] transition-all outline-none text-[#191c1d] font-medium text-sm sm:text-base"
+                      className="w-full border-none rounded-xl sm:rounded-2xl px-5 py-3 sm:py-4 focus:ring-2 transition-all outline-none font-medium text-sm sm:text-base"
+                      style={{
+                        background: "var(--dashboard-sidebar-active-bg)",
+                        color: "var(--dashboard-text)",
+                        focusRingColor: "var(--dashboard-sidebar-active-text)",
+                      }}
                       type="text"
-                      defaultValue="Dr. Sarah Luminous"
+                      defaultValue={data?.name || "data kosong"}
                     />
                   </div>
                   <div className="space-y-1 sm:space-y-2">
-                    <label className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-[#3f4a39] px-1">Alamat Email</label>
+                    <label
+                      className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest px-1"
+                      style={{ color: "var(--dashboard-text-secondary)" }}
+                    >
+                      Alamat Email
+                    </label>
                     <input
-                      className="w-full bg-[#edeeef] border-none rounded-xl sm:rounded-2xl px-5 py-3 sm:py-4 text-[#3f4a39] font-medium cursor-not-allowed opacity-70 text-sm sm:text-base"
+                      className="w-full border-none rounded-xl sm:rounded-2xl px-5 py-3 sm:py-4 font-medium cursor-not-allowed opacity-60 text-sm sm:text-base"
+                      style={{
+                        background: "var(--dashboard-border)",
+                        color: "var(--dashboard-text-secondary)",
+                      }}
                       readOnly
                       type="email"
-                      defaultValue="sarah.luminous@dermascan.com"
+                      value={data?.email || "data kosong"}
                     />
                   </div>
                   <div className="space-y-1 sm:space-y-2 sm:col-span-2">
-                    <label className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-[#3f4a39] px-1">Nomor Telepon</label>
+                    <label
+                      className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest px-1"
+                      style={{ color: "var(--dashboard-text-secondary)" }}
+                    >
+                      Role
+                    </label>
                     <input
-                      className="w-full bg-[#f3f4f5] border-none rounded-xl sm:rounded-2xl px-5 py-3 sm:py-4 focus:ring-2 focus:ring-[#1c6d00] transition-all outline-none text-[#191c1d] font-medium text-sm sm:text-base"
-                      type="tel"
-                      defaultValue="+62 812 3456 7890"
+                      className="w-full border-none rounded-xl sm:rounded-2xl px-5 py-3 sm:py-4 focus:ring-2 transition-all outline-none font-medium text-sm sm:text-base"
+                      style={{
+                        background: "var(--dashboard-sidebar-active-bg)",
+                        color: "var(--dashboard-text)",
+                      }}
+                      type="text"
+                      defaultValue={data?.role || "kosong"}
                     />
                   </div>
                 </div>
               </div>
             </section>
 
-            {/* Section 2: Informasi Klinis */}
-            <section className="bg-[#f3f4f5] rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-10 space-y-8 sm:space-y-10">
+            {/* ── Section 2: Informasi Klinis ── */}
+            <section
+              className="rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-10 space-y-8 sm:space-y-10 transition-colors duration-300"
+              style={{ background: "var(--dashboard-sidebar-active-bg)" }}
+            >
               <div className="space-y-6">
                 <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-[#1c6d00]">science</span>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#191c1d]">Informasi Klinis</h3>
+                  <span
+                    className="material-symbols-outlined"
+                    style={{ color: "var(--dashboard-sidebar-active-text)" }}
+                  >
+                    science
+                  </span>
+                  <h3
+                    className="text-xl sm:text-2xl font-bold"
+                    style={{ color: "var(--dashboard-text)" }}
+                  >
+                    Informasi Klinis
+                  </h3>
                 </div>
+
+                {/* Tipe Kulit */}
                 <div className="space-y-4">
-                  <label className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-[#3f4a39] px-1">Tipe Kulit</label>
+                  <label
+                    className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest px-1"
+                    style={{ color: "var(--dashboard-text-secondary)" }}
+                  >
+                    Tipe Kulit
+                  </label>
                   <div className="flex flex-wrap gap-2 sm:gap-3">
                     {["Kering", "Berminyak", "Kombinasi", "Normal"].map((type) => (
                       <button
                         key={type}
-                        className={`flex-1 min-w-[100px] sm:flex-none px-4 sm:px-8 py-2.5 sm:py-3 rounded-full border-2 transition-all hover:scale-95 font-bold text-xs sm:text-sm ${
+                        className="flex-1 min-w-[100px] sm:flex-none px-4 sm:px-8 py-2.5 sm:py-3 rounded-full border-2 transition-all hover:scale-95 font-bold text-xs sm:text-sm"
+                        style={
                           type === "Kering"
-                            ? "border-[#84f75e] bg-[#84f75e] text-[#1d7000]"
-                            : "border-transparent bg-white text-[#3f4a39] hover:border-[#84f75e]"
-                        }`}
+                            ? {
+                                borderColor: "var(--dashboard-sidebar-active-text)",
+                                background: "var(--dashboard-sidebar-active-text)",
+                                color: theme === "dark" ? "#042100" : "#ffffff",
+                              }
+                            : {
+                                borderColor: "transparent",
+                                background: "var(--dashboard-card-bg)",
+                                color: "var(--dashboard-text-secondary)",
+                              }
+                        }
                       >
                         {type}
                       </button>
                     ))}
                   </div>
                 </div>
+
+                {/* Masalah Utama */}
                 <div className="space-y-4">
-                  <label className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-[#3f4a39] px-1">Masalah Utama</label>
+                  <label
+                    className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest px-1"
+                    style={{ color: "var(--dashboard-text-secondary)" }}
+                  >
+                    Masalah Utama
+                  </label>
                   <div className="flex flex-wrap gap-2 sm:gap-3">
                     {["Jerawat", "Penuaan", "Kusam", "Tekstur"].map((problem) => (
                       <button
                         key={problem}
-                        className={`flex-1 min-w-[100px] sm:flex-none px-4 sm:px-8 py-2.5 sm:py-3 rounded-full border-2 transition-all hover:scale-95 font-bold text-xs sm:text-sm ${
+                        className="flex-1 min-w-[100px] sm:flex-none px-4 sm:px-8 py-2.5 sm:py-3 rounded-full border-2 transition-all hover:scale-95 font-bold text-xs sm:text-sm"
+                        style={
                           ["Jerawat", "Penuaan"].includes(problem)
-                            ? "border-[#84f75e] bg-[#84f75e] text-[#1d7000]"
-                            : "border-transparent bg-white text-[#3f4a39] hover:border-[#84f75e]"
-                        }`}
+                            ? {
+                                borderColor: "var(--dashboard-sidebar-active-text)",
+                                background: "var(--dashboard-sidebar-active-text)",
+                                color: theme === "dark" ? "#042100" : "#ffffff",
+                              }
+                            : {
+                                borderColor: "transparent",
+                                background: "var(--dashboard-card-bg)",
+                                color: "var(--dashboard-text-secondary)",
+                              }
+                        }
                       >
                         {problem}
                       </button>
@@ -139,41 +339,109 @@ export default function ProfilePage() {
               </div>
             </section>
 
-            {/* Section 3: Keamanan */}
-            <section className="bg-white/70 backdrop-blur-[30px] rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-10 shadow-[0_40px_60px_-5px_rgba(25,28,29,0.04)] border border-white/50">
+            {/* ── Section 3: Keamanan ── */}
+            <section
+              className="rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-10 border transition-colors duration-300"
+              style={{
+                background: "var(--glass-bg)",
+                backdropFilter: "blur(30px)",
+                WebkitBackdropFilter: "blur(30px)",
+                borderColor: "var(--dashboard-border)",
+                boxShadow: "0 40px 60px -5px rgba(0,0,0,0.06)",
+              }}
+            >
               <div className="flex items-center gap-3 mb-6 sm:mb-8">
-                <span className="material-symbols-outlined text-[#1c6d00]">shield</span>
-                <h3 className="text-xl sm:text-2xl font-bold text-[#191c1d]">Keamanan</h3>
+                <span
+                  className="material-symbols-outlined"
+                  style={{ color: "var(--dashboard-sidebar-active-text)" }}
+                >
+                  shield
+                </span>
+                <h3
+                  className="text-xl sm:text-2xl font-bold"
+                  style={{ color: "var(--dashboard-text)" }}
+                >
+                  Keamanan
+                </h3>
               </div>
               <div className="space-y-3 sm:space-y-4">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-6 bg-[#edeeef] rounded-xl sm:rounded-2xl group hover:bg-[#e7e8e9] transition-colors gap-4">
+                {/* Ubah Kata Sandi */}
+                <div
+                  className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-6 rounded-xl sm:rounded-2xl gap-4 transition-colors duration-200 cursor-pointer"
+                  style={{ background: "var(--dashboard-sidebar-active-bg)" }}
+                >
                   <div className="flex items-center gap-4">
-                    <span className="material-symbols-outlined text-[#3f4a39]">lock_reset</span>
+                    <span
+                      className="material-symbols-outlined"
+                      style={{ color: "var(--dashboard-text-secondary)" }}
+                    >
+                      lock_reset
+                    </span>
                     <div>
-                      <p className="font-bold text-[#191c1d] text-sm sm:text-base">Ubah Kata Sandi</p>
-                      <p className="text-[11px] sm:text-sm text-[#3f4a39]">Terakhir diperbarui 3 bulan yang lalu</p>
+                      <p
+                        className="font-bold text-sm sm:text-base"
+                        style={{ color: "var(--dashboard-text)" }}
+                      >
+                        Ubah Kata Sandi
+                      </p>
+                      <p
+                        className="text-[11px] sm:text-sm"
+                        style={{ color: "var(--dashboard-text-secondary)" }}
+                      >
+                        Terakhir diperbarui 3 bulan yang lalu
+                      </p>
                     </div>
                   </div>
-                  <button className="w-full sm:w-auto text-[#1c6d00] font-bold hover:underline transition-all text-sm sm:text-base text-left sm:text-right">Ubah</button>
+                  <button
+                    className="w-full sm:w-auto font-bold hover:underline transition-all text-sm sm:text-base text-left sm:text-right"
+                    style={{ color: "var(--dashboard-sidebar-active-text)" }}
+                  >
+                    Ubah
+                  </button>
                 </div>
-                <div className="flex items-center justify-between p-5 sm:p-6 bg-[#edeeef] rounded-xl sm:rounded-2xl gap-4">
+
+                {/* 2FA Toggle */}
+                <div
+                  className="flex items-center justify-between p-5 sm:p-6 rounded-xl sm:rounded-2xl gap-4 transition-colors duration-200"
+                  style={{ background: "var(--dashboard-sidebar-active-bg)" }}
+                >
                   <div className="flex items-center gap-4">
-                    <span className="material-symbols-outlined text-[#3f4a39]">vibration</span>
+                    <span
+                      className="material-symbols-outlined"
+                      style={{ color: "var(--dashboard-text-secondary)" }}
+                    >
+                      vibration
+                    </span>
                     <div>
-                      <p className="font-bold text-[#191c1d] text-sm sm:text-base">2-Step Verification</p>
-                      <p className="text-[11px] sm:text-sm text-[#3f4a39]">Amankan akun Anda via SMS</p>
+                      <p
+                        className="font-bold text-sm sm:text-base"
+                        style={{ color: "var(--dashboard-text)" }}
+                      >
+                        2-Step Verification
+                      </p>
+                      <p
+                        className="text-[11px] sm:text-sm"
+                        style={{ color: "var(--dashboard-text-secondary)" }}
+                      >
+                        Amankan akun Anda via SMS
+                      </p>
                     </div>
                   </div>
                   <div
-                    className={`relative inline-flex items-center cursor-pointer w-12 sm:w-14 h-6 sm:h-8 rounded-full p-1 transition-colors flex-shrink-0 ${
-                      is2FAEnabled ? "bg-[#1c6d00]" : "bg-[#cbd5e1]"
-                    }`}
+                    className="relative inline-flex items-center cursor-pointer w-12 sm:w-14 h-6 sm:h-8 rounded-full p-1 transition-colors flex-shrink-0"
+                    style={{
+                      background: is2FAEnabled
+                        ? "var(--dashboard-sidebar-active-text)"
+                        : "var(--dashboard-border)",
+                    }}
                     onClick={() => setIs2FAEnabled(!is2FAEnabled)}
                   >
                     <div
-                      className={`bg-white w-4 sm:w-6 h-4 sm:h-6 rounded-full shadow-sm transition-transform ${
-                        is2FAEnabled ? "translate-x-6" : "translate-x-0"
-                      }`}
+                      className="w-4 sm:w-6 h-4 sm:h-6 rounded-full shadow-sm transition-transform"
+                      style={{
+                        background: "var(--dashboard-card-bg)",
+                        transform: is2FAEnabled ? "translateX(1.5rem)" : "translateX(0)",
+                      }}
                     />
                   </div>
                 </div>
@@ -182,27 +450,37 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Sticky Footer */}
-        <footer className="fixed bottom-0 right-0 left-0 bg-white/90 backdrop-blur-3xl px-4 sm:px-16 py-4 sm:py-6 border-t border-zinc-200/50 z-30">
-          <div className="max-w-5xl mx-auto flex flex-col-reverse sm:flex-row justify-end items-center gap-2 sm:gap-4">
-            <button className="w-full sm:w-auto px-6 sm:px-10 py-3 sm:py-4 rounded-full text-[#3f4a39] font-bold hover:bg-[#edeeef] transition-colors active:scale-95 duration-200 text-sm sm:text-base">
+        {/* ── Sticky Footer — Minimal Save/Cancel ── */}
+        <footer
+          className="fixed bottom-0 right-0 left-0 backdrop-blur-3xl border-t z-30 transition-colors duration-300"
+          style={{
+            background: "var(--dashboard-header-scrolled-bg)",
+            borderColor: "var(--dashboard-border)",
+          }}
+        >
+          <div className="max-w-5xl mx-auto px-4 sm:px-10 py-3 flex justify-end items-center gap-2">
+            {/* Batal — ghost/text button */}
+            <button
+              id="profil-batal-btn"
+              className="px-5 py-2 rounded-full text-xs font-semibold transition-all duration-200 hover:opacity-80 active:scale-95"
+              style={{ color: "var(--dashboard-text-secondary)" }}
+            >
               Batal
             </button>
-            <button className="w-full sm:w-auto signature-gradient px-8 sm:px-12 py-3 sm:py-4 rounded-full text-white font-black text-base sm:text-lg shadow-lg hover:scale-[1.02] active:scale-95 transition-all duration-200">
-              Simpan Perubahan
+            {/* Simpan Perubahan — compact accent pill */}
+            <button
+              id="profil-simpan-btn"
+              className="px-6 py-2 rounded-full text-xs font-black tracking-wide shadow-md hover:scale-[1.03] active:scale-95 transition-all duration-200"
+              style={{
+                background: "linear-gradient(135deg, #84F75E 0%, #1C6D00 100%)",
+                color: "#ffffff",
+              }}
+            >
+              Simpan
             </button>
           </div>
         </footer>
       </main>
-
-      <style jsx>{`
-        .signature-gradient {
-          background: linear-gradient(135deg, #84F75E 0%, #1C6D00 100%);
-        }
-        @media (max-width: 640px) {
-          .material-symbols-outlined { font-size: 20px; }
-        }
-      `}</style>
     </div>
   );
 }
