@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google"; // Using Manrope for the landing page
 import { ReactQueryProvider } from "@/lib/react-query-provider";
+import { ThemeProvider } from "@/lib/theme-provider";
 import "./globals.css";
 import Navbar from "./components/Header";
 
@@ -23,20 +24,38 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme') || (document.cookie.match('(^|; )theme=([^;]*)') || [])[2];
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })()
+            `,
+          }}
+        />
       </head>
       <body
         className={`${manrope.variable} antialiased`}
       >
-        <ReactQueryProvider>
-          <Navbar />
-          {children}
-        </ReactQueryProvider>
+        <ThemeProvider>
+          <ReactQueryProvider>
+            <Navbar />
+            {children}
+          </ReactQueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

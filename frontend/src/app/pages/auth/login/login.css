@@ -3,7 +3,243 @@
 .login-page {
   background-color: #f8faf9;
   color: #1a1c1a;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  /* Semantic variables for login page elements */
+  --login-text-primary: #1a1c1a;
+  --login-text-secondary: #386a20;
+  --login-text-muted: #414941;
+  --login-text-muted-light: #595c5d;
+  --login-border-muted: rgba(193, 201, 190, 0.3);
+  --login-glass-bg: rgba(255, 255, 255, 0.75);
+  --login-glass-border: rgba(255, 255, 255, 0.6);
+  --login-progress-bg: #f1f5f2;
 }
+
+/* ─── Dark mode overrides ─── */
+.dark .login-page {
+  background-color: #090e0b;
+  color: #ecf3ee;
+
+  --login-text-primary: #ecf3ee;
+  --login-text-secondary: #84f75e;
+  --login-text-muted: #9aa89d;
+  --login-text-muted-light: #6b7f72;
+  --login-border-muted: rgba(33, 47, 38, 0.5);
+  --login-glass-bg: rgba(15, 21, 17, 0.75);
+  --login-glass-border: rgba(33, 47, 38, 0.6);
+  --login-progress-bg: #16201a;
+}
+
+/* Helper utility classes mapped to CSS variables for dynamic transitions */
+.login-text-primary {
+  color: var(--login-text-primary) !important;
+}
+.login-text-secondary {
+  color: var(--login-text-secondary) !important;
+}
+.login-text-muted {
+  color: var(--login-text-muted) !important;
+}
+.login-text-muted-light {
+  color: var(--login-text-muted-light) !important;
+}
+.login-progress-bar {
+  background-color: var(--login-progress-bg) !important;
+  transition: background-color 0.3s ease;
+}
+.login-divider-line {
+  background-color: var(--login-border-muted) !important;
+  transition: background-color 0.3s ease;
+}
+
+/* Left panel (form side) */
+.login-form-panel {
+  background-color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+.dark .login-form-panel {
+  background-color: #0f1511;
+}
+
+/* Right panel */
+.login-right-panel {
+  background-color: #f0f4f2;
+  border-left: 1px solid rgba(193, 201, 190, 0.3);
+  transition: background-color 0.3s ease;
+}
+.dark .login-right-panel {
+  background-color: #0a1009;
+  border-left: 1px solid rgba(33, 47, 38, 0.6);
+}
+
+/* Inputs */
+.login-input {
+  background-color: #f1f5f2;
+  color: #1a1c1a;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.dark .login-input {
+  background-color: #16201a;
+  color: #ecf3ee;
+}
+.login-input::placeholder {
+  color: #c1c9be;
+}
+.dark .login-input::placeholder {
+  color: #4a5c50;
+}
+
+/* Divider */
+.login-divider-bg {
+  background-color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+.dark .login-divider-bg {
+  background-color: #0f1511;
+}
+
+/* Footer */
+.login-footer {
+  background-color: #f1f5f2;
+  border-top: 1px solid rgba(193, 201, 190, 0.3);
+  transition: background-color 0.3s ease;
+}
+.dark .login-footer {
+  background-color: #090e0b;
+  border-top: 1px solid rgba(33, 47, 38, 0.5);
+}
+
+/* Social login buttons */
+.login-social-btn {
+  border: 1px solid rgba(193, 201, 190, 0.5);
+  color: #414941;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.login-social-btn:hover {
+  background-color: #f1f5f2;
+}
+.dark .login-social-btn {
+  border: 1px solid rgba(33, 47, 38, 0.8);
+  color: #9aa89d;
+}
+.dark .login-social-btn:hover {
+  background-color: #16201a;
+}
+
+.login-input-focus-accent:focus-within {
+  border-left: 3px solid #84f75e;
+}
+
+.auth-animate-in {
+  animation: auth-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes auth-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.dark .login-glass-panel {
+  background: rgba(15, 21, 17, 0.75);
+  border-color: rgba(33, 47, 38, 0.6) !important;
+}
+
+.login-scan-overlay {
+  background: linear-gradient(
+    0deg,
+    transparent 0%,
+    rgba(132, 247, 94, 0.15) 50%,
+    transparent 100%
+  );
+  background-size: 100% 200%;
+  animation: login-scan 4s linear infinite;
+}
+
+@keyframes login-scan {
+  0% { background-position: 0% 100%; }
+  100% { background-position: 0% -100%; }
+}
+
+.login-status-pulse {
+  animation: login-status-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes login-status-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(1.1); }
+}
+
+/* Modal Styles */
+.modal-backdrop {
+  background: rgba(26, 28, 26, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-content-glass {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+}
+.dark .modal-content-glass {
+  background: rgba(15, 21, 17, 0.9);
+  border: 1px solid rgba(33, 47, 38, 0.5);
+}
+
+.animate-scale-in {
+  animation: scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.notification-pill {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.08);
+}
+.dark .notification-pill {
+  background: rgba(15, 21, 17, 0.9);
+  border: 1px solid rgba(33, 47, 38, 0.6);
+}
+
+.success-check-draw {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: check-draw 0.6s 0.3s ease-in-out forwards;
+}
+
+@keyframes check-draw {
+  to { stroke-dashoffset: 0; }
+}
+
 
 .login-input-focus-accent:focus-within {
   border-left: 3px solid #84f75e;

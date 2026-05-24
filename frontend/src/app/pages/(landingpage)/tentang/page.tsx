@@ -37,7 +37,7 @@ export default function TentangPage() {
                                 />
                             </div>
                             {/* Overlapping Glass Card */}
-                            <div className="absolute -bottom-6 md:-bottom-8 -left-4 md:-left-8 bg-white/90 backdrop-blur-2xl p-4 md:p-6 rounded-2xl shadow-xl shadow-black/10 max-w-[220px] md:max-w-[280px] border border-white z-20 hover:-translate-y-2 transition-transform duration-300">
+                            <div className="absolute -bottom-6 md:-bottom-8 -left-4 md:-left-8 glass-panel ambient-shadow p-4 md:p-6 rounded-2xl max-w-[220px] md:max-w-[280px] border border-white/40 z-20 hover:-translate-y-2 transition-transform duration-300">
                                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
                                     <span className="material-symbols-outlined text-primary text-xl md:text-2xl">clinical_notes</span>
                                 </div>
@@ -59,25 +59,25 @@ export default function TentangPage() {
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                             {/* Card 1 */}
-                            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm hover:shadow-xl border border-outline-variant/30 group hover:-translate-y-2 transition-all duration-300">
-                                <div className="w-12 h-12 rounded-2xl bg-surface-variant group-hover:bg-primary flex items-center justify-center mb-6 transition-colors duration-300">
-                                    <span className="material-symbols-outlined text-primary group-hover:text-white text-2xl transition-colors duration-300">verified_user</span>
+                            <div className="bg-surface-container-lowest p-6 md:p-8 rounded-3xl shadow-sm hover:shadow-xl border border-outline-variant/30 group hover:-translate-y-2 transition-all duration-300">
+                                <div className="w-12 h-12 rounded-2xl bg-primary-container group-hover:bg-primary flex items-center justify-center mb-6 transition-colors duration-300">
+                                    <span className="material-symbols-outlined text-on-primary-container group-hover:text-white text-2xl transition-colors duration-300">verified_user</span>
                                 </div>
                                 <h4 className="text-xl md:text-2xl font-extrabold mb-3 text-on-surface">ISO 13485</h4>
                                 <p className="text-sm md:text-base text-on-surface-variant leading-relaxed font-medium">Sertifikasi internasional untuk sistem manajemen mutu perangkat medis yang menjamin keamanan produk unggulan.</p>
                             </div>
                             {/* Card 2 */}
-                            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm hover:shadow-xl border border-outline-variant/30 group hover:-translate-y-2 transition-all duration-300">
-                                <div className="w-12 h-12 rounded-2xl bg-surface-variant group-hover:bg-primary flex items-center justify-center mb-6 transition-colors duration-300">
-                                    <span className="material-symbols-outlined text-primary group-hover:text-white text-2xl transition-colors duration-300">lock</span>
+                            <div className="bg-surface-container-lowest p-6 md:p-8 rounded-3xl shadow-sm hover:shadow-xl border border-outline-variant/30 group hover:-translate-y-2 transition-all duration-300">
+                                <div className="w-12 h-12 rounded-2xl bg-primary-container group-hover:bg-primary flex items-center justify-center mb-6 transition-colors duration-300">
+                                    <span className="material-symbols-outlined text-on-primary-container group-hover:text-white text-2xl transition-colors duration-300">lock</span>
                                 </div>
                                 <h4 className="text-xl md:text-2xl font-extrabold mb-3 text-on-surface">HIPAA Compliant</h4>
                                 <p className="text-sm md:text-base text-on-surface-variant leading-relaxed font-medium">Data kesehatan Anda dilindungi dengan enkripsi tingkat militer sesuai dengan standar kerahasiaan medis global.</p>
                             </div>
                             {/* Card 3 */}
-                            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm hover:shadow-xl border border-outline-variant/30 group hover:-translate-y-2 transition-all duration-300">
-                                <div className="w-12 h-12 rounded-2xl bg-surface-variant group-hover:bg-primary flex items-center justify-center mb-6 transition-colors duration-300">
-                                    <span className="material-symbols-outlined text-primary group-hover:text-white text-2xl transition-colors duration-300">science</span>
+                            <div className="bg-surface-container-lowest p-6 md:p-8 rounded-3xl shadow-sm hover:shadow-xl border border-outline-variant/30 group hover:-translate-y-2 transition-all duration-300">
+                                <div className="w-12 h-12 rounded-2xl bg-primary-container group-hover:bg-primary flex items-center justify-center mb-6 transition-colors duration-300">
+                                    <span className="material-symbols-outlined text-on-primary-container group-hover:text-white text-2xl transition-colors duration-300">science</span>
                                 </div>
                                 <h4 className="text-xl md:text-2xl font-extrabold mb-3 text-on-surface">Uji Klinis</h4>
                                 <p className="text-sm md:text-base text-on-surface-variant leading-relaxed font-medium">Telah melewati lebih dari 50.000 dataset klinis dari berbagai etnis untuk memastikan inklusivitas diagnostik.</p>

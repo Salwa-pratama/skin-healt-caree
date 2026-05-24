@@ -1,5 +1,6 @@
 import express, { type Router } from "express";
 import { AuthController } from "./login_controller";
+import { authMiddleware } from "../../../middleware/auth.middleware";
 
 const authController = new AuthController();
 export const authRouter: Router = express.Router();
@@ -168,4 +169,4 @@ authRouter.post("/login", authController.login);
  *                 data:
  *                   type: "null"
  */
-authRouter.post("/logout", authController.logout);
+authRouter.post("/logout", authMiddleware, authController.logout);

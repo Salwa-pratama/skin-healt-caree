@@ -30,12 +30,13 @@ export default function SainsPage() {
                                 </div>
                             </div>
                         </div>
+                        {/* Right: Image + Floating Card */}
                         <div className="relative w-full max-w-[260px] md:max-w-[320px] lg:max-w-sm mx-auto mt-10 lg:mt-0">
                             <div className="aspect-square rounded-[2rem] overflow-hidden shadow-2xl">
                                 <img alt="Clinical Microscopy" className="w-full h-full object-cover scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkqDQ-GHtmHwua9rpQlOx8bGJP8boT45KEgONhh_g2GMMNX7eGs2e2BkIFwbHBUgUoRjYqPdE4xrVhaoU1qTypP4Rs58IbglLMDnulElf44BN1E1EST3yL4JjC4OHhj5GLbUlM348GUccLjqmgVd6NYKlPeEiJN6I7lLqYc0SZdtWkf97ifkWxCR1KFHhUV1I1xNSdfcY8rJ3BfPtGdbYN61gxxLQcgiyVicXdLgvMMo0_p73EuihR-KaJtQS1KAsdwlq5vp2GWr45" />
                             </div>
                             {/* Floating Glass Panel */}
-                            <div className="absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 bg-white/70 backdrop-blur-3xl p-4 md:p-5 rounded-2xl shadow-[0_40px_60px_-5px_rgba(25,28,29,0.04)] max-w-[180px] md:max-w-[220px] border border-white/20">
+                            <div className="absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 glass-panel ambient-shadow p-4 md:p-5 rounded-2xl max-w-[180px] md:max-w-[220px] border border-white/40">
                                 <span className="material-symbols-outlined text-primary mb-2 text-xl md:text-2xl">biotech</span>
                                 <h4 className="font-bold text-xs md:text-sm mb-1">Kedalaman Luminous</h4>
                                 <p className="text-[10px] leading-tight text-on-surface-variant">Pemindaian multi-layer yang menembus dermis terdalam.</p>
@@ -103,7 +104,7 @@ export default function SainsPage() {
                 </section>
 
                 {/* Core Science Quote */}
-                <section className="py-16 md:py-24 px-6 md:px-12 bg-white">
+                <section className="py-16 md:py-24 px-6 md:px-12 bg-surface">
                     <div className="max-w-3xl mx-auto text-center">
                         <div className="w-8 md:w-12 h-1 signature-gradient mx-auto mb-6 md:mb-8"></div>
                         <h2 className="text-xl md:text-3xl lg:text-4xl font-extrabold italic tracking-tight text-on-background leading-tight">
@@ -148,7 +149,7 @@ export default function SainsPage() {
             </main>
 
             {/* Footer Implementation */}
-            <footer className="bg-zinc-50 py-10 md:py-14 px-6 md:px-12 border-t border-zinc-200">
+            <footer className="bg-surface-container-low py-10 md:py-14 px-6 md:px-12 border-t border-outline-variant/20">
                 <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 items-center text-center md:text-left">
                     <div className="text-center md:text-left">
                         <div className="text-lg font-bold text-on-surface mb-4 font-headline tracking-tight">DermaScan</div>
@@ -157,10 +158,10 @@ export default function SainsPage() {
                         </p>
                     </div>
                     <div className="flex flex-wrap justify-center md:justify-end gap-5 md:gap-6">
-                        <a className="text-zinc-500 hover:text-green-500 transition-colors text-[10px] md:text-xs font-headline" href="#">Privasi</a>
-                        <a className="text-zinc-500 hover:text-green-500 transition-colors text-[10px] md:text-xs font-headline" href="#">Syarat & Ketentuan</a>
-                        <a className="text-zinc-500 hover:text-green-500 transition-colors text-[10px] md:text-xs font-headline" href="#">Metodologi</a>
-                        <a className="text-zinc-500 hover:text-green-500 transition-colors text-[10px] md:text-xs font-headline" href="#">Bantuan</a>
+                        <a className="text-on-surface-variant hover:text-primary transition-colors text-[10px] md:text-xs font-headline" href="#">Privasi</a>
+                        <a className="text-on-surface-variant hover:text-primary transition-colors text-[10px] md:text-xs font-headline" href="#">Syarat &amp; Ketentuan</a>
+                        <a className="text-on-surface-variant hover:text-primary transition-colors text-[10px] md:text-xs font-headline" href="#">Metodologi</a>
+                        <a className="text-on-surface-variant hover:text-primary transition-colors text-[10px] md:text-xs font-headline" href="#">Bantuan</a>
                     </div>
                 </div>
             </footer>

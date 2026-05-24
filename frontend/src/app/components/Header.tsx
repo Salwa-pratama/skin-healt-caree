@@ -3,10 +3,17 @@
 import React, { Suspense } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTheme } from '@/lib/theme-provider';
 
 function NavbarContent() {
     const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    const { theme, toggleTheme } = useTheme();
+    const [mounted, setMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const isSains = pathname === '/pages/sains' || pathname.startsWith('/pages/sains/');
     const isTentang = pathname === '/pages/tentang' || pathname.startsWith('/pages/tentang/');
@@ -17,7 +24,6 @@ function NavbarContent() {
                       pathname.startsWith('/pages/profil') || 
                       pathname.startsWith('/pages/setting') || 
                       pathname.startsWith('/pages/notifikasi');
-
     if (isAppPage) return null;
 
     const navLinks = [
@@ -26,7 +32,7 @@ function NavbarContent() {
         { name: 'Tentang', path: '/pages/tentang', active: isTentang },
     ];
     return (
-        <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-2xl border-b border-outline-variant/30 transition-all duration-300">
+        <nav className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-2xl border-b border-outline-variant/30 transition-all duration-300">
             <div className="flex justify-between items-center px-6 md:px-8 py-2.5 max-w-6xl mx-auto">
                 <div className="flex items-center gap-2 cursor-pointer">
                     <Link href="/" className="flex items-center gap-2 group">
@@ -61,12 +67,24 @@ function NavbarContent() {
                     ))}
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
+                    {/* Dark/Light Mode Toggle */}
+                    <button
+                        onClick={toggleTheme}
+                        className="p-2 rounded-xl bg-surface-variant text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-all duration-300 flex items-center justify-center shadow-sm cursor-pointer"
+                        aria-label="Toggle theme"
+                        title={!mounted ? 'Toggle theme' : theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                    >
+                        <span className="material-symbols-outlined text-[19px] md:text-xl leading-none">
+                            {!mounted ? 'dark_mode' : theme === 'dark' ? 'light_mode' : 'dark_mode'}
+                        </span>
+                    </button>
+
                     {/* Desktop Auth Pill */}
-                    <div className="hidden md:flex items-center gap-2 bg-[#eff1f2] p-1 rounded-full relative">
+                    <div className="hidden md:flex items-center gap-2 bg-surface-container-high border border-outline-variant/30 p-1 rounded-full relative">
                         {/* Sliding Pill Background */}
                         <div
-                            className="absolute h-[calc(100%-8px)] top-[4px] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] bg-[#84F75E] rounded-full shadow-sm"
+                            className="absolute h-[calc(100%-8px)] top-[4px] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] bg-primary rounded-full shadow-sm"
                             style={{
                                 width: "70px",
                                 transform: pathname === "/pages/auth/login" ? "translateX(0px)" : "translateX(74px)",
@@ -75,14 +93,14 @@ function NavbarContent() {
 
                         <Link
                             href="/pages/auth/login"
-                            className={`text-[11px] font-bold tracking-tight w-[70px] py-1.5 rounded-full flex items-center justify-center transition-colors duration-300 relative z-10 ${pathname === "/pages/auth/login" ? "text-[#0a3900]" : "text-[#595c5d]"
+                            className={`text-[11px] font-bold tracking-tight w-[70px] py-1.5 rounded-full flex items-center justify-center transition-colors duration-300 relative z-10 ${pathname === "/pages/auth/login" ? "text-on-primary" : "text-on-surface-variant hover:text-primary"
                                 }`}
                         >
                             Masuk
                         </Link>
                         <Link
                             href="/pages/auth/register"
-                            className={`text-[11px] font-bold tracking-tight w-[70px] py-1.5 rounded-full flex items-center justify-center transition-colors duration-300 relative z-10 ${pathname === "/pages/auth/register" ? "text-[#0a3900]" : "text-[#595c5d]"
+                            className={`text-[11px] font-bold tracking-tight w-[70px] py-1.5 rounded-full flex items-center justify-center transition-colors duration-300 relative z-10 ${pathname === "/pages/auth/register" ? "text-on-primary" : "text-on-surface-variant hover:text-primary"
                                 }`}
                         >
                             Daftar
@@ -103,7 +121,7 @@ function NavbarContent() {
 
             {/* Mobile Navigation Menu */}
             <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-96 border-t border-outline-variant/20 opacity-100' : 'max-h-0 opacity-0'}`}>
-                <div className="bg-white/95 backdrop-blur-xl px-6 py-6 space-y-5 shadow-inner">
+                <div className="bg-surface/95 backdrop-blur-xl px-6 py-6 space-y-5 shadow-inner">
                     <div className="flex flex-col space-y-4">
                         {navLinks.map((link) => (
                             <Link

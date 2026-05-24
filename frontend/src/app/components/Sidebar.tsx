@@ -30,17 +30,17 @@ export default function Sidebar({ activePage, isOpen = true }: SidebarProps) {
   return (
     <>
       <aside 
-        className={`hidden lg:flex flex-col h-screen pt-6 pb-10 bg-white fixed left-0 top-0 border-r border-[#edeeef] z-40 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+        className={`hidden lg:flex flex-col h-screen pt-6 pb-10 bg-[var(--dashboard-sidebar-bg)] fixed left-0 top-0 border-r border-[var(--dashboard-sidebar-border)] z-40 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
           isOpen ? "w-64 translate-x-0 opacity-100" : "w-0 -translate-x-full opacity-0 pointer-events-none"
         }`}
       >
         {/* Brand */}
         <div className={`px-8 mb-12 mt-4 transition-opacity duration-300 ${!isOpen ? "lg:opacity-0" : "opacity-100"}`}>
           <div className="flex flex-col">
-            <span className="uppercase tracking-[0.1em] text-[10px] font-extrabold text-[#6f7b67]">
+            <span className="uppercase tracking-[0.1em] text-[10px] font-extrabold text-on-surface-variant/70">
               Clinical Precision
             </span>
-            <span className="text-[#191c1d] font-black text-xl tracking-tight uppercase">
+            <span className="text-[var(--dashboard-text)] font-black text-xl tracking-tight uppercase">
               Aether Med
             </span>
           </div>
@@ -56,8 +56,8 @@ export default function Sidebar({ activePage, isOpen = true }: SidebarProps) {
                 href={item.href}
                 className={`flex items-center gap-4 py-4 px-8 border-l-4 transition-all ${
                   isActive
-                    ? "text-[#1c6d00] bg-[#f3fbf0] border-[#1c6d00]"
-                    : "text-[#6f7b67] border-transparent hover:text-[#1c6d00] hover:bg-[#f3fbf0] hover:border-[#1c6d00]"
+                    ? "text-[var(--dashboard-sidebar-active-text)] bg-[var(--dashboard-sidebar-active-bg)] border-[var(--dashboard-sidebar-active-text)]"
+                    : "text-on-surface-variant border-transparent hover:text-[var(--dashboard-sidebar-active-text)] hover:bg-[var(--dashboard-sidebar-active-bg)] hover:border-[var(--dashboard-sidebar-active-text)]"
                 } ${!isOpen ? "justify-center px-0 border-l-0 border-r-4" : ""}`}
               >
                 <span className="material-symbols-outlined text-xl">{item.icon}</span>
@@ -74,7 +74,7 @@ export default function Sidebar({ activePage, isOpen = true }: SidebarProps) {
         {/* Bottom Section */}
         <div className={`px-8 mt-auto transition-all duration-300 ${!isOpen ? "px-2" : ""}`}>
           <div className="mt-8 flex flex-col gap-2">
-            <div className={`flex items-center gap-4 text-[#6f7b67] py-4 cursor-pointer hover:text-[#1c6d00] ${!isOpen ? "justify-center px-0" : ""}`}>
+            <div className={`flex items-center gap-4 text-on-surface-variant py-4 cursor-pointer hover:text-[var(--dashboard-sidebar-active-text)] ${!isOpen ? "justify-center px-0" : ""}`}>
               <span className="material-symbols-outlined">help</span>
               {isOpen && (
                 <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
@@ -101,28 +101,28 @@ export default function Sidebar({ activePage, isOpen = true }: SidebarProps) {
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl flex flex-col items-center text-center animate-in zoom-in-95 duration-200">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-500 mb-6">
+          <div className="bg-[var(--dashboard-card-bg)] border border-[var(--dashboard-sidebar-border)] rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl flex flex-col items-center text-center animate-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 bg-red-100/10 rounded-full flex items-center justify-center text-red-500 mb-6">
               <span className="material-symbols-outlined text-3xl">logout</span>
             </div>
-            <h3 className="text-xl font-extrabold text-[#191c1d] mb-2 tracking-tight">
+            <h3 className="text-xl font-extrabold text-[var(--dashboard-text)] mb-2 tracking-tight">
               Keluar Sesi?
             </h3>
-            <p className="text-sm font-medium text-slate-500 mb-8">
+            <p className="text-sm font-medium text-on-surface-variant/80 mb-8">
               Apakah Anda yakin ingin keluar dari DermaScan? Anda harus masuk
               kembali untuk melanjutkan analisis.
             </p>
             <div className="w-full grid grid-cols-2 gap-4">
               <button
                 onClick={() => setShowLogoutModal(false)}
-                className="py-3 rounded-2xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                className="py-3 rounded-2xl font-bold bg-surface-variant text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer"
                 disabled={logoutMutation.isPending}
               >
                 Batal
               </button>
               <button
                 onClick={handleLogoutConfirm}
-                className="py-3 rounded-2xl font-bold bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-50"
+                className="py-3 rounded-2xl font-bold bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-50 cursor-pointer"
                 disabled={logoutMutation.isPending}
               >
                 {logoutMutation.isPending ? "Keluar..." : "Ya, Keluar"}
