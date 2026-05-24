@@ -11,6 +11,42 @@ import MobileNav from "@/app/components/MobileNav";
 import "./scan.css";
 import "../dashboard/dashboard.css";
 
+const isSkinImage = (img: HTMLImageElement | HTMLVideoElement | HTMLCanvasElement): boolean => {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return true; // Fallback to true if context fails
+  
+  canvas.width = 100;
+  canvas.height = 100;
+  ctx.drawImage(img, 0, 0, 100, 100);
+  
+  const imageData = ctx.getImageData(0, 0, 100, 100);
+  const data = imageData.data;
+  
+  let skinPixelCount = 0;
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i+1];
+    const b = data[i+2];
+    
+    // YCbCr color space conversion
+    const y = 0.299 * r + 0.587 * g + 0.114 * b;
+    const cb = 128 - 0.168736 * r - 0.331264 * g + 0.5 * b;
+    const cr = 128 + 0.5 * r - 0.418688 * g - 0.081312 * b;
+    
+    // Skin color range in YCbCr
+    if (y > 80 && cb > 85 && cb < 135 && cr > 135 && cr < 180) {
+      skinPixelCount++;
+    }
+  }
+  
+  const totalPixels = 100 * 100;
+  const skinPercentage = skinPixelCount / totalPixels;
+  
+  // Return true if at least 15% of the image has skin color
+  return skinPercentage > 0.15;
+};
+
 export default function Analisis() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState<"live" | "upload">("live");
@@ -34,6 +70,7 @@ export default function Analisis() {
   const [capturedFile, setCapturedFile] = useState<File | null>(null);
   const [showDetail, setShowDetail] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [modalConfig, setModalConfig] = useState<{
     isOpen: boolean;
     title: string;
@@ -54,6 +91,7 @@ export default function Analisis() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const latestFaceLandmarksRef = useRef<any>(null);
 
   // Initialize Face Landmarker
   useEffect(() => {
@@ -139,6 +177,7 @@ export default function Analisis() {
 
           if (results.faceLandmarks && results.faceLandmarks.length > 0) {
             setFaceDetected(true);
+            latestFaceLandmarksRef.current = results.faceLandmarks[0];
             const drawingUtils = new DrawingUtils(canvasCtx);
             for (const landmarks of results.faceLandmarks) {
               // Draw detailed mesh
@@ -155,6 +194,7 @@ export default function Analisis() {
             }
           } else {
             setFaceDetected(false);
+            latestFaceLandmarksRef.current = null;
           }
           canvasCtx.restore();
         }
@@ -167,18 +207,53 @@ export default function Analisis() {
   }, [faceLandmarker, activeTab]);
 
   const captureImage = () => {
-    if (videoRef.current && canvasRef.current) {
-      const context = canvasRef.current.getContext("2d");
-      if (context) {
-        canvasRef.current.width = videoRef.current.videoWidth;
-        canvasRef.current.height = videoRef.current.videoHeight;
-        context.drawImage(videoRef.current, 0, 0);
-
-        const imageData = canvasRef.current.toDataURL("image/jpeg");
+    if (videoRef.current) {
+      const video = videoRef.current;
+      const videoWidth = video.videoWidth;
+      const videoHeight = video.videoHeight;
+      
+      let cropX = 0;
+      let cropY = 0;
+      let cropW = videoWidth;
+      let cropH = videoHeight;
+      
+      if (latestFaceLandmarksRef.current) {
+         const landmarks = latestFaceLandmarksRef.current;
+         let minX = 1, minY = 1, maxX = 0, maxY = 0;
+         for (const pt of landmarks) {
+            minX = Math.min(minX, pt.x);
+            maxX = Math.max(maxX, pt.x);
+            minY = Math.min(minY, pt.y);
+            maxY = Math.max(maxY, pt.y);
+         }
+         
+         const paddingX = (maxX - minX) * 0.2;
+         const paddingY = (maxY - minY) * 0.25;
+         
+         const finalMinX = Math.max(0, minX - paddingX);
+         const finalMaxX = Math.min(1, maxX + paddingX);
+         const finalMinY = Math.max(0, minY - paddingY - 0.1);
+         const finalMaxY = Math.min(1, maxY + paddingY);
+         
+         cropX = finalMinX * videoWidth;
+         cropY = finalMinY * videoHeight;
+         cropW = (finalMaxX - finalMinX) * videoWidth;
+         cropH = (finalMaxY - finalMinY) * videoHeight;
+      }
+      
+      const captureCanvas = document.createElement("canvas");
+      captureCanvas.width = cropW;
+      captureCanvas.height = cropH;
+      const ctx = captureCanvas.getContext("2d");
+      
+      if (ctx) {
+        ctx.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+        
+        const imageData = captureCanvas.toDataURL("image/jpeg");
         setCapturedImage(imageData);
         setIsCameraActive(false);
-
-        canvasRef.current.toBlob((blob) => {
+        
+        captureCanvas.toBlob((blob) => {
           if (blob) {
             const file = new File([blob], "capture.jpg", { type: "image/jpeg" });
             setCapturedFile(file);
@@ -188,17 +263,40 @@ export default function Analisis() {
     }
   };
 
-  const handleLivePredict = () => {
-    if (capturedFile) {
+  const handleLivePredict = async () => {
+    if (capturedFile && capturedImage) {
+      if (!faceDetected) {
+        const img = new Image();
+        img.src = capturedImage;
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+        
+        if (!isSkinImage(img)) {
+          showModal("Gambar Anomali", "Kamera tidak mendeteksi wajah atau kulit yang jelas. Silakan posisikan ulang kamera Anda.", "error");
+          resetScan();
+          return;
+        }
+      }
+
+      setIsAnalyzing(true);
+      const startTime = Date.now();
       predictMutation.mutate(capturedFile, {
         onSuccess: (resData: any) => {
-          if (resData?.data) {
-            setPredictionResult(resData.data);
-          }
+          const elapsed = Date.now() - startTime;
+          const remainingTime = Math.max(0, 10000 - elapsed);
+          setTimeout(() => {
+            if (resData?.data) {
+              setPredictionResult(resData.data);
+            }
+            setIsAnalyzing(false);
+          }, remainingTime);
         },
         onError: (err: any) => {
           console.error("Live Analysis Error:", err);
           alert("Gagal melakukan analisis kulit. Pastikan koneksi server tersedia.");
+          setIsAnalyzing(false);
         }
       });
     }
@@ -249,36 +347,48 @@ export default function Analisis() {
         const results = faceLandmarker.detectForVideo(img, performance.now());
         
         if (!results.faceLandmarks || results.faceLandmarks.length === 0) {
-          showModal("Wajah Tidak Terdeteksi", "Foto terdeteksi sebagai anomali. Silakan unggah foto wajah yang jelas untuk dianalisis.", "error");
-          setSelectedFile(null);
-          setIsValidating(false);
-          URL.revokeObjectURL(imageUrl);
-          return;
+          console.log("Wajah utuh tidak terdeteksi, mencoba memvalidasi area kulit...");
+          if (!isSkinImage(img)) {
+            showModal("Gambar Anomali", "Foto tidak terdeteksi sebagai wajah atau kulit yang jelas. Silakan unggah foto kulit/wajah yang sesuai.", "error");
+            setSelectedFile(null);
+            setIsValidating(false);
+            URL.revokeObjectURL(imageUrl);
+            return;
+          }
         }
 
-        console.log("Face validated. Starting Upload Analysis for:", selectedFile.name);
+        console.log("Starting Upload Analysis for:", selectedFile.name);
+        setIsAnalyzing(true);
+        const startTime = Date.now();
         predictMutation.mutate(selectedFile, {
           onSuccess: (resData: any) => {
             console.log("Upload Prediction Success:", resData);
-            if (resData?.data) {
-              setPredictionResult(resData.data);
-              showModal("Analisis Berhasil", "Data analisis kulit telah berhasil diproses.", "success");
-            } else {
-              showModal("Kesalahan Data", "Data tidak valid dari server.", "error");
-            }
-            setIsValidating(false);
+            const elapsed = Date.now() - startTime;
+            const remainingTime = Math.max(0, 3000 - elapsed);
+            setTimeout(() => {
+              if (resData?.data) {
+                setPredictionResult(resData.data);
+                showModal("Analisis Berhasil", "Data analisis kulit telah berhasil diproses.", "success");
+              } else {
+                showModal("Kesalahan Data", "Data tidak valid dari server.", "error");
+              }
+              setIsValidating(false);
+              setIsAnalyzing(false);
+            }, remainingTime);
           },
           onError: (err: any) => {
             console.error("Upload Analysis Error:", err);
             const errorMsg = err.response?.data?.message || "Gagal melakukan analisis kulit.";
             showModal("Analisis Gagal", errorMsg, "error");
             setIsValidating(false);
+            setIsAnalyzing(false);
           }
         });
       } catch (err) {
         console.error("Validation error:", err);
         showModal("Kesalahan Proses", "Gagal memproses gambar. Pastikan file adalah gambar yang valid.", "error");
         setIsValidating(false);
+        setIsAnalyzing(false);
       } finally {
         URL.revokeObjectURL(imageUrl);
       }
@@ -374,7 +484,7 @@ export default function Analisis() {
                             <div className={`w-3 h-3 rounded-full ${faceDetected ? 'bg-primary status-pulse' : 'bg-red-500'}`}></div>
                             <div className="bg-black/40 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10">
                               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white">
-                                {faceDetected ? 'Sistem: Wajah Terdeteksi' : 'Sistem: Mencari Wajah...'}
+                                {faceDetected ? 'Sistem: Wajah Terdeteksi' : 'Sistem: Mencari Wajah / Kulit...'}
                               </p>
                             </div>
                           </div>
@@ -385,17 +495,17 @@ export default function Analisis() {
                           <div className="flex flex-col items-center gap-4">
                             {!faceDetected && (
                               <div className="bg-red-500/80 backdrop-blur-md px-4 py-1.5 rounded-full animate-bounce">
-                                <p className="text-[10px] font-bold text-white uppercase tracking-widest">Posisikan Wajah Anda</p>
+                                <p className="text-[10px] font-bold text-white uppercase tracking-widest">Posisikan Wajah / Kulit</p>
                               </div>
                             )}
                             <button
                               onClick={captureImage}
-                              disabled={predictMutation.isPending || !faceDetected}
-                              className={`w-16 h-16 rounded-full border-4 ${faceDetected ? 'border-white' : 'border-white/30'} flex items-center justify-center group active:scale-90 transition-all`}
+                              disabled={isAnalyzing}
+                              className={`w-16 h-16 rounded-full border-4 border-white flex items-center justify-center group active:scale-90 transition-all`}
                             >
-                              <div className={`w-12 h-12 rounded-full ${!faceDetected || predictMutation.isPending ? 'bg-slate-400' : 'bg-primary'} group-hover:scale-110 transition-transform flex items-center justify-center`}>
+                              <div className={`w-12 h-12 rounded-full ${isAnalyzing ? 'bg-slate-400' : 'bg-primary'} group-hover:scale-110 transition-transform flex items-center justify-center`}>
                                 <span className="material-symbols-outlined text-white">
-                                  {predictMutation.isPending ? 'sync' : 'camera'}
+                                  {isAnalyzing ? 'sync' : 'camera'}
                                 </span>
                               </div>
                             </button>
@@ -408,15 +518,15 @@ export default function Analisis() {
                           <img
                             src={capturedImage}
                             alt="Captured"
-                            className="absolute inset-0 w-full h-full object-cover"
+                            className="absolute inset-0 w-full h-full object-contain bg-black"
                           />
                         )}
                         {!predictionResult && <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"></div>}
 
-                        {predictMutation.isPending ? (
-                          <div className="z-10 flex flex-col items-center gap-4">
-                            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                            <p className="text-white font-black text-[10px] uppercase tracking-[0.3em]">Menganalisis Kulit...</p>
+                        {isAnalyzing ? (
+                          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm">
+                            <div className="w-16 h-16 border-[5px] border-primary border-t-transparent rounded-full animate-spin shadow-[0_0_15px_rgba(28,109,0,0.5)]"></div>
+                            <p className="text-primary font-black text-xs uppercase tracking-[0.3em] mt-6 animate-pulse drop-shadow-[0_0_5px_rgba(28,109,0,0.5)]">Sedang Proses Prediksi...</p>
                           </div>
                         ) : (
                           <>
@@ -484,7 +594,13 @@ export default function Analisis() {
                         </div>
                       </div>
                     ) : (
-                      <div className="w-full max-w-md glass-panel rounded-3xl border-2 border-primary/60 p-8 flex flex-col items-center shadow-lg">
+                      <div className="relative w-full max-w-md glass-panel rounded-3xl border-2 border-primary/60 p-8 flex flex-col items-center shadow-lg overflow-hidden">
+                        {isAnalyzing && (
+                          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-slate-50/80 backdrop-blur-sm">
+                            <div className="w-16 h-16 border-[5px] border-primary border-t-transparent rounded-full animate-spin shadow-[0_0_15px_rgba(28,109,0,0.5)]"></div>
+                            <p className="text-primary font-black text-xs uppercase tracking-[0.3em] mt-6 animate-pulse drop-shadow-[0_0_5px_rgba(28,109,0,0.2)]">Sedang Proses Prediksi...</p>
+                          </div>
+                        )}
                         <div className="w-full max-h-64 bg-slate-100 rounded-xl mb-6 overflow-hidden flex justify-center">
                           <img src={URL.createObjectURL(selectedFile)} alt="Preview" className="h-full object-cover" />
                         </div>
@@ -496,10 +612,10 @@ export default function Analisis() {
                             </button>
                             <button
                               onClick={handleSubmit}
-                              disabled={predictMutation.isPending || isValidating}
+                              disabled={isAnalyzing || isValidating}
                               className="flex-1 py-3 bg-primary text-white rounded-xl font-bold hover:bg-[#1c6d00] transition-colors disabled:opacity-50"
                             >
-                              {isValidating ? "Validasi..." : predictMutation.isPending ? "Menganalisis..." : "Proses Analisis"}
+                              {isValidating ? "Validasi..." : isAnalyzing ? "Sedang Proses Prediksi..." : "Proses Analisis"}
                             </button>
                           </div>
                         )}

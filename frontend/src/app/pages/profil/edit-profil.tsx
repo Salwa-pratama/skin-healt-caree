@@ -8,7 +8,7 @@ export default function ProfilePage() {
   const [is2FAEnabled, setIs2FAEnabled] = useState(true);
   const { data, isLoading, error } = useProfile();
   console.log("Profile Data:", data);
-  
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#f8f9fa]">
@@ -99,7 +99,7 @@ export default function ProfilePage() {
                     <input
                       className="w-full bg-[#f3f4f5] border-none rounded-xl sm:rounded-2xl px-5 py-3 sm:py-4 focus:ring-2 focus:ring-[#1c6d00] transition-all outline-none text-[#191c1d] font-medium text-sm sm:text-base"
                       type="text"
-                      value={data?.name || ""}
+                      value={data?.name || "data kosong"}
                     />
                   </div>
                   <div className="space-y-1 sm:space-y-2">
@@ -108,15 +108,15 @@ export default function ProfilePage() {
                       className="w-full bg-[#edeeef] border-none rounded-xl sm:rounded-2xl px-5 py-3 sm:py-4 text-[#3f4a39] font-medium cursor-not-allowed opacity-70 text-sm sm:text-base"
                       readOnly
                       type="email"
-                      value={data?.email || ""}
+                      value={data?.email || "data kosong"}
                     />
                   </div>
                   <div className="space-y-1 sm:space-y-2 sm:col-span-2">
-                    <label className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-[#3f4a39] px-1">Nomor Telepon</label>
+                    <label className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-[#3f4a39] px-1">Role</label>
                     <input
                       className="w-full bg-[#f3f4f5] border-none rounded-xl sm:rounded-2xl px-5 py-3 sm:py-4 focus:ring-2 focus:ring-[#1c6d00] transition-all outline-none text-[#191c1d] font-medium text-sm sm:text-base"
-                      type="tel"
-                      defaultValue="+62 812 3456 7890"
+                      type="Role"
+                      value={data?.role || "kosong"}
                     />
                   </div>
                 </div>
