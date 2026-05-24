@@ -18,8 +18,10 @@ model UserPublic {
   skintype             String                @default("normal")
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
+
   acneProblems         AcneProblem[]
   acneProblemSolutions AcneProblemSolution[]
+  acnesolutions         AcneSolution[]
 }
 
 // ================= ACNE PROBLEM =================
@@ -39,6 +41,10 @@ model AcneProblem {
 // ================= ACNE SOLUTION =================
 model AcneSolution {
   id Int @id @default(autoincrement())
+  // Menambahkan relasi ke user
+  userId Int
+  user UserPublic @relation(fields:[userId], references: [id])
+
 
   goodIngredient       GoodIngredient[]
   badIngredient        BadIngredient[]
@@ -53,7 +59,7 @@ model Treatment {
   name String
   time String
 
-  acneSolution AcneSolution[]
+  acneSolutions AcneSolution[]
 }
 
 // ================= HABITS =================
@@ -61,20 +67,24 @@ model Habit {
   id   Int    @id @default(autoincrement())
   name String
 
-  acneSolution AcneSolution[]
+  acneSolutions AcneSolution[]
 }
 
 // ================= ACNE PROBLEM SOLUTION (PIVOT) =================
 model AcneProblemSolution {
   id Int @id @default(autoincrement())
 
-  userId         Int
+
   acneSolutionId Int
   acneProblemId  Int
 
+  userId Int
   user         UserPublic   @relation(fields: [userId], references: [id])
   acneSolution AcneSolution @relation(fields: [acneSolutionId], references: [id])
   acneProblem  AcneProblem  @relation(fields: [acneProblemId], references: [id])
+
+  // Intuk menghindrari duplikasi pivot
+  @@unique([acneProblemId, acneSolutionId])
 }
 
 // ================= GOOD INGREDIENT =================
@@ -82,7 +92,7 @@ model GoodIngredient {
   id   Int    @id @default(autoincrement())
   name String
 
-  acneSolution AcneSolution[]
+  acneSolutions AcneSolution[]
 }
 
 // ================= BAD INGREDIENT =================
@@ -90,5 +100,5 @@ model BadIngredient {
   id   Int    @id @default(autoincrement())
   name String
 
-  acneSolution AcneSolution[]
+  acneSolutions AcneSolution[]
 }
