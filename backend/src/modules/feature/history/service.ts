@@ -4,13 +4,20 @@ import { prisma } from "../../../common/lib/prisma";
 import { acneRecommendations } from "../../../database/prisma/seeding/rekomendation_seed";
 
 export class HistoryService {
-  constructor(private readonly repository: HistoryRepository = new HistoryRepository()) {}
+  constructor(
+    private readonly repository: HistoryRepository = new HistoryRepository(),
+  ) {}
 
-  async saveHistoryAsync(fileBuffer: Buffer, userId: number, jerawat: string, predictionsInput: any) {
+  async saveHistoryAsync(
+    fileBuffer: Buffer,
+    userId: number,
+    jerawat: string,
+    predictionsInput: any,
+  ) {
     let predictions = [];
-    
+
     // Handle predictions input which could be a JSON string or an object/array
-    if (typeof predictionsInput === 'string') {
+    if (typeof predictionsInput === "string") {
       try {
         predictions = JSON.parse(predictionsInput);
       } catch (e) {
@@ -25,14 +32,14 @@ export class HistoryService {
     const uploadToCloudinary = () => {
       return new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
-          { 
+          {
             folder: "e-taqwa/history",
-            resource_type: "auto"
+            resource_type: "auto",
           },
           (error, result) => {
             if (error) return reject(error);
             resolve(result);
-          }
+          },
         );
         uploadStream.end(fileBuffer);
       });
@@ -42,11 +49,16 @@ export class HistoryService {
     const citraUrl = cloudinaryResult.secure_url;
 
     // 2. Find Recommendation based on top prediction
-    const mainRec = acneRecommendations.find(r => {
+    const mainRec = acneRecommendations.find((r) => {
       const typeLower = r.type.toLowerCase();
       const topPrediction = jerawat.toLowerCase();
-      return typeLower.includes(topPrediction) || topPrediction.includes(typeLower) ||
-             (typeLower === "whitehead / blackhead" && (topPrediction.includes("whitehead") || topPrediction.includes("blackhead")));
+      return (
+        typeLower.includes(topPrediction) ||
+        topPrediction.includes(typeLower) ||
+        (typeLower === "whitehead / blackhead" &&
+          (topPrediction.includes("whitehead") ||
+            topPrediction.includes("blackhead")))
+      );
     });
 
     // 3. Save to Database with nested relations as per schema
@@ -56,29 +68,39 @@ export class HistoryService {
         name: jerawat,
         citra: citraUrl,
         predictions: predictions as any,
-        acneProblemSolutions: mainRec ? {
-          create: [
-            {
-              user: { connect: { id: userId } }, // Explicitly connect user in pivot
-              acneSolution: {
-                create: {
-                  goodIngredient: { 
-                    create: mainRec.goodIngredients.map(name => ({ name })) 
+        acneProblemSolutions: mainRec
+          ? {
+              create: [
+                {
+                  user: { connect: { id: userId } }, // Explicitly connect user in pivot
+                  acneSolution: {
+                    create: {
+                      user: { connect: { id: userId } },
+                      goodIngredient: {
+                        create: mainRec.goodIngredients.map((name) => ({
+                          name,
+                        })),
+                      },
+                      badIngredient: {
+                        create: mainRec.badIngredients.map((name) => ({
+                          name,
+                        })),
+                      },
+                      habits: {
+                        create: mainRec.habits.map((name) => ({ name })),
+                      },
+                      treatments: {
+                        create: mainRec.treatments.map((t: any) => ({
+                          name: t.name,
+                          time: t.time,
+                        })),
+                      },
+                    },
                   },
-                  badIngredient: { 
-                    create: mainRec.badIngredients.map(name => ({ name })) 
-                  },
-                  habits: { 
-                    create: mainRec.habits.map(name => ({ name })) 
-                  },
-                  treatments: { 
-                    create: mainRec.treatments.map((t: any) => ({ name: t.name, time: t.time })) 
-                  }
-                }
-              }
+                },
+              ],
             }
-          ]
-        } : undefined
+          : undefined,
       },
       include: {
         acneProblemSolutions: {
@@ -88,12 +110,12 @@ export class HistoryService {
                 goodIngredient: true,
                 badIngredient: true,
                 habits: true,
-                treatments: true
-              }
-            }
-          }
-        }
-      }
+                treatments: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     return saved;
@@ -107,9 +129,18 @@ export class HistoryService {
     return this.repository.getHistoryByIdAsync(userId, id);
   }
 
-  async updateHistoryAsync(id: number, userId: number, fileBuffer: Buffer | undefined, jerawat: string | undefined, predictionsInput: any) {
+  async updateHistoryAsync(
+    id: number,
+    userId: number,
+    fileBuffer: Buffer | undefined,
+    jerawat: string | undefined,
+    predictionsInput: any,
+  ) {
     // 1. Check if history exists
-    const existingHistory = await this.repository.getHistoryByIdAsync(userId, id);
+    const existingHistory = await this.repository.getHistoryByIdAsync(
+      userId,
+      id,
+    );
     if (!existingHistory) {
       throw new Error("History tidak ditemukan");
     }
@@ -125,7 +156,7 @@ export class HistoryService {
             (error, result) => {
               if (error) return reject(error);
               resolve(result);
-            }
+            },
           );
           uploadStream.end(fileBuffer);
         });
@@ -136,11 +167,16 @@ export class HistoryService {
       // Hapus gambar lama dari Cloudinary
       if (existingHistory.citra) {
         try {
-          const parts = existingHistory.citra.split('/upload/');
+          const parts = existingHistory.citra.split("/upload/");
           if (parts.length > 1) {
             const afterUpload = parts[1];
-            const withoutVersion = afterUpload.substring(afterUpload.indexOf('/') + 1);
-            const publicId = withoutVersion.substring(0, withoutVersion.lastIndexOf('.'));
+            const withoutVersion = afterUpload.substring(
+              afterUpload.indexOf("/") + 1,
+            );
+            const publicId = withoutVersion.substring(
+              0,
+              withoutVersion.lastIndexOf("."),
+            );
             if (publicId) {
               await cloudinary.uploader.destroy(publicId);
             }
@@ -153,7 +189,7 @@ export class HistoryService {
 
     // 3. Handle predictions update
     if (predictionsInput) {
-      if (typeof predictionsInput === 'string') {
+      if (typeof predictionsInput === "string") {
         try {
           updateData.predictions = JSON.parse(predictionsInput);
         } catch (e) {
@@ -167,12 +203,17 @@ export class HistoryService {
     // 4. Handle jerawat update (and regenerate recommendations)
     if (jerawat) {
       updateData.name = jerawat;
-      
-      const mainRec = acneRecommendations.find(r => {
+
+      const mainRec = acneRecommendations.find((r) => {
         const typeLower = r.type.toLowerCase();
         const topPrediction = jerawat.toLowerCase();
-        return typeLower.includes(topPrediction) || topPrediction.includes(typeLower) ||
-               (typeLower === "whitehead / blackhead" && (topPrediction.includes("whitehead") || topPrediction.includes("blackhead")));
+        return (
+          typeLower.includes(topPrediction) ||
+          topPrediction.includes(typeLower) ||
+          (typeLower === "whitehead / blackhead" &&
+            (topPrediction.includes("whitehead") ||
+              topPrediction.includes("blackhead")))
+        );
       });
 
       // We need to delete old pivot tables in repository before updating
@@ -185,14 +226,23 @@ export class HistoryService {
               user: { connect: { id: userId } },
               acneSolution: {
                 create: {
-                  goodIngredient: { create: mainRec.goodIngredients.map(name => ({ name })) },
-                  badIngredient: { create: mainRec.badIngredients.map(name => ({ name })) },
-                  habits: { create: mainRec.habits.map(name => ({ name })) },
-                  treatments: { create: mainRec.treatments.map((t: any) => ({ name: t.name, time: t.time })) }
-                }
-              }
-            }
-          ]
+                  goodIngredient: {
+                    create: mainRec.goodIngredients.map((name) => ({ name })),
+                  },
+                  badIngredient: {
+                    create: mainRec.badIngredients.map((name) => ({ name })),
+                  },
+                  habits: { create: mainRec.habits.map((name) => ({ name })) },
+                  treatments: {
+                    create: mainRec.treatments.map((t: any) => ({
+                      name: t.name,
+                      time: t.time,
+                    })),
+                  },
+                },
+              },
+            },
+          ],
         };
       }
     }
@@ -202,7 +252,10 @@ export class HistoryService {
   }
 
   async deleteHistoryAsync(userId: number, id: number) {
-    const existingHistory = await this.repository.getHistoryByIdAsync(userId, id);
+    const existingHistory = await this.repository.getHistoryByIdAsync(
+      userId,
+      id,
+    );
     if (!existingHistory) {
       throw new Error("History tidak ditemukan");
     }
@@ -210,11 +263,16 @@ export class HistoryService {
     // Hapus gambar dari Cloudinary
     if (existingHistory.citra) {
       try {
-        const parts = existingHistory.citra.split('/upload/');
+        const parts = existingHistory.citra.split("/upload/");
         if (parts.length > 1) {
           const afterUpload = parts[1];
-          const withoutVersion = afterUpload.substring(afterUpload.indexOf('/') + 1);
-          const publicId = withoutVersion.substring(0, withoutVersion.lastIndexOf('.'));
+          const withoutVersion = afterUpload.substring(
+            afterUpload.indexOf("/") + 1,
+          );
+          const publicId = withoutVersion.substring(
+            0,
+            withoutVersion.lastIndexOf("."),
+          );
           if (publicId) {
             await cloudinary.uploader.destroy(publicId);
           }
