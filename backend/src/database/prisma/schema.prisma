@@ -1,26 +1,28 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
-
 
 //  ================= User Schema =================
 model UserPublic {
-    id               Int      @id @default(autoincrement())
-    email            String   @unique
-    name             String
-    role             String   @default("user")
-    passwordHash     String
-    refreshTokenHash String?
-    skintype         String  @default("normal")
-    createdAt        DateTime @default(now())
-    updatedAt        DateTime @updatedAt
-    acneProblems     AcneProblem[]
-    acneProblemSolutions AcneProblemSolution[]
+  id                   Int                   @id @default(autoincrement())
+  email                String                @unique
+  name                 String
+  role                 String                @default("user")
+  passwordHash         String
+  refreshTokenHash     String?
+  skintype             String                @default("normal")
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+
+  // relation
+  acneProblems         AcneProblem[]
+  acneProblemSolutions AcneProblemSolution[]
+  acnesolutions         AcneSolution[]
 }
 
 // ================= ACNE PROBLEM =================
@@ -33,18 +35,22 @@ model AcneProblem {
 
   userId Int
   user   UserPublic @relation(fields: [userId], references: [id])
-
+  // relation
   acneProblemSolutions AcneProblemSolution[]
 }
 
 // ================= ACNE SOLUTION =================
 model AcneSolution {
-  id            Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+  // Menambahkan relasi ke user
+  userId Int
+  user UserPublic @relation(fields:[userId], references: [id])
 
-  goodIngredient GoodIngredient[]
-  badIngredient  BadIngredient[]
-  habits         Habit[]
-  treatments     Treatment[]
+  // relation
+  goodIngredient       GoodIngredient[]
+  badIngredient        BadIngredient[]
+  habits               Habit[]
+  treatments           Treatment[]
   acneProblemSolutions AcneProblemSolution[]
 }
 
@@ -54,7 +60,8 @@ model Treatment {
   name String
   time String
 
-  acneSolution AcneSolution[]
+  // relation
+  acneSolutions AcneSolution[]
 }
 
 // ================= HABITS =================
@@ -62,29 +69,35 @@ model Habit {
   id   Int    @id @default(autoincrement())
   name String
 
-  acneSolution AcneSolution[]
+  // relation
+  acneSolutions AcneSolution[]
 }
 
 // ================= ACNE PROBLEM SOLUTION (PIVOT) =================
 model AcneProblemSolution {
   id Int @id @default(autoincrement())
 
-  userId          Int
-  acneSolutionId  Int
-  acneProblemId   Int
 
-  user          UserPublic          @relation(fields: [userId], references: [id])
-  acneSolution  AcneSolution @relation(fields: [acneSolutionId], references: [id])
-  acneProblem   AcneProblem  @relation(fields: [acneProblemId], references: [id])
+  acneSolutionId Int
+  acneProblemId  Int
+
+  userId Int
+  // relation
+  user         UserPublic   @relation(fields: [userId], references: [id])
+  acneSolution AcneSolution @relation(fields: [acneSolutionId], references: [id])
+  acneProblem  AcneProblem  @relation(fields: [acneProblemId], references: [id])
+
+  // Intuk menghindrari duplikasi pivot
+  @@unique([acneProblemId, acneSolutionId])
 }
-
 
 // ================= GOOD INGREDIENT =================
 model GoodIngredient {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
   name String
 
-  acneSolution AcneSolution[]
+  // relation
+  acneSolutions AcneSolution[]
 }
 
 // ================= BAD INGREDIENT =================
@@ -92,6 +105,6 @@ model BadIngredient {
   id   Int    @id @default(autoincrement())
   name String
 
-  acneSolution AcneSolution[]
+  // relation
+  acneSolutions AcneSolution[]
 }
-

@@ -30,6 +30,8 @@ export const predictRouter: Router = express.Router();
  *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - file
  *             properties:
  *               file:
  *                 type: string

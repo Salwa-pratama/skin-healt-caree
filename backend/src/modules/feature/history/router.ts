@@ -126,6 +126,88 @@ historyRouter.post("/", authMiddleware, upload.single("file"), historyController
 /**
  * @openapi
  * /api/feature/history/{id}:
+ *   get:
+ *     tags:
+ *       - History
+ *     summary: Get a specific history record by ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: History ID
+ *     responses:
+ *       200:
+ *         description: Successfully fetched history details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 kode:
+ *                   type: integer
+ *                   example: 200
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 data:
+ *                   type: object
+ *       404:
+ *         description: History not found
+ */
+historyRouter.get("/:id", authMiddleware, historyController.getHistoryById);
+
+/**
+ * @openapi
+ * /api/feature/history/{id}:
+ *   put:
+ *     tags:
+ *       - History
+ *     summary: Update an existing prediction scan history
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: History ID
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: New image file to replace the old one (optional)
+ *               jerawat:
+ *                 type: string
+ *                 description: Top prediction acne type (optional)
+ *               predictions:
+ *                 type: string
+ *                 description: JSON string of prediction array (optional)
+ *     responses:
+ *       200:
+ *         description: Successfully updated history
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: History not found
+ *       500:
+ *         description: Internal server error
+ */
+historyRouter.put("/:id", authMiddleware, upload.single("file"), historyController.updateHistory);
+
+/**
+ * @openapi
+ * /api/feature/history/{id}:
  *   delete:
  *     tags:
  *       - History
