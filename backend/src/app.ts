@@ -4,6 +4,7 @@ import { authRouter } from "./modules/auth/login/login_router";
 import { predictRouter } from "./modules/feature/predict/router";
 import { historyRouter } from "./modules/feature/history/router";
 import { profileRouter } from "./modules/feature/profile/router";
+import { setupSwagger } from "./utils/swagger";
 
 // Middleware
 import { authMiddleware } from "./middleware/auth.middleware";
@@ -48,6 +49,11 @@ app.use("/api/auth", authRouter);
 app.use("/api/feature", authMiddleware, predictRouter);
 app.use("/api/feature/profile", authMiddleware, profileRouter);
 app.use("/api/feature/history", authMiddleware, historyRouter);
+
+// Setup Swagger UI
+const SWAGGER_PORT = process.env.APP_PORT || 1915;
+setupSwagger(app, SWAGGER_PORT);
+
 console.log("✅ Express app initialization complete!");
 
 export default app;
