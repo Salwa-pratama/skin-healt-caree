@@ -396,7 +396,7 @@ export default function Analisis() {
   };
 
   return (
-    <div className="bg-[#f8f9fa] text-[#191c1d] antialiased overflow-x-hidden min-h-screen font-manrope">
+    <div className="bg-[var(--dashboard-bg)] text-[var(--dashboard-text)] antialiased overflow-x-hidden min-h-screen font-manrope transition-colors duration-300">
       <DashboardHeader
         isSidebarOpen={isSidebarOpen}
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -458,7 +458,7 @@ export default function Analisis() {
             {/* Left Column: Skin Analysis Content */}
             <div className="col-span-12 lg:col-span-8 flex flex-col gap-6 md:gap-8">
               {/* Main Container */}
-              <div className="bg-surface-container-lowest rounded-lg overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.03)] relative min-h-[500px] flex flex-col border border-slate-100">
+              <div className="bg-[var(--dashboard-card-bg)] rounded-lg overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.03)] relative min-h-[500px] flex flex-col border border-[var(--dashboard-border)]">
                 {activeTab === "live" && (
                   <div className="relative flex-grow block bg-black min-h-[450px]">
                     {isCameraActive ? (
@@ -557,7 +557,7 @@ export default function Analisis() {
 
                 {/* Upload View */}
                 {activeTab === "upload" && (
-                  <div className="relative flex-grow bg-slate-50 flex flex-col items-center justify-center p-12 min-h-[400px]">
+                  <div className="relative flex-grow bg-[var(--dashboard-bg)] flex flex-col items-center justify-center p-12 min-h-[400px]">
                     <input
                       type="file"
                       ref={fileInputRef}
@@ -575,39 +575,39 @@ export default function Analisis() {
                             add_a_photo
                           </span>
                         </div>
-                        <h3 className="text-xl font-extrabold text-on-surface mb-2">
+                        <h3 className="text-xl font-extrabold text-[var(--dashboard-text)] mb-2">
                           Unggah Foto Pasien
                         </h3>
-                        <p className="text-sm text-on-surface/50 text-center font-medium">
+                        <p className="text-sm text-[var(--dashboard-text-secondary)] text-center font-medium">
                           Tarik dan lepas file di sini atau{" "}
                           <span className="text-primary font-bold">
                             cari file
                           </span>{" "}
                           untuk memulai analisis.
                         </p>
-                        <div className="mt-8 flex gap-3 text-[10px] font-black uppercase tracking-widest text-on-surface/30">
+                        <div className="mt-8 flex gap-3 text-[10px] font-black uppercase tracking-widest text-[var(--dashboard-text-secondary)]/60">
                           <span>JPG</span>
-                          <span className="w-1 h-1 bg-on-surface/20 rounded-full self-center"></span>
+                          <span className="w-1 h-1 bg-[var(--dashboard-border)] rounded-full self-center"></span>
                           <span>PNG</span>
-                          <span className="w-1 h-1 bg-on-surface/20 rounded-full self-center"></span>
+                          <span className="w-1 h-1 bg-[var(--dashboard-border)] rounded-full self-center"></span>
                           <span>Maks 10MB</span>
                         </div>
                       </div>
                     ) : (
                       <div className="relative w-full max-w-md glass-panel rounded-3xl border-2 border-primary/60 p-8 flex flex-col items-center shadow-lg overflow-hidden">
                         {isAnalyzing && (
-                          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-slate-50/80 backdrop-blur-sm">
+                          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[var(--dashboard-card-bg)]/80 backdrop-blur-sm">
                             <div className="w-16 h-16 border-[5px] border-primary border-t-transparent rounded-full animate-spin shadow-[0_0_15px_rgba(28,109,0,0.5)]"></div>
                             <p className="text-primary font-black text-xs uppercase tracking-[0.3em] mt-6 animate-pulse drop-shadow-[0_0_5px_rgba(28,109,0,0.2)]">Sedang Proses Prediksi...</p>
                           </div>
                         )}
-                        <div className="w-full max-h-64 bg-slate-100 rounded-xl mb-6 overflow-hidden flex justify-center">
+                        <div className="w-full max-h-64 bg-[var(--dashboard-bg)] rounded-xl mb-6 overflow-hidden flex justify-center">
                           <img src={URL.createObjectURL(selectedFile)} alt="Preview" className="h-full object-cover" />
                         </div>
-                        {!predictionResult && <p className="text-sm font-bold text-slate-700 truncate w-full text-center mb-6">{selectedFile.name}</p>}
+                        {!predictionResult && <p className="text-sm font-bold text-[var(--dashboard-text-secondary)] truncate w-full text-center mb-6">{selectedFile.name}</p>}
                         {!predictionResult && (
                           <div className="flex gap-4 w-full">
-                            <button onClick={() => setSelectedFile(null)} className="flex-1 py-3 bg-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-300 transition-colors">
+                            <button onClick={() => setSelectedFile(null)} className="flex-1 py-3 bg-[var(--dashboard-bg)] text-[var(--dashboard-text)] rounded-xl font-bold hover:bg-[var(--dashboard-border)] transition-colors">
                               Batal
                             </button>
                             <button
@@ -624,7 +624,7 @@ export default function Analisis() {
 
                     {/* Removed result div to show uploaded photo preview clearly */}
 
-                    <p className="mt-8 text-[10px] font-bold text-on-surface/40 uppercase tracking-[0.2em] flex items-center gap-2">
+                    <p className="mt-8 text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-[0.2em] flex items-center gap-2">
                       <span className="material-symbols-outlined text-xs">
                         verified_user
                       </span>
@@ -634,7 +634,7 @@ export default function Analisis() {
                 )}
 
                 {/* Footer HUD */}
-                <div className="p-8 bg-black/5 backdrop-blur-md flex justify-between items-end border-t border-slate-100">
+                <div className="p-8 bg-[var(--dashboard-card-bg)] flex justify-between items-end border-t border-[var(--dashboard-border)]">
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
                       <span className="w-2.5 h-2.5 rounded-full bg-primary status-pulse"></span>
@@ -642,7 +642,7 @@ export default function Analisis() {
                         Fase Bio-Analisis
                       </span>
                     </div>
-                    <h3 className="text-2xl font-black tracking-tight text-on-surface">
+                    <h3 className="text-2xl font-black tracking-tight text-[var(--dashboard-text)]">
                       PETA_EPIDERMAL_V2
                     </h3>
                   </div>
@@ -662,58 +662,58 @@ export default function Analisis() {
 
               {/* Metrics Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-surface-container-low rounded-lg p-6 flex flex-col gap-4">
+                <div className="bg-[var(--dashboard-card-bg)] rounded-lg p-6 flex flex-col gap-4">
                   <div className="flex justify-between items-center">
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface/30">
                       Profil Komposisi
                     </p>
                   </div>
                   <div className="grid grid-cols-3 gap-3">
-                    <div className="bg-white/50 p-3 rounded-xl text-center">
-                      <p className="text-[10px] font-bold text-on-surface/40 mb-2">
+                    <div className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] p-3 rounded-xl text-center">
+                      <p className="text-[10px] font-bold text-[var(--dashboard-text-secondary)] mb-2">
                         Kering
                       </p>
-                      <div className="h-1 bg-slate-200 rounded-full overflow-hidden">
+                      <div className="h-1 bg-[var(--dashboard-border)] rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-primary/40"
+                          className="h-full bg-primary/60"
                           style={{ width: "33%" }}
                         ></div>
                       </div>
                     </div>
-                    <div className="bg-primary/10 p-3 rounded-xl text-center">
-                      <p className="text-[10px] font-bold text-on-surface mb-2">
+                    <div className="bg-primary/10 border border-primary/20 p-3 rounded-xl text-center">
+                      <p className="text-[10px] font-bold text-primary mb-2">
                         Berjerawat
                       </p>
-                      <div className="h-1 bg-slate-200 rounded-full overflow-hidden">
+                      <div className="h-1 bg-[var(--dashboard-border)] rounded-full overflow-hidden">
                         <div
                           className="h-full bg-primary"
                           style={{ width: "88%" }}
                         ></div>
                       </div>
                     </div>
-                    <div className="bg-white/50 p-3 rounded-xl text-center">
-                      <p className="text-[10px] font-bold text-on-surface/40 mb-2">
+                    <div className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] p-3 rounded-xl text-center">
+                      <p className="text-[10px] font-bold text-[var(--dashboard-text-secondary)] mb-2">
                         Berminyak
                       </p>
-                      <div className="h-1 bg-slate-200 rounded-full overflow-hidden">
+                      <div className="h-1 bg-[var(--dashboard-border)] rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-primary/40"
+                          className="h-full bg-primary/60"
                           style={{ width: "50%" }}
                         ></div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="bg-surface-container-low rounded-lg p-6 flex items-center justify-between">
+                <div className="bg-[var(--dashboard-card-bg)] rounded-lg p-6 flex items-center justify-between">
                   <div className="flex flex-col">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface/30 mb-2">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--dashboard-text-secondary)]/50 mb-2">
                       Tingkat Hidrasi
                     </p>
-                    <p className="text-4xl font-black text-on-background">
+                    <p className="text-4xl font-black text-[var(--dashboard-text)]">
                       84<span className="text-primary text-xl ml-1">%</span>
                     </p>
                   </div>
-                  <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-primary shadow-sm hover:scale-105 transition-transform cursor-pointer">
+                  <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/25 flex items-center justify-center text-primary shadow-sm hover:scale-105 transition-transform cursor-pointer">
                     <span className="material-symbols-outlined text-3xl font-black">
                       water_drop
                     </span>
@@ -726,7 +726,7 @@ export default function Analisis() {
             <div className="col-span-12 lg:col-span-4 flex flex-col gap-6 md:gap-8">
 
               {/* Concerns List */}
-              <div className="bg-surface-container-low rounded-lg p-6 md:p-8 flex flex-col h-[520px]">
+              <div className="bg-[var(--dashboard-card-bg)] rounded-lg p-6 md:p-8 flex flex-col h-[520px]">
                 <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar space-y-8">
                   {/* Masalah Terdeteksi Section */}
                   <section>
@@ -743,14 +743,14 @@ export default function Analisis() {
                       ]).map((pred, index) => (
                         <div key={index} className="group">
                           <div className="flex justify-between items-center mb-1.5 px-1">
-                            <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+                            <span className="text-[10px] font-bold text-[var(--dashboard-text-secondary)] uppercase tracking-widest">
                               {pred.label}
                             </span>
                             <span className="text-[10px] font-black text-primary">
                               {pred.persentase}
                             </span>
                           </div>
-                          <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                          <div className="w-full bg-[var(--dashboard-bg)] h-1.5 rounded-full overflow-hidden border border-[var(--dashboard-border)]">
                             <div
                               className="h-full bg-primary transition-all duration-1000 ease-out shadow-[0_0_8px_rgba(28,109,0,0.3)]"
                               style={{ width: pred.persentase }}
@@ -765,47 +765,47 @@ export default function Analisis() {
                   {predictionResult && (
                     <section className="space-y-4 pt-4 animate-in fade-in slide-in-from-top-4 duration-700 pb-4">
                       <div className="flex items-center gap-3 mb-2">
-                        <div className="h-px bg-slate-200 flex-grow"></div>
-                        <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em]">Rekomendasi Ahli</span>
-                        <div className="h-px bg-slate-200 flex-grow"></div>
+                        <div className="h-px bg-[var(--dashboard-border)] flex-grow"></div>
+                        <span className="text-[9px] font-black text-[var(--dashboard-text-secondary)]/50 uppercase tracking-[0.3em]">Rekomendasi Ahli</span>
+                        <div className="h-px bg-[var(--dashboard-border)] flex-grow"></div>
                       </div>
 
                       {/* Analysis Summary Card */}
-                      <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm">
+                      <div className="bg-[var(--dashboard-card-bg)] border border-[var(--dashboard-border)] rounded-2xl p-4 shadow-sm">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="material-symbols-outlined text-primary text-sm">verified</span>
-                          <h3 className="font-extrabold text-[10px] uppercase tracking-widest text-slate-800">
+                          <h3 className="font-extrabold text-[10px] uppercase tracking-widest text-[var(--dashboard-text)]">
                             Analisis {predictionResult.rekomendasi.type}
                           </h3>
                         </div>
-                        <p className="text-[11px] text-slate-500 font-bold leading-relaxed">
+                        <p className="text-[11px] text-[var(--dashboard-text-secondary)] font-bold leading-relaxed">
                           {predictionResult.rekomendasi.description}
                         </p>
                       </div>
 
                       {/* Ingredients Card */}
-                      <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm space-y-4">
+                      <div className="bg-[var(--dashboard-card-bg)] border border-[var(--dashboard-border)] rounded-2xl p-4 shadow-sm space-y-4">
                         <div>
-                          <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 flex items-center gap-2">
+                          <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--dashboard-text-secondary)] mb-3 flex items-center gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
                             Kandungan Disarankan
                           </h4>
                           <div className="flex flex-wrap gap-2">
                             {predictionResult.rekomendasi.goodIngredients.map((item, i) => (
-                              <span key={i} className="px-2 py-1 bg-primary/5 text-primary text-[9px] font-bold rounded-lg border border-primary/10">
+                              <span key={i} className="px-2 py-1 bg-primary/10 text-primary text-[9px] font-bold rounded-lg border border-primary/20">
                                 {item}
                               </span>
                             ))}
                           </div>
                         </div>
-                        <div className="pt-3 border-t border-slate-50">
-                          <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                        <div className="pt-3 border-t border-[var(--dashboard-border)]">
+                          <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--dashboard-text-secondary)] mb-3 flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
                             Hindari Kandungan
                           </h4>
                           <div className="flex flex-wrap gap-2">
                             {predictionResult.rekomendasi.badIngredients.map((item, i) => (
-                              <span key={i} className="px-2 py-1 bg-red-50 text-red-400 text-[9px] font-bold rounded-lg border border-red-100">
+                              <span key={i} className="px-2 py-1 bg-red-500/10 text-red-500 text-[9px] font-bold rounded-lg border border-red-500/20">
                                 {item}
                               </span>
                             ))}
@@ -814,14 +814,14 @@ export default function Analisis() {
                       </div>
 
                       {/* Habits & Lifestyle Card */}
-                      <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm">
-                        <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 flex items-center gap-2">
+                      <div className="bg-[var(--dashboard-card-bg)] border border-[var(--dashboard-border)] rounded-2xl p-4 shadow-sm">
+                        <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--dashboard-text-secondary)] mb-3 flex items-center gap-2">
                           <span className="material-symbols-outlined text-sm">self_care</span>
                           Kebiasaan Sehat
                         </h4>
                         <ul className="space-y-2">
                           {predictionResult.rekomendasi.habits.map((item, i) => (
-                            <li key={i} className="text-[10px] font-bold text-slate-600 flex items-start gap-2">
+                            <li key={i} className="text-[10px] font-bold text-[var(--dashboard-text)] flex items-start gap-2">
                               <span className="mt-1 w-1 h-1 bg-primary rounded-full flex-shrink-0"></span>
                               {item}
                             </li>
@@ -830,18 +830,18 @@ export default function Analisis() {
                       </div>
 
                       {/* Treatment Plan Card */}
-                      <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm">
-                        <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 flex items-center gap-2">
+                      <div className="bg-[var(--dashboard-card-bg)] border border-[var(--dashboard-border)] rounded-2xl p-4 shadow-sm">
+                        <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--dashboard-text-secondary)] mb-3 flex items-center gap-2">
                           <span className="material-symbols-outlined text-sm">medical_services</span>
                           Rencana Perawatan
                         </h4>
                         <div className="space-y-2">
                           {predictionResult.rekomendasi.treatments.map((item, i) => (
-                            <div key={i} className="bg-slate-50 p-3 rounded-xl flex justify-between items-center group hover:bg-primary/5 transition-colors duration-300">
-                              <p className="text-[10px] font-black text-slate-700 group-hover:text-primary transition-colors">{item.name}</p>
-                              <div className="flex items-center gap-1 px-2 py-1 bg-white shadow-sm rounded-full">
+                            <div key={i} className="bg-[var(--dashboard-bg)] p-3 rounded-xl flex justify-between items-center group hover:bg-primary/5 transition-colors duration-300 border border-[var(--dashboard-border)]">
+                              <p className="text-[10px] font-black text-[var(--dashboard-text)] group-hover:text-primary transition-colors">{item.name}</p>
+                              <div className="flex items-center gap-1 px-2 py-1 bg-[var(--dashboard-card-bg)] border border-[var(--dashboard-border)] shadow-sm rounded-full">
                                 <span className="material-symbols-outlined text-[10px] text-primary">schedule</span>
-                                <p className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">{item.time}</p>
+                                <p className="text-[8px] font-black text-[var(--dashboard-text-secondary)] uppercase tracking-tighter">{item.time}</p>
                               </div>
                             </div>
                           ))}
@@ -912,7 +912,7 @@ export default function Analisis() {
         </div>
       </main>
 
-      <footer className="lg:ml-72 bg-white py-6 px-12 border-t border-slate-100 hidden lg:block">
+      <footer className="lg:ml-72 bg-[var(--dashboard-card-bg)] py-6 px-12 border-t border-[var(--dashboard-border)] hidden lg:block transition-colors duration-300">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface/30">
             © 2024 Clinical Ethereal MedTech.
@@ -1034,7 +1034,7 @@ export default function Analisis() {
       {/* Custom Modal Popup */}
       {modalConfig.isOpen && (
         <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white rounded-[32px] shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-300">
+          <div className="bg-[var(--dashboard-card-bg)] rounded-[32px] shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-300">
             <div className="p-8 flex flex-col items-center text-center">
               <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 ${
                 modalConfig.type === "success" ? "bg-green-100 text-green-600" : 
@@ -1045,10 +1045,10 @@ export default function Analisis() {
                    modalConfig.type === "error" ? "error" : "info"}
                 </span>
               </div>
-              <h3 className="text-2xl font-black text-slate-800 mb-2 tracking-tight">
+              <h3 className="text-2xl font-black text-[var(--dashboard-text)] mb-2 tracking-tight">
                 {modalConfig.title}
               </h3>
-              <p className="text-sm text-slate-500 font-medium leading-relaxed mb-8 px-4">
+              <p className="text-sm text-[var(--dashboard-text-secondary)] font-medium leading-relaxed mb-8 px-4">
                 {modalConfig.message}
               </p>
               <button

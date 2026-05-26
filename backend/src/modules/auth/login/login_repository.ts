@@ -34,6 +34,9 @@ export class AuthRepository {
   }
 
   async clearRefreshTokenAsync(userId: number): Promise<void> {
+    if (!userId) {
+      throw new Error("Invalid User ID provided to clearRefreshTokenAsync");
+    }
     await prisma.userPublic.update({
       where: { id: userId },
       data: { refreshTokenHash: null, updatedAt: new Date() },

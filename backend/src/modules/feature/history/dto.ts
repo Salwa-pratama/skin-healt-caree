@@ -6,6 +6,7 @@ export const HistoryResponseSchema = z.object({
   name: z.string(),
   predictions: z.any(),
   createdAt: z.date(),
+  acneProblemSolutions: z.array(z.any()).optional(),
 });
 
 export type HistoryResponse = z.infer<typeof HistoryResponseSchema>;

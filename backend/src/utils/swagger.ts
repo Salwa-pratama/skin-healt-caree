@@ -10,6 +10,16 @@ const options: swaggerJsdoc.Options = {
       version: '1.0.0',
       description: 'API documentation for Skin Health Care Backend Service',
     },
+    servers: [
+      {
+        url: '/',
+        description: 'Default Server (Relative URL for dev/prod)',
+      },
+      {
+        url: `http://localhost:${process.env.APP_PORT || 1915}`,
+        description: 'Local Development Server',
+      },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -26,14 +36,28 @@ const options: swaggerJsdoc.Options = {
     ],
   },
   // Look for swagger comments in these files
-  apis: ['./src/modules/**/*/router.ts', './src/modules/**/*/*_router.ts'],
+  apis: [
+    './src/modules/**/*.ts',
+    './src/modules/**/*.js',
+    './dist/src/modules/**/*.js',
+    './dist/modules/**/*.js',
+    './modules/**/*.js',
+  ],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
 export function setupSwagger(app: Express, port: number | string) {
   // Swagger Page
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec, {
+      swaggerOptions: {
+        persistAuthorization: true,
+      },
+    })
+  );
 
   // Docs in JSON format
   app.get('/api-docs.json', (req: Request, res: Response) => {
@@ -43,3 +67,4 @@ export function setupSwagger(app: Express, port: number | string) {
 
   console.log(`✅ Swagger docs available at http://localhost:${port}/api-docs`);
 }
+
