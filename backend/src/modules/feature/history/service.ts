@@ -28,25 +28,31 @@ export class HistoryService {
       predictions = predictionsInput;
     }
 
-    // 1. Upload image to Cloudinary using stream
-    const uploadToCloudinary = () => {
-      return new Promise((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          {
-            folder: "e-taqwa/history",
-            resource_type: "auto",
-          },
-          (error, result) => {
-            if (error) return reject(error);
-            resolve(result);
-          },
-        );
-        uploadStream.end(fileBuffer);
-      });
-    };
-
-    const cloudinaryResult: any = await uploadToCloudinary();
-    const citraUrl = cloudinaryResult.secure_url;
+    // 1. Upload image to Cloudinary with fallback to Base64
+    let citraUrl = "";
+    if (process.env.CLOUDINARY_API_SECRET) {
+      const uploadToCloudinary = () => {
+        return new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            {
+              folder: "e-taqwa/history",
+              resource_type: "auto",
+            },
+            (error, result) => {
+              if (error) return reject(error);
+              resolve(result);
+            },
+          );
+          uploadStream.end(fileBuffer);
+        });
+      };
+      const cloudinaryResult: any = await uploadToCloudinary();
+      citraUrl = cloudinaryResult.secure_url;
+    } else {
+      console.warn("⚠️ CLOUDINARY_API_SECRET is missing. Bypassing Cloudinary and storing image as base64 in database.");
+      const base64Image = fileBuffer.toString("base64");
+      citraUrl = `data:image/jpeg;base64,${base64Image}`;
+    }
 
     // 2. Find Recommendation based on top prediction
     const mainRec = acneRecommendations.find((r) => {
@@ -64,7 +70,7 @@ export class HistoryService {
     // 3. Save to Database with nested relations as per schema
     const saved = await prisma.acneProblem.create({
       data: {
-        userId: userId,
+        user: { connect: { id: userId } },
         name: jerawat,
         citra: citraUrl,
         predictions: predictions as any,
@@ -149,41 +155,47 @@ export class HistoryService {
 
     // 2. Handle image upload if a new file is provided
     if (fileBuffer) {
-      const uploadToCloudinary = () => {
-        return new Promise((resolve, reject) => {
-          const uploadStream = cloudinary.uploader.upload_stream(
-            { folder: "e-taqwa/history", resource_type: "auto" },
-            (error, result) => {
-              if (error) return reject(error);
-              resolve(result);
-            },
-          );
-          uploadStream.end(fileBuffer);
-        });
-      };
-      const cloudinaryResult: any = await uploadToCloudinary();
-      updateData.citra = cloudinaryResult.secure_url;
+      if (process.env.CLOUDINARY_API_SECRET) {
+        const uploadToCloudinary = () => {
+          return new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              { folder: "e-taqwa/history", resource_type: "auto" },
+              (error, result) => {
+                if (error) return reject(error);
+                resolve(result);
+              },
+            );
+            uploadStream.end(fileBuffer);
+          });
+        };
+        const cloudinaryResult: any = await uploadToCloudinary();
+        updateData.citra = cloudinaryResult.secure_url;
 
-      // Hapus gambar lama dari Cloudinary
-      if (existingHistory.citra) {
-        try {
-          const parts = existingHistory.citra.split("/upload/");
-          if (parts.length > 1) {
-            const afterUpload = parts[1];
-            const withoutVersion = afterUpload.substring(
-              afterUpload.indexOf("/") + 1,
-            );
-            const publicId = withoutVersion.substring(
-              0,
-              withoutVersion.lastIndexOf("."),
-            );
-            if (publicId) {
-              await cloudinary.uploader.destroy(publicId);
+        // Hapus gambar lama dari Cloudinary
+        if (existingHistory.citra) {
+          try {
+            const parts = existingHistory.citra.split("/upload/");
+            if (parts.length > 1) {
+              const afterUpload = parts[1];
+              const withoutVersion = afterUpload.substring(
+                afterUpload.indexOf("/") + 1,
+              );
+              const publicId = withoutVersion.substring(
+                0,
+                withoutVersion.lastIndexOf("."),
+              );
+              if (publicId) {
+                await cloudinary.uploader.destroy(publicId);
+              }
             }
+          } catch (e) {
+            console.error("Gagal menghapus gambar lama di Cloudinary:", e);
           }
-        } catch (e) {
-          console.error("Gagal menghapus gambar lama di Cloudinary:", e);
         }
+      } else {
+        console.warn("⚠️ CLOUDINARY_API_SECRET is missing. Bypassing Cloudinary and storing updated image as base64.");
+        const base64Image = fileBuffer.toString("base64");
+        updateData.citra = `data:image/jpeg;base64,${base64Image}`;
       }
     }
 
@@ -260,8 +272,8 @@ export class HistoryService {
       throw new Error("History tidak ditemukan");
     }
 
-    // Hapus gambar dari Cloudinary
-    if (existingHistory.citra) {
+    // Hapus gambar dari Cloudinary (jika di-upload menggunakan Cloudinary)
+    if (existingHistory.citra && process.env.CLOUDINARY_API_SECRET && !existingHistory.citra.startsWith("data:")) {
       try {
         const parts = existingHistory.citra.split("/upload/");
         if (parts.length > 1) {
