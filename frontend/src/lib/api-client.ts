@@ -25,3 +25,26 @@ apiClient.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+apiClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      const isLoginRequest = error.config?.url?.includes("/auth/login");
+      const isLoginPage = typeof window !== "undefined" && window.location.pathname.includes("/pages/auth/login");
+
+      if (!isLoginRequest && !isLoginPage) {
+        console.warn("🚫 apiClient: Sesi kedaluwarsa (401). Menghapus token...");
+        Cookies.remove("access_token", { path: "/" });
+        if (typeof window !== "undefined") {
+          localStorage.setItem("logout-event", Date.now().toString());
+          sessionStorage.removeItem("session_active");
+          window.location.href = "/pages/auth/login";
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
