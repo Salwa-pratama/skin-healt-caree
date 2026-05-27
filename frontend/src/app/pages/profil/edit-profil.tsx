@@ -205,7 +205,6 @@ export default function ProfilePage() {
                       style={{
                         background: "var(--dashboard-sidebar-active-bg)",
                         color: "var(--dashboard-text)",
-                        focusRingColor: "var(--dashboard-sidebar-active-text)",
                       }}
                       type="text"
                       defaultValue={data?.name || "data kosong"}

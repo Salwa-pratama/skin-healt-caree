@@ -4,6 +4,7 @@ import { ReactQueryProvider } from "@/lib/react-query-provider";
 import { ThemeProvider } from "@/lib/theme-provider";
 import "./globals.css";
 import Navbar from "./components/Header";
+import AuthListener from "./components/AuthListener";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -52,6 +53,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <ReactQueryProvider>
+            <AuthListener />
             <Navbar />
             {children}
           </ReactQueryProvider>
