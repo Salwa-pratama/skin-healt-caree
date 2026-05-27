@@ -15,34 +15,34 @@ const isSkinImage = (img: HTMLImageElement | HTMLVideoElement | HTMLCanvasElemen
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
   if (!ctx) return true; // Fallback to true if context fails
-  
+
   canvas.width = 100;
   canvas.height = 100;
   ctx.drawImage(img, 0, 0, 100, 100);
-  
+
   const imageData = ctx.getImageData(0, 0, 100, 100);
   const data = imageData.data;
-  
+
   let skinPixelCount = 0;
   for (let i = 0; i < data.length; i += 4) {
     const r = data[i];
-    const g = data[i+1];
-    const b = data[i+2];
-    
+    const g = data[i + 1];
+    const b = data[i + 2];
+
     // YCbCr color space conversion
     const y = 0.299 * r + 0.587 * g + 0.114 * b;
     const cb = 128 - 0.168736 * r - 0.331264 * g + 0.5 * b;
     const cr = 128 + 0.5 * r - 0.418688 * g - 0.081312 * b;
-    
+
     // Skin color range in YCbCr
     if (y > 80 && cb > 85 && cb < 135 && cr > 135 && cr < 180) {
       skinPixelCount++;
     }
   }
-  
+
   const totalPixels = 100 * 100;
   const skinPercentage = skinPixelCount / totalPixels;
-  
+
   // Return true if at least 15% of the image has skin color
   return skinPercentage > 0.15;
 };
@@ -82,7 +82,7 @@ export default function Analisis() {
     message: "",
     type: "info"
   });
-  
+
   const showModal = (title: string, message: string, type: "success" | "error" | "info" = "info") => {
     setModalConfig({ isOpen: true, title, message, type });
   };
@@ -182,7 +182,7 @@ export default function Analisis() {
             for (const landmarks of results.faceLandmarks) {
               // Draw detailed mesh
               drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_TESSELATION, { color: "#C0C0C050", lineWidth: 1 });
-              
+
               // Draw major features with thicker lines for full facial coverage
               const mainFeatureStyle = { color: "#84f75e", lineWidth: 3 };
               drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE, mainFeatureStyle);
@@ -211,48 +211,48 @@ export default function Analisis() {
       const video = videoRef.current;
       const videoWidth = video.videoWidth;
       const videoHeight = video.videoHeight;
-      
+
       let cropX = 0;
       let cropY = 0;
       let cropW = videoWidth;
       let cropH = videoHeight;
-      
+
       if (latestFaceLandmarksRef.current) {
-         const landmarks = latestFaceLandmarksRef.current;
-         let minX = 1, minY = 1, maxX = 0, maxY = 0;
-         for (const pt of landmarks) {
-            minX = Math.min(minX, pt.x);
-            maxX = Math.max(maxX, pt.x);
-            minY = Math.min(minY, pt.y);
-            maxY = Math.max(maxY, pt.y);
-         }
-         
-         const paddingX = (maxX - minX) * 0.2;
-         const paddingY = (maxY - minY) * 0.25;
-         
-         const finalMinX = Math.max(0, minX - paddingX);
-         const finalMaxX = Math.min(1, maxX + paddingX);
-         const finalMinY = Math.max(0, minY - paddingY - 0.1);
-         const finalMaxY = Math.min(1, maxY + paddingY);
-         
-         cropX = finalMinX * videoWidth;
-         cropY = finalMinY * videoHeight;
-         cropW = (finalMaxX - finalMinX) * videoWidth;
-         cropH = (finalMaxY - finalMinY) * videoHeight;
+        const landmarks = latestFaceLandmarksRef.current;
+        let minX = 1, minY = 1, maxX = 0, maxY = 0;
+        for (const pt of landmarks) {
+          minX = Math.min(minX, pt.x);
+          maxX = Math.max(maxX, pt.x);
+          minY = Math.min(minY, pt.y);
+          maxY = Math.max(maxY, pt.y);
+        }
+
+        const paddingX = (maxX - minX) * 0.2;
+        const paddingY = (maxY - minY) * 0.25;
+
+        const finalMinX = Math.max(0, minX - paddingX);
+        const finalMaxX = Math.min(1, maxX + paddingX);
+        const finalMinY = Math.max(0, minY - paddingY - 0.1);
+        const finalMaxY = Math.min(1, maxY + paddingY);
+
+        cropX = finalMinX * videoWidth;
+        cropY = finalMinY * videoHeight;
+        cropW = (finalMaxX - finalMinX) * videoWidth;
+        cropH = (finalMaxY - finalMinY) * videoHeight;
       }
-      
+
       const captureCanvas = document.createElement("canvas");
       captureCanvas.width = cropW;
       captureCanvas.height = cropH;
       const ctx = captureCanvas.getContext("2d");
-      
+
       if (ctx) {
         ctx.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
-        
+
         const imageData = captureCanvas.toDataURL("image/jpeg");
         setCapturedImage(imageData);
         setIsCameraActive(false);
-        
+
         captureCanvas.toBlob((blob) => {
           if (blob) {
             const file = new File([blob], "capture.jpg", { type: "image/jpeg" });
@@ -272,7 +272,7 @@ export default function Analisis() {
           img.onload = resolve;
           img.onerror = reject;
         });
-        
+
         if (!isSkinImage(img)) {
           showModal("Gambar Anomali", "Kamera tidak mendeteksi wajah atau kulit yang jelas. Silakan posisikan ulang kamera Anda.", "error");
           resetScan();
@@ -331,12 +331,12 @@ export default function Analisis() {
     if (selectedFile && faceLandmarker) {
       setIsValidating(true);
       console.log("Validating photo for face presence...");
-      
+
       // Create image element for validation
       const img = document.createElement("img");
       const imageUrl = URL.createObjectURL(selectedFile);
       img.src = imageUrl;
-      
+
       try {
         await new Promise((resolve, reject) => {
           img.onload = resolve;
@@ -345,7 +345,7 @@ export default function Analisis() {
 
         // Use the existing landmarker to detect face in the uploaded image
         const results = faceLandmarker.detectForVideo(img, performance.now());
-        
+
         if (!results.faceLandmarks || results.faceLandmarks.length === 0) {
           console.log("Wajah utuh tidak terdeteksi, mencoba memvalidasi area kulit...");
           if (!isSkinImage(img)) {
@@ -428,8 +428,8 @@ export default function Analisis() {
               <div className="bg-surface-container-high p-0.5 rounded-xl flex w-fit">
                 <button
                   className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all duration-300 flex items-center gap-1.5 ${activeTab === "live"
-                      ? "tab-active"
-                      : "text-on-surface/50 hover:text-on-surface"
+                    ? "tab-active"
+                    : "text-on-surface/50 hover:text-on-surface"
                     }`}
                   onClick={() => setActiveTab("live")}
                 >
@@ -440,8 +440,8 @@ export default function Analisis() {
                 </button>
                 <button
                   className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all duration-300 flex items-center gap-1.5 ${activeTab === "upload"
-                      ? "tab-active"
-                      : "text-on-surface/50 hover:text-on-surface"
+                    ? "tab-active"
+                    : "text-on-surface/50 hover:text-on-surface"
                     }`}
                   onClick={() => setActiveTab("upload")}
                 >
@@ -858,27 +858,29 @@ export default function Analisis() {
               <div className="flex flex-col gap-3 w-full">
                 <button
                   onClick={() => {
-                    if (predictionResult && capturedImage) {
+                    const activeFile = activeTab === "upload" ? selectedFile : capturedFile;
+                    if (predictionResult && activeFile) {
                       saveHistoryMutation.mutate({
-                        citra: capturedImage,
-                        name: predictionResult.jerawat,
+                        file: activeFile,
+                        jerawat: predictionResult.jerawat,
                         predictions: predictionResult.predictions
                       }, {
                         onSuccess: () => {
-                          showModal("Berhasil Disimpan", "Hasil analisis kulit Anda telah berhasil disimpan ke riwayat.", "success");
+                          showModal("Berhasil Disimpan", "Hasil analisis kulit Anda telah berhasil disimpan ke history.", "success");
                           resetScan();
                         },
                         onError: (error: any) => {
                           console.error("Save History Error:", error);
-                          showModal("Gagal Menyimpan", "Maaf, terjadi kesalahan saat mencoba menyimpan hasil analisis.", "error");
+                          const errorMsg = error.response?.data?.message || error.message || "Maaf, terjadi kesalahan saat mencoba menyimpan hasil analisis.";
+                          showModal("Gagal Menyimpan", errorMsg, "error");
                         }
                       });
                     }
                   }}
-                  disabled={!predictionResult || saveHistoryMutation.isPending}
+                  disabled={!predictionResult || !(activeTab === "upload" ? selectedFile : capturedFile) || saveHistoryMutation.isPending}
                   className={`w-full py-4 rounded-2xl font-black text-base tracking-tight shadow-lg transition-all flex items-center justify-center gap-3 ${predictionResult
-                      ? "signature-gradient text-white hover:-translate-y-1 active:scale-95 cursor-pointer"
-                      : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                    ? "signature-gradient text-white hover:-translate-y-1 active:scale-95 cursor-pointer"
+                    : "bg-slate-200 text-slate-400 cursor-not-allowed"
                     }`}
                 >
                   {saveHistoryMutation.isPending ? "MENYIMPAN..." : "SIMPAN"}
@@ -891,8 +893,8 @@ export default function Analisis() {
                   onClick={resetScan}
                   disabled={!predictionResult}
                   className={`w-full py-4 rounded-2xl font-black text-base tracking-tight shadow-lg transition-all flex items-center justify-center gap-3 ${predictionResult
-                      ? "bg-red-500 text-white hover:-translate-y-1 active:scale-95 cursor-pointer"
-                      : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                    ? "bg-red-500 text-white hover:-translate-y-1 active:scale-95 cursor-pointer"
+                    : "bg-slate-200 text-slate-400 cursor-not-allowed"
                     }`}
                 >
                   HAPUS
@@ -1036,13 +1038,12 @@ export default function Analisis() {
         <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
           <div className="bg-[var(--dashboard-card-bg)] rounded-[32px] shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-300">
             <div className="p-8 flex flex-col items-center text-center">
-              <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 ${
-                modalConfig.type === "success" ? "bg-green-100 text-green-600" : 
-                modalConfig.type === "error" ? "bg-red-100 text-red-600" : "bg-blue-100 text-blue-600"
-              }`}>
+              <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 ${modalConfig.type === "success" ? "bg-green-100 text-green-600" :
+                  modalConfig.type === "error" ? "bg-red-100 text-red-600" : "bg-blue-100 text-blue-600"
+                }`}>
                 <span className="material-symbols-outlined text-4xl">
-                  {modalConfig.type === "success" ? "check_circle" : 
-                   modalConfig.type === "error" ? "error" : "info"}
+                  {modalConfig.type === "success" ? "check_circle" :
+                    modalConfig.type === "error" ? "error" : "info"}
                 </span>
               </div>
               <h3 className="text-2xl font-black text-[var(--dashboard-text)] mb-2 tracking-tight">
@@ -1053,11 +1054,10 @@ export default function Analisis() {
               </p>
               <button
                 onClick={() => setModalConfig({ ...modalConfig, isOpen: false })}
-                className={`w-full py-4 rounded-2xl font-black text-sm tracking-widest uppercase transition-all active:scale-95 ${
-                  modalConfig.type === "success" ? "bg-primary text-white shadow-lg shadow-primary/20 hover:bg-[#1c6d00]" :
-                  modalConfig.type === "error" ? "bg-red-500 text-white shadow-lg shadow-red-500/20 hover:bg-red-600" :
-                  "bg-slate-800 text-white shadow-lg shadow-slate-800/20 hover:bg-slate-900"
-                }`}
+                className={`w-full py-4 rounded-2xl font-black text-sm tracking-widest uppercase transition-all active:scale-95 ${modalConfig.type === "success" ? "bg-primary text-white shadow-lg shadow-primary/20 hover:bg-[#1c6d00]" :
+                    modalConfig.type === "error" ? "bg-red-500 text-white shadow-lg shadow-red-500/20 hover:bg-red-600" :
+                      "bg-slate-800 text-white shadow-lg shadow-slate-800/20 hover:bg-slate-900"
+                  }`}
               >
                 Mengerti
               </button>
