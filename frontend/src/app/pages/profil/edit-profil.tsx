@@ -2,13 +2,62 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useProfile } from "@/features/auth/api/profile.api";
+import { useRouter } from "next/navigation";
+import { useProfile, useUpdateProfileMutation } from "@/features/auth/api/profile.api";
 import { useTheme } from "@/lib/theme-provider";
 
 export default function ProfilePage() {
+  const router = useRouter();
   const [is2FAEnabled, setIs2FAEnabled] = useState(true);
   const { data, isLoading, error } = useProfile();
   const { theme, toggleTheme } = useTheme();
+
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [skintype, setSkintype] = useState("Normal");
+  const updateProfileMutation = useUpdateProfileMutation();
+
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const skintypeMap: Record<string, string> = {
+    "Kering": "dry",
+    "Berminyak": "oily",
+    "Kombinasi": "combination",
+    "Normal": "normal"
+  };
+  
+  const reverseSkintypeMap: Record<string, string> = {
+    "dry": "Kering",
+    "oily": "Berminyak",
+    "combination": "Kombinasi",
+    "normal": "Normal"
+  };
+
+  useEffect(() => {
+    if (data) {
+      setName(data.name || "");
+      setPhone(data.phone || "");
+      setSkintype(reverseSkintypeMap[data.skintype] || "Normal");
+    }
+  }, [data]);
+
+  const handleSave = () => {
+    updateProfileMutation.mutate({
+      name,
+      phone,
+      skintype: skintypeMap[skintype] || "normal"
+    }, {
+      onSuccess: () => {
+        setShowSuccessPopup(true);
+      },
+      onError: (err: any) => {
+        setErrorMessage(err?.response?.data?.message || err.message);
+        setShowErrorPopup(true);
+      }
+    });
+  };
 
   console.log("Profile Data:", data);
 
@@ -171,14 +220,26 @@ export default function ProfilePage() {
                 {/* Avatar */}
                 <div className="relative group flex-shrink-0">
                   <div
-                    className="w-32 h-32 sm:w-48 sm:h-48 rounded-full overflow-hidden border-4 shadow-lg"
+                    className="w-32 h-32 sm:w-48 sm:h-48 rounded-full overflow-hidden border-4 shadow-lg animate-none"
                     style={{ borderColor: "var(--dashboard-sidebar-active-text)" }}
                   >
-                    <img
-                      alt="User profile avatar"
-                      className="w-full h-full object-cover"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuASpIs7U2aIxSyaIMtvONfbkT2-D3eO2hifZYSbtM12iOArzKj_0fZkjawcx4xqygnEeFz45ouT79ASyf1EMzsqCVYFO25pAyDShRSVHIrk4V6cDN31pArjVrP_8A3I0NVNycgFHAtT4MEy3LAteBJxfBM4CkygCF2dHgQn1DftN63JJW7C4bTAmMW1znnb-dCfBmnzm7912q5W4v2pPNz1HHlcM4jRo2kUss9TMLFLiZ2CBrlO3Kx5F9crVR83GeC7W6X9SQxUgQMC"
-                    />
+                    {data?.avatar ? (
+                      <img
+                        alt="User profile avatar"
+                        className="w-full h-full object-cover"
+                        src={data.avatar}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#E2E8F0] dark:bg-[#334155] flex items-center justify-center text-[#94A3B8] dark:text-[#64748B]">
+                        <svg
+                          className="w-2/3 h-2/3"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                      </div>
+                    )}
                   </div>
                   <button
                     className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 p-2 sm:p-3 rounded-full shadow-lg hover:scale-105 active:scale-90 transition-transform"
@@ -207,7 +268,8 @@ export default function ProfilePage() {
                         color: "var(--dashboard-text)",
                       }}
                       type="text"
-                      defaultValue={data?.name || "data kosong"}
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                     />
                   </div>
                   <div className="space-y-1 sm:space-y-2">
@@ -233,7 +295,7 @@ export default function ProfilePage() {
                       className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest px-1"
                       style={{ color: "var(--dashboard-text-secondary)" }}
                     >
-                      Role
+                      Nomor HP
                     </label>
                     <input
                       className="w-full border-none rounded-xl sm:rounded-2xl px-5 py-3 sm:py-4 focus:ring-2 transition-all outline-none font-medium text-sm sm:text-base"
@@ -242,7 +304,9 @@ export default function ProfilePage() {
                         color: "var(--dashboard-text)",
                       }}
                       type="text"
-                      defaultValue={data?.role || "kosong"}
+                      placeholder="Masukkan nomor HP Anda"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
                     />
                   </div>
                 </div>
@@ -282,9 +346,11 @@ export default function ProfilePage() {
                     {["Kering", "Berminyak", "Kombinasi", "Normal"].map((type) => (
                       <button
                         key={type}
+                        type="button"
+                        onClick={() => setSkintype(type)}
                         className="flex-1 min-w-[100px] sm:flex-none px-4 sm:px-8 py-2.5 sm:py-3 rounded-full border-2 transition-all hover:scale-95 font-bold text-xs sm:text-sm"
                         style={
-                          type === "Kering"
+                          type === skintype
                             ? {
                                 borderColor: "var(--dashboard-sidebar-active-text)",
                                 background: "var(--dashboard-sidebar-active-text)",
@@ -461,6 +527,10 @@ export default function ProfilePage() {
             {/* Batal — ghost/text button */}
             <button
               id="profil-batal-btn"
+              type="button"
+              onClick={() => {
+                router.push("/pages/dashboard");
+              }}
               className="px-5 py-2 rounded-full text-xs font-semibold transition-all duration-200 hover:opacity-80 active:scale-95"
               style={{ color: "var(--dashboard-text-secondary)" }}
             >
@@ -469,16 +539,127 @@ export default function ProfilePage() {
             {/* Simpan Perubahan — compact accent pill */}
             <button
               id="profil-simpan-btn"
-              className="px-6 py-2 rounded-full text-xs font-black tracking-wide shadow-md hover:scale-[1.03] active:scale-95 transition-all duration-200"
+              type="button"
+              onClick={handleSave}
+              disabled={updateProfileMutation.isPending}
+              className="px-6 py-2 rounded-full text-xs font-black tracking-wide shadow-md hover:scale-[1.03] active:scale-95 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
               style={{
                 background: "linear-gradient(135deg, #84F75E 0%, #1C6D00 100%)",
                 color: "#ffffff",
               }}
             >
-              Simpan
+              {updateProfileMutation.isPending ? "Menyimpan..." : "Simpan"}
             </button>
           </div>
         </footer>
+
+        {/* ── Success Modal Popup ── */}
+        {showSuccessPopup && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <div 
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 cursor-pointer"
+              onClick={() => setShowSuccessPopup(false)}
+            />
+            {/* Modal Content */}
+            <div 
+              className="relative bg-[var(--dashboard-card-bg)] border border-[var(--dashboard-border)] rounded-[2rem] p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center transition-all"
+              style={{ 
+                color: "var(--dashboard-text)",
+                animation: "popupEntrance 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards" 
+              }}
+            >
+              {/* Animated Icon Container */}
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6 relative">
+                {/* Outer pulsing ring */}
+                <div className="absolute inset-0 rounded-full bg-[#84F75E]/20 animate-ping duration-1000" />
+                {/* Inner gradient circle */}
+                <div 
+                  className="w-16 h-16 rounded-full flex items-center justify-center relative shadow-inner"
+                  style={{ background: "linear-gradient(135deg, #84F75E 0%, #1C6D00 100%)" }}
+                >
+                  <span className="material-symbols-outlined text-white text-3xl font-black">check</span>
+                </div>
+              </div>
+
+              {/* Typography */}
+              <h3 className="text-xl font-extrabold tracking-tight mb-2">Profil Diperbarui</h3>
+              <p className="text-xs leading-relaxed mb-6" style={{ color: "var(--dashboard-text-secondary)" }}>
+                Perubahan profil Anda telah berhasil disimpan dengan aman ke dalam sistem klinis kami.
+              </p>
+
+              {/* Action Button */}
+              <button
+                onClick={() => setShowSuccessPopup(false)}
+                className="w-full py-3 rounded-full text-xs font-black tracking-wide shadow-md hover:scale-[1.02] active:scale-95 transition-all duration-200"
+                style={{
+                  background: "linear-gradient(135deg, #84F75E 0%, #1C6D00 100%)",
+                  color: "#ffffff",
+                }}
+              >
+                Simpan
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── Error Modal Popup ── */}
+        {showErrorPopup && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <div 
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 cursor-pointer"
+              onClick={() => setShowErrorPopup(false)}
+            />
+            {/* Modal Content */}
+            <div 
+              className="relative bg-[var(--dashboard-card-bg)] border border-[var(--dashboard-border)] rounded-[2rem] p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center transition-all"
+              style={{ 
+                color: "var(--dashboard-text)",
+                animation: "popupEntrance 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards" 
+              }}
+            >
+              {/* Animated Icon Container */}
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6 relative">
+                {/* Outer pulsing ring */}
+                <div className="absolute inset-0 rounded-full bg-red-500/20 animate-ping duration-1000" />
+                {/* Inner gradient circle */}
+                <div 
+                  className="w-16 h-16 rounded-full flex items-center justify-center relative shadow-inner bg-gradient-to-br from-red-400 to-red-600 animate-none"
+                >
+                  <span className="material-symbols-outlined text-white text-3xl font-black">close</span>
+                </div>
+              </div>
+
+              {/* Typography */}
+              <h3 className="text-xl font-extrabold tracking-tight mb-2">Gagal Menyimpan</h3>
+              <p className="text-xs leading-relaxed mb-6" style={{ color: "var(--dashboard-text-secondary)" }}>
+                {errorMessage || "Terjadi kesalahan sistem saat mencoba memperbarui profil klinis Anda."}
+              </p>
+
+              {/* Action Button */}
+              <button
+                onClick={() => setShowErrorPopup(false)}
+                className="w-full py-3 rounded-full text-xs font-black tracking-wide shadow-md hover:scale-[1.02] active:scale-95 transition-all duration-200 bg-gradient-to-r from-red-500 to-red-600 text-white"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        )}
+
+        <style jsx>{`
+          @keyframes popupEntrance {
+            from {
+              opacity: 0;
+              transform: scale(0.9) translateY(15px);
+            }
+            to {
+              opacity: 1;
+              transform: scale(1) translateY(0);
+            }
+          }
+        `}</style>
       </main>
     </div>
   );

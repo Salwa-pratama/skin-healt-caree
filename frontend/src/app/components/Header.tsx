@@ -84,23 +84,23 @@ function NavbarContent() {
                     <div className="hidden md:flex items-center gap-2 bg-surface-container-high border border-outline-variant/30 p-1 rounded-full relative">
                         {/* Sliding Pill Background */}
                         <div
-                            className="absolute h-[calc(100%-8px)] top-[4px] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] bg-primary rounded-full shadow-sm"
+                            className="absolute h-[calc(100%-8px)] top-[4px] left-[4px] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] bg-primary rounded-full shadow-sm"
                             style={{
                                 width: "70px",
-                                transform: pathname === "/pages/auth/login" ? "translateX(0px)" : "translateX(74px)",
+                                transform: pathname === "/pages/auth/login" ? "translateX(0px)" : "translateX(78px)",
                             }}
                         />
 
                         <Link
                             href="/pages/auth/login"
-                            className={`text-[11px] font-bold tracking-tight w-[70px] py-1.5 rounded-full flex items-center justify-center transition-colors duration-300 relative z-10 ${pathname === "/pages/auth/login" ? "text-on-primary" : "text-on-surface-variant hover:text-primary"
+                            className={`text-[11px] font-bold tracking-tight w-[70px] py-1.5 rounded-full flex items-center justify-center transition-colors duration-300 relative z-10 ${pathname === "/pages/auth/login" ? "text-white" : "text-on-surface-variant hover:text-primary"
                                 }`}
                         >
                             Masuk
                         </Link>
                         <Link
                             href="/pages/auth/register"
-                            className={`text-[11px] font-bold tracking-tight w-[70px] py-1.5 rounded-full flex items-center justify-center transition-colors duration-300 relative z-10 ${pathname === "/pages/auth/register" ? "text-on-primary" : "text-on-surface-variant hover:text-primary"
+                            className={`text-[11px] font-bold tracking-tight w-[70px] py-1.5 rounded-full flex items-center justify-center transition-colors duration-300 relative z-10 ${pathname !== "/pages/auth/login" ? "text-white" : "text-on-surface-variant hover:text-primary"
                                 }`}
                         >
                             Daftar
