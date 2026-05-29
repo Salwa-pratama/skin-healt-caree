@@ -12,7 +12,10 @@ export const useLoginMutation = () => {
     onSuccess: (resData: any) => {
       // Adjusted exactly to fit backend structure:
       if (resData?.data?.accessToken) {
-        Cookies.set("access_token", resData.data.accessToken, { expires: 1, path: "/" });
+        Cookies.set("access_token", resData.data.accessToken, { path: "/" });
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("session_active", "true");
+        }
       }
     },
   });
@@ -35,6 +38,10 @@ export const useLogoutMutation = () => {
     },
     onSettled: () => {
       Cookies.remove("access_token", { path: "/" });
+      if (typeof window !== "undefined") {
+        localStorage.setItem("logout-event", Date.now().toString());
+        sessionStorage.removeItem("session_active");
+      }
       window.location.href = "/pages/auth/login";
     }
   });
