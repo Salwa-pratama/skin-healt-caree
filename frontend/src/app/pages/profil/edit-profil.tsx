@@ -3,7 +3,10 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useProfile, useUpdateProfileMutation } from "@/features/auth/api/profile.api";
+import {
+  useProfile,
+  useUpdateProfileMutation,
+} from "@/features/auth/api/profile.api";
 import { useTheme } from "@/lib/theme-provider";
 
 export default function ProfilePage() {
@@ -13,7 +16,9 @@ export default function ProfilePage() {
   const { theme, toggleTheme } = useTheme();
 
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState("Nomor belum diupdate");
+  const [gender, setGender] = useState("male");
+  const [avatar, setAvatar] = useState("");
   const [skintype, setSkintype] = useState("Normal");
   const updateProfileMutation = useUpdateProfileMutation();
 
@@ -22,51 +27,69 @@ export default function ProfilePage() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const skintypeMap: Record<string, string> = {
-    "Kering": "dry",
-    "Berminyak": "oily",
-    "Kombinasi": "combination",
-    "Normal": "normal"
+    Kering: "dry",
+    Berminyak: "oily",
+    Kombinasi: "combination",
+    Normal: "normal",
   };
 
   const reverseSkintypeMap: Record<string, string> = {
-    "dry": "Kering",
-    "oily": "Berminyak",
-    "combination": "Kombinasi",
-    "normal": "Normal"
+    dry: "Kering",
+    oily: "Berminyak",
+    combination: "Kombinasi",
+    normal: "Normal",
   };
+
+  const defaultAvatar =
+    gender === "female"
+      ? "/assets/profile/female.png"
+      : "/assets/profile/male.png";
+  const avatarUrl = data?.avatar || defaultAvatar;
+
+  console.log(avatarUrl);
 
   useEffect(() => {
     if (data) {
       setName(data?.name || "");
-      setPhone(data?.phone || "");
+      setPhone(data?.phone || "Nomor belum diupdate bro");
+      setGender(data?.gender || "male");
+
       setSkintype(reverseSkintypeMap[data?.skintype] || "Normal");
     }
   }, [data]);
 
   const handleSave = () => {
-    updateProfileMutation.mutate({
-      name,
-      phone,
-      skintype: skintypeMap[skintype] || "normal"
-    }, {
-      onSuccess: () => {
-        setShowSuccessPopup(true);
+    updateProfileMutation.mutate(
+      {
+        name,
+        phone,
+        skintype: skintypeMap[skintype] || "normal",
       },
-      onError: (err: any) => {
-        setErrorMessage(err?.response?.data?.message || err.message);
-        setShowErrorPopup(true);
-      }
-    });
+      {
+        onSuccess: () => {
+          setShowSuccessPopup(true);
+        },
+        onError: (err: any) => {
+          setErrorMessage(err?.response?.data?.message || err.message);
+          setShowErrorPopup(true);
+        },
+      },
+    );
   };
 
   console.log("Profile Data:", data);
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen" style={{ background: "var(--dashboard-bg)" }}>
+      <div
+        className="flex items-center justify-center min-h-screen"
+        style={{ background: "var(--dashboard-bg)" }}
+      >
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-[#1c6d00] dark:border-[#84f75e] border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm font-bold text-[#1c6d00] dark:text-[#84f75e] animate-pulse">Memuat Profil...</p>
+          <p className="text-sm font-bold text-[#1c6d00] dark:text-[#84f75e] animate-pulse">
+            Memuat Profil...
+          </p>
         </div>
       </div>
     );
@@ -74,10 +97,23 @@ export default function ProfilePage() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen" style={{ background: "var(--dashboard-bg)" }}>
+      <div
+        className="flex items-center justify-center min-h-screen"
+        style={{ background: "var(--dashboard-bg)" }}
+      >
         <div className="flex flex-col items-center gap-4">
-          <p className="text-sm font-bold" style={{ color: "var(--dashboard-sidebar-active-text)" }}>Error memuat profil</p>
-          <p className="text-xs" style={{ color: "var(--dashboard-text-secondary)" }}>{error?.message}</p>
+          <p
+            className="text-sm font-bold"
+            style={{ color: "var(--dashboard-sidebar-active-text)" }}
+          >
+            Error memuat profil
+          </p>
+          <p
+            className="text-xs"
+            style={{ color: "var(--dashboard-text-secondary)" }}
+          >
+            {error?.message}
+          </p>
         </div>
       </div>
     );
@@ -123,7 +159,9 @@ export default function ProfilePage() {
               style={{ color: "var(--dashboard-text-secondary)" }}
               href="/pages/dashboard"
             >
-              <span className="material-symbols-outlined text-xl sm:text-2xl">dashboard</span>
+              <span className="material-symbols-outlined text-xl sm:text-2xl">
+                dashboard
+              </span>
             </Link>
             <Link
               className="hidden sm:block p-2 transition-colors"
@@ -171,13 +209,18 @@ export default function ProfilePage() {
               </span>
             </button>
 
-            <div className="h-6 w-px mx-1 sm:mx-2" style={{ background: "var(--dashboard-border)" }} />
+            <div
+              className="h-6 w-px mx-1 sm:mx-2"
+              style={{ background: "var(--dashboard-border)" }}
+            />
             <Link
               className="p-2 transition-colors hover:text-red-500"
               style={{ color: "var(--dashboard-text-secondary)" }}
               href="/pages/auth/login"
             >
-              <span className="material-symbols-outlined text-xl sm:text-2xl">logout</span>
+              <span className="material-symbols-outlined text-xl sm:text-2xl">
+                logout
+              </span>
             </Link>
           </div>
         </div>
@@ -186,7 +229,6 @@ export default function ProfilePage() {
       {/* ── Main Content ── */}
       <main className="min-h-screen pb-28">
         <div className="max-w-5xl mx-auto">
-
           {/* Header */}
           <header className="px-6 sm:px-10 lg:px-0 pt-10 sm:pt-16 pb-10 sm:pb-16 text-center md:text-left">
             <h2
@@ -199,12 +241,12 @@ export default function ProfilePage() {
               className="text-base sm:text-lg max-w-2xl mx-auto md:mx-0 leading-relaxed"
               style={{ color: "var(--dashboard-text-secondary)" }}
             >
-              Perbarui informasi akun dan preferensi klinis Anda untuk hasil analisis kulit yang lebih akurat.
+              Perbarui informasi akun dan preferensi klinis Anda untuk hasil
+              analisis kulit yang lebih akurat.
             </p>
           </header>
 
           <div className="px-5 sm:px-10 lg:px-0 space-y-8 sm:space-y-12">
-
             {/* ── Section 1: Profil Pengguna ── */}
             <section
               className="rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-10 border transition-colors duration-300"
@@ -221,13 +263,15 @@ export default function ProfilePage() {
                 <div className="relative group flex-shrink-0">
                   <div
                     className="w-32 h-32 sm:w-48 sm:h-48 rounded-full overflow-hidden border-4 shadow-lg animate-none"
-                    style={{ borderColor: "var(--dashboard-sidebar-active-text)" }}
+                    style={{
+                      borderColor: "var(--dashboard-sidebar-active-text)",
+                    }}
                   >
-                    {data?.avatar ? (
+                    {/* {data?.avatar ? (
                       <img
                         alt="User profile avatar"
                         className="w-full h-full object-cover"
-                        src={data.avatar}
+                        src={avatar}
                       />
                     ) : (
                       <div className="w-full h-full bg-[#E2E8F0] dark:bg-[#334155] flex items-center justify-center text-[#94A3B8] dark:text-[#64748B]">
@@ -239,7 +283,12 @@ export default function ProfilePage() {
                           <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                       </div>
-                    )}
+                    )} */}
+                    <img
+                      alt="User profile avatar"
+                      className="w-full h-full object-cover"
+                      src={avatarUrl}
+                    />
                   </div>
                   <button
                     className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 p-2 sm:p-3 rounded-full shadow-lg hover:scale-105 active:scale-90 transition-transform"
@@ -248,7 +297,9 @@ export default function ProfilePage() {
                       color: theme === "dark" ? "#042100" : "#ffffff",
                     }}
                   >
-                    <span className="material-symbols-outlined text-lg sm:text-base">photo_camera</span>
+                    <span className="material-symbols-outlined text-lg sm:text-base">
+                      photo_camera
+                    </span>
                   </button>
                 </div>
 
@@ -268,6 +319,7 @@ export default function ProfilePage() {
                         color: "var(--dashboard-text)",
                       }}
                       type="text"
+                      placeholder={name}
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
@@ -298,14 +350,15 @@ export default function ProfilePage() {
                       Nomor HP
                     </label>
                     <input
-                      className="w-full border-none rounded-xl sm:rounded-2xl px-5 py-3 sm:py-4 focus:ring-2 transition-all outline-none font-medium text-sm sm:text-base"
+                      className="w-full text-white border-none rounded-xl sm:rounded-2xl px-5 py-3 sm:py-4 focus:ring-2 transition-all outline-none font-medium text-sm sm:text-base"
                       style={{
                         background: "var(--dashboard-sidebar-active-bg)",
                         color: "var(--dashboard-text)",
                       }}
                       type="text"
-                      placeholder="Masukkan nomor HP Anda"
-                      value={data?.phone}
+                      // placeholder="Masukkan nomor HP Anda"
+                      placeholder={phone}
+                      value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                     />
                   </div>
@@ -343,29 +396,34 @@ export default function ProfilePage() {
                     Tipe Kulit
                   </label>
                   <div className="flex flex-wrap gap-2 sm:gap-3">
-                    {["Kering", "Berminyak", "Kombinasi", "Normal"].map((type) => (
-                      <button
-                        key={type}
-                        type="button"
-                        onClick={() => setSkintype(type)}
-                        className="flex-1 min-w-[100px] sm:flex-none px-4 sm:px-8 py-2.5 sm:py-3 rounded-full border-2 transition-all hover:scale-95 font-bold text-xs sm:text-sm"
-                        style={
-                          type === skintype
-                            ? {
-                                borderColor: "var(--dashboard-sidebar-active-text)",
-                                background: "var(--dashboard-sidebar-active-text)",
-                                color: theme === "dark" ? "#042100" : "#ffffff",
-                              }
-                            : {
-                                borderColor: "transparent",
-                                background: "var(--dashboard-card-bg)",
-                                color: "var(--dashboard-text-secondary)",
-                              }
-                        }
-                      >
-                        {type}
-                      </button>
-                    ))}
+                    {["Kering", "Berminyak", "Kombinasi", "Normal"].map(
+                      (type) => (
+                        <button
+                          key={type}
+                          type="button"
+                          onClick={() => setSkintype(type)}
+                          className="flex-1 min-w-[100px] sm:flex-none px-4 sm:px-8 py-2.5 sm:py-3 rounded-full border-2 transition-all hover:scale-95 font-bold text-xs sm:text-sm"
+                          style={
+                            type === skintype
+                              ? {
+                                  borderColor:
+                                    "var(--dashboard-sidebar-active-text)",
+                                  background:
+                                    "var(--dashboard-sidebar-active-text)",
+                                  color:
+                                    theme === "dark" ? "#042100" : "#ffffff",
+                                }
+                              : {
+                                  borderColor: "transparent",
+                                  background: "var(--dashboard-card-bg)",
+                                  color: "var(--dashboard-text-secondary)",
+                                }
+                          }
+                        >
+                          {type}
+                        </button>
+                      ),
+                    )}
                   </div>
                 </div>
 
@@ -378,15 +436,17 @@ export default function ProfilePage() {
                     Masalah Utama
                   </label>
                   <div className="flex flex-wrap gap-2 sm:gap-3">
-                    {["Jerawat", "Penuaan", "Kusam", "Tekstur"].map((problem) => (
+                    {["Jerawat"].map((problem) => (
                       <button
                         key={problem}
                         className="flex-1 min-w-[100px] sm:flex-none px-4 sm:px-8 py-2.5 sm:py-3 rounded-full border-2 transition-all hover:scale-95 font-bold text-xs sm:text-sm"
                         style={
                           ["Jerawat", "Penuaan"].includes(problem)
                             ? {
-                                borderColor: "var(--dashboard-sidebar-active-text)",
-                                background: "var(--dashboard-sidebar-active-text)",
+                                borderColor:
+                                  "var(--dashboard-sidebar-active-text)",
+                                background:
+                                  "var(--dashboard-sidebar-active-text)",
                                 color: theme === "dark" ? "#042100" : "#ffffff",
                               }
                             : {
@@ -505,7 +565,9 @@ export default function ProfilePage() {
                       className="w-4 sm:w-6 h-4 sm:h-6 rounded-full shadow-sm transition-transform"
                       style={{
                         background: "var(--dashboard-card-bg)",
-                        transform: is2FAEnabled ? "translateX(1.5rem)" : "translateX(0)",
+                        transform: is2FAEnabled
+                          ? "translateX(1.5rem)"
+                          : "translateX(0)",
                       }}
                     />
                   </div>
@@ -566,7 +628,8 @@ export default function ProfilePage() {
               className="relative bg-[var(--dashboard-card-bg)] border border-[var(--dashboard-border)] rounded-[2rem] p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center transition-all"
               style={{
                 color: "var(--dashboard-text)",
-                animation: "popupEntrance 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards"
+                animation:
+                  "popupEntrance 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
               }}
             >
               {/* Animated Icon Container */}
@@ -576,16 +639,27 @@ export default function ProfilePage() {
                 {/* Inner gradient circle */}
                 <div
                   className="w-16 h-16 rounded-full flex items-center justify-center relative shadow-inner"
-                  style={{ background: "linear-gradient(135deg, #84F75E 0%, #1C6D00 100%)" }}
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #84F75E 0%, #1C6D00 100%)",
+                  }}
                 >
-                  <span className="material-symbols-outlined text-white text-3xl font-black">check</span>
+                  <span className="material-symbols-outlined text-white text-3xl font-black">
+                    check
+                  </span>
                 </div>
               </div>
 
               {/* Typography */}
-              <h3 className="text-xl font-extrabold tracking-tight mb-2">Profil Diperbarui</h3>
-              <p className="text-xs leading-relaxed mb-6" style={{ color: "var(--dashboard-text-secondary)" }}>
-                Perubahan profil Anda telah berhasil disimpan dengan aman ke dalam sistem klinis kami.
+              <h3 className="text-xl font-extrabold tracking-tight mb-2">
+                Profil Diperbarui
+              </h3>
+              <p
+                className="text-xs leading-relaxed mb-6"
+                style={{ color: "var(--dashboard-text-secondary)" }}
+              >
+                Perubahan profil Anda telah berhasil disimpan dengan aman ke
+                dalam sistem klinis kami.
               </p>
 
               {/* Action Button */}
@@ -593,7 +667,8 @@ export default function ProfilePage() {
                 onClick={() => setShowSuccessPopup(false)}
                 className="w-full py-3 rounded-full text-xs font-black tracking-wide shadow-md hover:scale-[1.02] active:scale-95 transition-all duration-200"
                 style={{
-                  background: "linear-gradient(135deg, #84F75E 0%, #1C6D00 100%)",
+                  background:
+                    "linear-gradient(135deg, #84F75E 0%, #1C6D00 100%)",
                   color: "#ffffff",
                 }}
               >
@@ -616,7 +691,8 @@ export default function ProfilePage() {
               className="relative bg-[var(--dashboard-card-bg)] border border-[var(--dashboard-border)] rounded-[2rem] p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center transition-all"
               style={{
                 color: "var(--dashboard-text)",
-                animation: "popupEntrance 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards"
+                animation:
+                  "popupEntrance 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
               }}
             >
               {/* Animated Icon Container */}
@@ -624,17 +700,23 @@ export default function ProfilePage() {
                 {/* Outer pulsing ring */}
                 <div className="absolute inset-0 rounded-full bg-red-500/20 animate-ping duration-1000" />
                 {/* Inner gradient circle */}
-                <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center relative shadow-inner bg-gradient-to-br from-red-400 to-red-600 animate-none"
-                >
-                  <span className="material-symbols-outlined text-white text-3xl font-black">close</span>
+                <div className="w-16 h-16 rounded-full flex items-center justify-center relative shadow-inner bg-gradient-to-br from-red-400 to-red-600 animate-none">
+                  <span className="material-symbols-outlined text-white text-3xl font-black">
+                    close
+                  </span>
                 </div>
               </div>
 
               {/* Typography */}
-              <h3 className="text-xl font-extrabold tracking-tight mb-2">Gagal Menyimpan</h3>
-              <p className="text-xs leading-relaxed mb-6" style={{ color: "var(--dashboard-text-secondary)" }}>
-                {errorMessage || "Terjadi kesalahan sistem saat mencoba memperbarui profil klinis Anda."}
+              <h3 className="text-xl font-extrabold tracking-tight mb-2">
+                Gagal Menyimpan
+              </h3>
+              <p
+                className="text-xs leading-relaxed mb-6"
+                style={{ color: "var(--dashboard-text-secondary)" }}
+              >
+                {errorMessage ||
+                  "Terjadi kesalahan sistem saat mencoba memperbarui profil klinis Anda."}
               </p>
 
               {/* Action Button */}

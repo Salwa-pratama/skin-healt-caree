@@ -12,8 +12,8 @@ export class ProfileRepository {
         role: true,
         phone: true,
         skintype: true,
-        phone: true,
-        gambar: true,
+
+        avatar: true,
         createdAt: true,
         updatedAt: true,
       },
