@@ -27,7 +27,7 @@ export default function ProfilePage() {
     "Kombinasi": "combination",
     "Normal": "normal"
   };
-  
+
   const reverseSkintypeMap: Record<string, string> = {
     "dry": "Kering",
     "oily": "Berminyak",
@@ -37,9 +37,9 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (data) {
-      setName(data.name || "");
-      setPhone(data.phone || "");
-      setSkintype(reverseSkintypeMap[data.skintype] || "Normal");
+      setName(data?.name || "");
+      setPhone(data?.phone || "");
+      setSkintype(reverseSkintypeMap[data?.skintype] || "Normal");
     }
   }, [data]);
 
@@ -305,7 +305,7 @@ export default function ProfilePage() {
                       }}
                       type="text"
                       placeholder="Masukkan nomor HP Anda"
-                      value={phone}
+                      value={data?.phone}
                       onChange={(e) => setPhone(e.target.value)}
                     />
                   </div>
@@ -557,16 +557,16 @@ export default function ProfilePage() {
         {showSuccessPopup && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             {/* Backdrop */}
-            <div 
+            <div
               className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 cursor-pointer"
               onClick={() => setShowSuccessPopup(false)}
             />
             {/* Modal Content */}
-            <div 
+            <div
               className="relative bg-[var(--dashboard-card-bg)] border border-[var(--dashboard-border)] rounded-[2rem] p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center transition-all"
-              style={{ 
+              style={{
                 color: "var(--dashboard-text)",
-                animation: "popupEntrance 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards" 
+                animation: "popupEntrance 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards"
               }}
             >
               {/* Animated Icon Container */}
@@ -574,7 +574,7 @@ export default function ProfilePage() {
                 {/* Outer pulsing ring */}
                 <div className="absolute inset-0 rounded-full bg-[#84F75E]/20 animate-ping duration-1000" />
                 {/* Inner gradient circle */}
-                <div 
+                <div
                   className="w-16 h-16 rounded-full flex items-center justify-center relative shadow-inner"
                   style={{ background: "linear-gradient(135deg, #84F75E 0%, #1C6D00 100%)" }}
                 >
@@ -607,16 +607,16 @@ export default function ProfilePage() {
         {showErrorPopup && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             {/* Backdrop */}
-            <div 
+            <div
               className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 cursor-pointer"
               onClick={() => setShowErrorPopup(false)}
             />
             {/* Modal Content */}
-            <div 
+            <div
               className="relative bg-[var(--dashboard-card-bg)] border border-[var(--dashboard-border)] rounded-[2rem] p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center transition-all"
-              style={{ 
+              style={{
                 color: "var(--dashboard-text)",
-                animation: "popupEntrance 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards" 
+                animation: "popupEntrance 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards"
               }}
             >
               {/* Animated Icon Container */}
@@ -624,7 +624,7 @@ export default function ProfilePage() {
                 {/* Outer pulsing ring */}
                 <div className="absolute inset-0 rounded-full bg-red-500/20 animate-ping duration-1000" />
                 {/* Inner gradient circle */}
-                <div 
+                <div
                   className="w-16 h-16 rounded-full flex items-center justify-center relative shadow-inner bg-gradient-to-br from-red-400 to-red-600 animate-none"
                 >
                   <span className="material-symbols-outlined text-white text-3xl font-black">close</span>
