@@ -13,10 +13,11 @@ model UserPublic {
   email                String                @unique
   name                 String
   role                 String                @default("user")
+  phone                String?
   passwordHash         String
   refreshTokenHash     String?
   skintype             String                @default("normal")
-  phone                String?
+
   avatar               String?
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt

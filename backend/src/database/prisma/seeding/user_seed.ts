@@ -17,8 +17,9 @@ async function main() {
   const user = await prisma.userPublic.create({
     data: {
       name: "ananda slalwa pratama",
-      email: "ananda@example.com",
-      passwordHash: "hashed_password_dummy",
+      phone: "08086372441",
+      email: "ananda@gmail.com",
+      passwordHash: "ananda123 ",
     },
   });
 

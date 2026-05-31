@@ -84,11 +84,23 @@ export default function SettingPage() {
                 <div className="flex flex-col sm:flex-row gap-6 items-center">
                   <div className="relative group cursor-pointer">
                     <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-primary shadow-sm transition-transform group-hover:scale-105">
-                      <img
-                        alt="Profile Edit"
-                        className="w-full h-full object-cover"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuASpIs7U2aIxSyaIMtvONfbkT2-D3eO2hifZYSbtM12iOArzKj_0fZkjawcx4xqygnEeFz45ouT79ASyf1EMzsqCVYFO25pAyDShRSVHIrk4V6cDN31pArjVrP_8A3I0NVNycgFHAtT4MEy3LAteBJxfBM4CkygCF2dHgQn1DftN63JJW7C4bTAmMW1znnb-dCfBmnzm7912q5W4v2pPNz1HHlcM4jRo2kUss9TMLFLiZ2CBrlO3Kx5F9crVR83GeC7W6X9SQxUgQMC"
-                      />
+                      {data?.avatar ? (
+                        <img
+                          alt="Profile Edit"
+                          className="w-full h-full object-cover"
+                          src={data.avatar}
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-[#E2E8F0] dark:bg-[#334155] flex items-center justify-center text-[#94A3B8] dark:text-[#64748B]">
+                          <svg
+                            className="w-2/3 h-2/3"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                          </svg>
+                        </div>
+                      )}
                     </div>
                     <div className="absolute inset-0 bg-primary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-full backdrop-blur-[1px]">
                       <span className="material-symbols-outlined text-white text-lg">photo_camera</span>
