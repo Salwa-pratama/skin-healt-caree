@@ -45,7 +45,8 @@ export class ProfileController {
       }
 
       const validatedData = updateProfileSchema.parse(req.body);
-      const updatedProfile = await this.service.updateProfile(Number(userId), validatedData);
+      const fileBuffer = req.file?.buffer;
+      const updatedProfile = await this.service.updateProfile(Number(userId), validatedData, fileBuffer);
       
       return res.status(StatusCodes.OK).json({
         status: "success",

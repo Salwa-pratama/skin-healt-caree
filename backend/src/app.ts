@@ -4,6 +4,7 @@ import { authRouter } from "./modules/auth/login/login_router";
 import { predictRouter } from "./modules/feature/predict/router";
 import { historyRouter } from "./modules/feature/history/router";
 import { profileRouter } from "./modules/feature/profile/router";
+import { todoRouter } from "./modules/feature/todo/router";
 import { setupSwagger } from "./utils/swagger";
 
 // Middleware
@@ -49,6 +50,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/feature", authMiddleware, predictRouter);
 app.use("/api/feature/profile", authMiddleware, profileRouter);
 app.use("/api/feature/history", authMiddleware, historyRouter);
+app.use("/api/feature/todo", authMiddleware, todoRouter);
 
 // Setup Swagger UI
 const SWAGGER_PORT = process.env.APP_PORT || 1915;

@@ -1,8 +1,10 @@
 import { Router } from "express";
+import multer from "multer";
 import { ProfileController } from "./controller";
 
 const profileRouter = Router();
 const controller = new ProfileController();
+const upload = multer({ storage: multer.memoryStorage() });
 
 /**
  * @openapi
@@ -44,6 +46,12 @@ const controller = new ProfileController();
  *                       type: string
  *                     skintype:
  *                       type: string
+ *                     phone:
+ *                       type: string
+ *                       nullable: true
+ *                     gambar:
+ *                       type: string
+ *                       nullable: true
  *                     createdAt:
  *                       type: string
  *                       format: date-time
@@ -57,14 +65,14 @@ profileRouter.get("/", controller.getMe);
  * @openapi
  * /api/feature/profile:
  *   put:
- *     summary: Update profil user (Nama & Tipe Kulit)
+ *     summary: Update profil user (Nama, Tipe Kulit, Telepon & Foto Profil)
  *     tags: [Profile]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -75,6 +83,13 @@ profileRouter.get("/", controller.getMe);
  *                 type: string
  *                 example: "oily"
  *                 enum: [normal, dry, oily, combination, sensitive] 
+ *               phone:
+ *                 type: string
+ *                 example: "081234567890"
+ *               gambar:
+ *                 type: string
+ *                 format: binary
+ *                 description: File foto profil yang diunggah dari komputer
  *     responses:
  *       200:
  *         description: Profil berhasil diupdate
@@ -100,6 +115,12 @@ profileRouter.get("/", controller.getMe);
  *                       type: string
  *                     skintype:
  *                       type: string
+ *                     phone:
+ *                       type: string
+ *                       nullable: true
+ *                     gambar:
+ *                       type: string
+ *                       nullable: true
  *                     createdAt:
  *                       type: string
  *                       format: date-time
@@ -107,6 +128,6 @@ profileRouter.get("/", controller.getMe);
  *                       type: string
  *                       format: date-time
  */
-profileRouter.put("/", controller.updateMe);
+profileRouter.put("/", upload.single("gambar"), controller.updateMe);
 
 export { profileRouter };
