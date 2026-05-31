@@ -17,8 +17,8 @@ model UserPublic {
   passwordHash         String
   refreshTokenHash     String?
   skintype             String                @default("normal")
-  phone                String?
-  avatar               String?
+
+  avatar               String?               @default("kosong")
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
 
