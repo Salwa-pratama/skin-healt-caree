@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useTheme } from "@/lib/theme-provider";
+import { useProfile } from "@/features/auth/api/profile.api";
 
 interface DashboardHeaderProps {
   isSidebarOpen: boolean;
@@ -10,6 +11,7 @@ interface DashboardHeaderProps {
 }
 
 export default function DashboardHeader({ isSidebarOpen, onToggleSidebar }: DashboardHeaderProps) {
+  const { data } = useProfile();
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -81,11 +83,24 @@ export default function DashboardHeader({ isSidebarOpen, onToggleSidebar }: Dash
         </button>
 
         <Link href="/pages/profil">
-          <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-primary hover:scale-105 transition-transform cursor-pointer shadow-sm">
-            <img
-              alt="Profile"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuEn4HazQ2JPJoF2zKyTSqb9V8Md24ll0JNrzbPnz8Y34Ag94EwJh0y6c3E0zG9cSLOF3pafjfuiziCBtzvgck3_DfbO7D8ydx0r63uuVzQVgWLh0QQICPVLBsE63LTlT-3hPapCkbNE946COlqln_K43fr41a3C96qSk62cLc_G186RPZo6KC7LbT-RV0kgehO7sog0GbIGaoSuS-qLOk94GPnP3NJ-mrGAbjw_GHKm842lRLupT3MVKSsQH4vY4TOBE7MfG_Z-b2Y"
-            />
+          <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-primary hover:scale-105 transition-transform cursor-pointer shadow-sm flex items-center justify-center">
+            {data?.avatar ? (
+              <img
+                alt="Profile"
+                src={data.avatar}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-[#E2E8F0] dark:bg-[#334155] flex items-center justify-center text-[#94A3B8] dark:text-[#64748B]">
+                <svg
+                  className="w-2/3 h-2/3"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              </div>
+            )}
           </div>
         </Link>
       </div>

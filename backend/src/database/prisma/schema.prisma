@@ -13,9 +13,12 @@ model UserPublic {
   email                String                @unique
   name                 String
   role                 String                @default("user")
+  phone                String?
   passwordHash         String
   refreshTokenHash     String?
   skintype             String                @default("normal")
+
+  avatar               String?
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
 
@@ -23,6 +26,8 @@ model UserPublic {
   acneProblems         AcneProblem[]
   acneProblemSolutions AcneProblemSolution[]
   acnesolutions         AcneSolution[]
+  jadwalTreatments     JadwalTreatment[]
+  jadwalHabits         JadwalHabit[]
 }
 
 // ================= ACNE PROBLEM =================
@@ -107,4 +112,28 @@ model BadIngredient {
 
   // relation
   acneSolutions AcneSolution[]
+}
+
+// ================= JADWAL TREATMENT =================
+model JadwalTreatment {
+  id        String       @id @default(uuid())
+  hari      DateTime     // tipe Date
+  tempat    String       // tempat treatment (string)
+  nama      String       // nama (string)
+  pengingat DateTime     // pengingat (date, satu hari sebelum treatment)
+  users     UserPublic[] // Many-to-many dengan UserPublic
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+// ================= JADWAL HABIT =================
+model JadwalHabit {
+  id        String       @id @default(uuid())
+  nama      String       // nama (string)
+  hari      String       // hari (string)
+  jam       String       // jam (time, contoh: "22:00")
+  pengingat String       // pengingat (time, contoh: "21:00", satu jam sebelum jam)
+  users     UserPublic[] // Many-to-many dengan UserPublic
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 }
