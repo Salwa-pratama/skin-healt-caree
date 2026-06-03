@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useLogoutMutation } from "@/features/auth/api/auth.api";
 
-type ActivePage = "dashboard" | "scan" | "history" | "setting";
+type ActivePage = "dashboard" | "scan" | "history" | "setting" | "jadwal";
 
 interface SidebarProps {
   activePage: ActivePage;
@@ -13,6 +13,7 @@ interface SidebarProps {
 
 const navItems = [
   { icon: "dashboard", label: "Dashboard", href: "/pages/dashboard", key: "dashboard" },
+  { icon: "calendar_month", label: "Jadwal", href: "/pages/jadwal", key: "jadwal" },
   { icon: "biotech", label: "Analysis", href: "/pages/scan", key: "scan" },
   { icon: "history", label: "History", href: "/pages/history", key: "history" },
   { icon: "settings", label: "Settings", href: "/pages/setting", key: "setting" },
