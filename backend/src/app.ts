@@ -6,6 +6,7 @@ import { historyRouter } from "./modules/feature/history/router";
 import { profileRouter } from "./modules/feature/profile/router";
 import { todoRouter } from "./modules/feature/todo/router";
 import { acneSolutionRouter } from "./modules/feature/acne-solution/router";
+import { adminRouter } from "./modules/feature/admin/router";
 import { setupSwagger } from "./utils/swagger";
 
 // Middleware
@@ -53,6 +54,7 @@ app.use("/api/feature/profile", authMiddleware, profileRouter);
 app.use("/api/feature/history", authMiddleware, historyRouter);
 app.use("/api/feature/todo", authMiddleware, todoRouter);
 app.use("/api/feature/acne-solution", authMiddleware, acneSolutionRouter);
+app.use("/api/feature/admin", authMiddleware, adminRouter);
 
 // Setup Swagger UI
 const SWAGGER_PORT = process.env.APP_PORT || 1915;

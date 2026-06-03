@@ -11,6 +11,7 @@ const router_2 = require("./modules/feature/history/router");
 const router_3 = require("./modules/feature/profile/router");
 const router_4 = require("./modules/feature/todo/router");
 const router_5 = require("./modules/feature/acne-solution/router");
+const router_6 = require("./modules/feature/admin/router");
 const swagger_1 = require("./utils/swagger");
 // Middleware
 const auth_middleware_1 = require("./middleware/auth.middleware");
@@ -52,6 +53,7 @@ app.use("/api/feature/profile", auth_middleware_1.authMiddleware, router_3.profi
 app.use("/api/feature/history", auth_middleware_1.authMiddleware, router_2.historyRouter);
 app.use("/api/feature/todo", auth_middleware_1.authMiddleware, router_4.todoRouter);
 app.use("/api/feature/acne-solution", auth_middleware_1.authMiddleware, router_5.acneSolutionRouter);
+app.use("/api/feature/admin", auth_middleware_1.authMiddleware, router_6.adminRouter);
 // Setup Swagger UI
 const SWAGGER_PORT = process.env.APP_PORT || 1915;
 (0, swagger_1.setupSwagger)(app, SWAGGER_PORT);

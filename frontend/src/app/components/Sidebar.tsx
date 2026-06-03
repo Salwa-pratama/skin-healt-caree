@@ -3,15 +3,16 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useLogoutMutation } from "@/features/auth/api/auth.api";
+import { useProfile } from "@/features/auth/api/profile.api";
 
-type ActivePage = "dashboard" | "scan" | "history" | "setting" | "jadwal";
+type ActivePage = string;
 
 interface SidebarProps {
   activePage: ActivePage;
   isOpen?: boolean;
 }
 
-const navItems = [
+const userNavItems = [
   { icon: "dashboard", label: "Dashboard", href: "/pages/dashboard", key: "dashboard" },
   { icon: "calendar_month", label: "Jadwal", href: "/pages/jadwal", key: "jadwal" },
   { icon: "biotech", label: "Analysis", href: "/pages/scan", key: "scan" },
@@ -19,9 +20,19 @@ const navItems = [
   { icon: "settings", label: "Settings", href: "/pages/setting", key: "setting" },
 ];
 
+const adminNavItems = [
+  { icon: "dashboard", label: "Dashboard", href: "/pages/admin-dashboard", key: "admin-dashboard" },
+  { icon: "group", label: "Users", href: "/pages/admin-users", key: "admin-users" },
+  { icon: "medical_services", label: "Acne Solutions", href: "/pages/admin-acne-solutions", key: "admin-acne-solutions" },
+  { icon: "settings", label: "Settings", href: "/pages/setting", key: "setting" },
+];
+
 export default function Sidebar({ activePage, isOpen = true }: SidebarProps) {
+  const { data: user } = useProfile();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const logoutMutation = useLogoutMutation();
+  
+  const navItems = user?.role === "admin" ? adminNavItems : userNavItems;
 
   const handleLogoutConfirm = () => {
     logoutMutation.mutate();
