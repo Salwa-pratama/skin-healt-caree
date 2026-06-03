@@ -118,23 +118,61 @@ export const acneRecommendations = [
   }
 ];
 
-// Contoh script seeding jika ingin dimasukkan ke database:
-/*
+// Script seeding untuk memasukkan data rekomendasi ke database
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function seedRecommendations() {
-  // Disini kita bisa menambahkan logika untuk memasukkan data rekomendasi ke database,
-  // namun berdasarkan schema saat ini (AcneProblem terhubung dengan User, dan BadIngredient terhubung ke AcneProblem),
-  // data rekomendasi ini mungkin lebih cocok digunakan sebagai data statis (constant)
-  // yang dipanggil saat user mendapatkan hasil prediksi, atau jika schema di-update
-  // untuk menyimpan master data rekomendasi secara global.
-
   console.log("Seeding data rekomendasi...");
-  console.log(acneRecommendations);
+  
+  // Hapus data lama agar tidak duplikat (karena ini master data)
+  await prisma.acneSolution.deleteMany({
+    where: {
+      userId: null as any
+    }
+  });
+
+  // Hapus master data habit, treatment, ingredients yang tidak ada relasi, tapi delete cascade pada prisma tidak disetel.
+  // Lebih aman jika kita hapus secara eksplisit data yang terkait (atau biarkan yatim piatu untuk sementara, 
+  // karena relasinya di-handle oleh m-n implicitly).
+  
+  for (const rec of acneRecommendations) {
+    console.log(`Memasukkan solusi untuk: ${rec.type}`);
+    
+    await prisma.acneSolution.create({
+      data: {
+        type: rec.type,
+        description: rec.description,
+        userId: null as any, // Global / Master data
+        goodIngredient: {
+          create: rec.goodIngredients.map(ingredient => ({ name: ingredient }))
+        },
+        badIngredient: {
+          create: rec.badIngredients.map(ingredient => ({ name: ingredient }))
+        },
+        habits: {
+          create: rec.habits.map(habit => ({ name: habit }))
+        },
+        treatments: {
+          create: rec.treatments.map(treatment => ({ 
+            name: treatment.name, 
+            time: treatment.time 
+          }))
+        }
+      }
+    });
+  }
+
+  console.log("✅ Seeding selesai!");
 }
 
-seedRecommendations()
-  .catch(e => console.error(e))
-  .finally(() => prisma.$disconnect());
-*/
+if (require.main === module) {
+  seedRecommendations()
+    .catch(e => {
+      console.error(e);
+      process.exit(1);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+}

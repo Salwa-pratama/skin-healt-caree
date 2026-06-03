@@ -9,23 +9,23 @@ datasource db {
 
 //  ================= User Schema =================
 model UserPublic {
-  id                   Int                   @id @default(autoincrement())
-  email                String                @unique
-  name                 String
-  role                 String                @default("user")
-  phone                String?
-  passwordHash         String
-  refreshTokenHash     String?
-  skintype             String                @default("normal")
+  id               Int     @id @default(autoincrement())
+  email            String  @unique
+  name             String
+  role             String  @default("user")
+  phone            String?
+  passwordHash     String
+  refreshTokenHash String?
+  skintype         String  @default("normal")
 
-  avatar               String?
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // relation
   acneProblems         AcneProblem[]
   acneProblemSolutions AcneProblemSolution[]
-  acnesolutions         AcneSolution[]
+  acnesolutions        AcneSolution[]
   jadwalTreatments     JadwalTreatment[]
   jadwalHabits         JadwalHabit[]
 }
@@ -38,8 +38,8 @@ model AcneProblem {
   predictions Json?
   createdAt   DateTime @default(now())
 
-  userId Int
-  user   UserPublic @relation(fields: [userId], references: [id])
+  userId               Int
+  user                 UserPublic            @relation(fields: [userId], references: [id])
   // relation
   acneProblemSolutions AcneProblemSolution[]
 }
@@ -47,9 +47,13 @@ model AcneProblem {
 // ================= ACNE SOLUTION =================
 model AcneSolution {
   id Int @id @default(autoincrement())
+
+  type        String?
+  description String?
+
   // Menambahkan relasi ke user
-  userId Int
-  user UserPublic @relation(fields:[userId], references: [id])
+  userId Int?
+  user   UserPublic? @relation(fields: [userId], references: [id])
 
   // relation
   goodIngredient       GoodIngredient[]
@@ -82,11 +86,10 @@ model Habit {
 model AcneProblemSolution {
   id Int @id @default(autoincrement())
 
-
   acneSolutionId Int
   acneProblemId  Int
 
-  userId Int
+  userId       Int
   // relation
   user         UserPublic   @relation(fields: [userId], references: [id])
   acneSolution AcneSolution @relation(fields: [acneSolutionId], references: [id])
@@ -117,10 +120,10 @@ model BadIngredient {
 // ================= JADWAL TREATMENT =================
 model JadwalTreatment {
   id        String       @id @default(uuid())
-  hari      DateTime     // tipe Date
-  tempat    String       // tempat treatment (string)
-  nama      String       // nama (string)
-  pengingat DateTime     // pengingat (date, satu hari sebelum treatment)
+  hari      DateTime // tipe Date
+  tempat    String // tempat treatment (string)
+  nama      String // nama (string)
+  pengingat DateTime // pengingat (date, satu hari sebelum treatment)
   users     UserPublic[] // Many-to-many dengan UserPublic
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
@@ -129,10 +132,10 @@ model JadwalTreatment {
 // ================= JADWAL HABIT =================
 model JadwalHabit {
   id        String       @id @default(uuid())
-  nama      String       // nama (string)
-  hari      String       // hari (string)
-  jam       String       // jam (time, contoh: "22:00")
-  pengingat String       // pengingat (time, contoh: "21:00", satu jam sebelum jam)
+  nama      String // nama (string)
+  hari      String // hari (string)
+  jam       String // jam (time, contoh: "22:00")
+  pengingat String // pengingat (time, contoh: "21:00", satu jam sebelum jam)
   users     UserPublic[] // Many-to-many dengan UserPublic
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
