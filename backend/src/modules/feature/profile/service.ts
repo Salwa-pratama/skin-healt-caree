@@ -38,12 +38,12 @@ export class ProfileService {
           });
         };
         const cloudinaryResult: any = await uploadToCloudinary();
-        finalData.gambar = cloudinaryResult.secure_url;
+        finalData.avatar = cloudinaryResult.secure_url;
 
         // Hapus gambar lama dari Cloudinary jika ada
-        if (existingProfile.gambar && !existingProfile.gambar.startsWith("data:")) {
+        if (existingProfile.avatar && !existingProfile.avatar.startsWith("data:")) {
           try {
-            const parts = existingProfile.gambar.split("/upload/");
+            const parts = existingProfile.avatar.split("/upload/");
             if (parts.length > 1) {
               const afterUpload = parts[1];
               const withoutVersion = afterUpload.substring(
@@ -64,10 +64,10 @@ export class ProfileService {
       } else {
         console.warn("⚠️ CLOUDINARY_API_SECRET is missing. Bypassing Cloudinary and storing avatar as base64.");
         const base64Image = fileBuffer.toString("base64");
-        finalData.gambar = `data:image/jpeg;base64,${base64Image}`;
+        finalData.avatar = `data:image/jpeg;base64,${base64Image}`;
       }
     }
-    
+
     return await this.repository.updateProfile(userId, finalData);
   }
 }
