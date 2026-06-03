@@ -10,7 +10,8 @@ import { useProfile } from "@/features/auth/api/profile.api";
 export default function SettingPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { data, isLoading, error } = useProfile();
-  console.log("Profile Data:", data);
+  const [gender, setGender] = useState("male")
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[var(--dashboard-bg)] transition-colors duration-300">
@@ -32,6 +33,14 @@ export default function SettingPage() {
       </div>
     );
   }
+
+  const defaultAvatar =
+    gender === "female"
+      ? "/assets/profile/female.png"
+      : "/assets/profile/male.png";
+
+  const avatarUrl = data?.avatar || defaultAvatar;
+
 
 
   return (
@@ -84,13 +93,13 @@ export default function SettingPage() {
                 <div className="flex flex-col sm:flex-row gap-6 items-center">
                   <div className="relative group cursor-pointer">
                     <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-primary shadow-sm transition-transform group-hover:scale-105">
-                      {data?.avatar ? (
+                      
                         <img
                           alt="Profile Edit"
                           className="w-full h-full object-cover"
-                          src={data.avatar}
+                          src={avatarUrl}
                         />
-                      ) : (
+                     
                         <div className="w-full h-full bg-[#E2E8F0] dark:bg-[#334155] flex items-center justify-center text-[#94A3B8] dark:text-[#64748B]">
                           <svg
                             className="w-2/3 h-2/3"
@@ -100,7 +109,7 @@ export default function SettingPage() {
                             <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                           </svg>
                         </div>
-                      )}
+                      
                     </div>
                     <div className="absolute inset-0 bg-primary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-full backdrop-blur-[1px]">
                       <span className="material-symbols-outlined text-white text-lg">photo_camera</span>
@@ -188,17 +197,17 @@ export default function SettingPage() {
                   <h3 className="text-lg font-black tracking-tight text-[var(--dashboard-text)]">Keamanan</h3>
                 </div>
                 <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between p-4 bg-[var(--dashboard-bg)] rounded-xl gap-4 hover:bg-[var(--dashboard-border)] transition-colors">
+                  <div className="flex items-center justify-between p-4 bg-[var(--dashboard-bg)] rounded-xl gap-4 hover:bg-[var(--dashboard-border)] transition-colors">
                     <div className="flex flex-col">
-                        <span className="font-bold text-[var(--dashboard-text)] text-xs">Ubah Kata Sandi</span>
-                        <span className="text-[9px] text-on-surface-variant font-bold uppercase tracking-wider mt-0.5">3 bulan lalu</span>
-                      </div>
-                      <button className="bg-[var(--dashboard-card-bg)] px-4 py-1.5 rounded-lg text-[9px] font-black text-primary border border-primary/20 hover:bg-primary hover:text-on-primary transition-all uppercase tracking-widest">Ubah</button>
+                      <span className="font-bold text-[var(--dashboard-text)] text-xs">Ubah Kata Sandi</span>
+                      <span className="text-[9px] text-on-surface-variant font-bold uppercase tracking-wider mt-0.5">3 bulan lalu</span>
+                    </div>
+                    <button className="bg-[var(--dashboard-card-bg)] px-4 py-1.5 rounded-lg text-[9px] font-black text-primary border border-primary/20 hover:bg-primary hover:text-on-primary transition-all uppercase tracking-widest">Ubah</button>
                   </div>
-                    <div className="flex items-center justify-between p-4 bg-[var(--dashboard-bg)] rounded-xl gap-4 hover:bg-[var(--dashboard-border)] transition-colors">
+                  <div className="flex items-center justify-between p-4 bg-[var(--dashboard-bg)] rounded-xl gap-4 hover:bg-[var(--dashboard-border)] transition-colors">
                     <div className="flex flex-col">
-                        <span className="font-bold text-[var(--dashboard-text)] text-xs">Verifikasi 2 Langkah</span>
-                        <span className="text-[9px] text-on-surface-variant font-bold uppercase tracking-wider mt-0.5">Proteksi SMS/App</span>
+                      <span className="font-bold text-[var(--dashboard-text)] text-xs">Verifikasi 2 Langkah</span>
+                      <span className="text-[9px] text-on-surface-variant font-bold uppercase tracking-wider mt-0.5">Proteksi SMS/App</span>
                     </div>
                     <div className="relative inline-flex items-center cursor-pointer scale-90">
                       <input defaultChecked className="sr-only peer" type="checkbox" />
