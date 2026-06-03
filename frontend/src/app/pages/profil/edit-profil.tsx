@@ -46,7 +46,7 @@ export default function ProfilePage() {
       : "/assets/profile/male.png";
   const avatarUrl = data?.avatar || defaultAvatar;
 
-  console.log(avatarUrl);
+
 
   useEffect(() => {
     if (data) {
