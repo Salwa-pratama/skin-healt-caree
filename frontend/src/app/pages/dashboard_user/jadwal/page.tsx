@@ -41,7 +41,7 @@ export default function JadwalPage() {
   const [editId, setEditId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<{ id: string; type: "treatment" | "habit" } | null>(null);
-  
+
   // Toast State
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -145,41 +145,33 @@ export default function JadwalPage() {
 
   return (
     <div className="bg-[var(--dashboard-bg)] text-[var(--dashboard-text)] antialiased min-h-screen font-manrope transition-colors duration-300">
-      <DashboardHeader 
-        isSidebarOpen={isSidebarOpen} 
-        onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
-      />
 
-      <Sidebar activePage="jadwal" isOpen={isSidebarOpen} />
-
-      <main className={`transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] pt-20 px-4 sm:px-6 md:px-10 pb-32 md:pb-12 ${isSidebarOpen ? "lg:ml-64" : "lg:ml-0"}`}>
+      <main >
         <div className="max-w-5xl mx-auto flex flex-col gap-8">
-          
+
           {/* Header & Tabs */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-4">
             <div>
               <h1 className="text-3xl font-black tracking-tight text-[var(--dashboard-text)]">Jadwal Perawatan</h1>
               <p className="text-on-surface-variant font-medium mt-1 text-sm">Kelola jadwal treatment klinik dan habit skincare Anda.</p>
             </div>
-            
+
             <div className="flex bg-[var(--dashboard-card-bg)] p-1 rounded-xl border border-[var(--dashboard-border)] shadow-sm self-start">
               <button
                 onClick={() => setActiveTab("treatment")}
-                className={`px-6 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
-                  activeTab === "treatment" 
-                    ? "bg-primary text-on-primary shadow-md" 
-                    : "text-on-surface-variant hover:bg-surface-variant"
-                }`}
+                className={`px-6 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === "treatment"
+                  ? "bg-primary text-on-primary shadow-md"
+                  : "text-on-surface-variant hover:bg-surface-variant"
+                  }`}
               >
                 Treatment
               </button>
               <button
                 onClick={() => setActiveTab("habit")}
-                className={`px-6 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
-                  activeTab === "habit" 
-                    ? "bg-primary text-on-primary shadow-md" 
-                    : "text-on-surface-variant hover:bg-surface-variant"
-                }`}
+                className={`px-6 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === "habit"
+                  ? "bg-primary text-on-primary shadow-md"
+                  : "text-on-surface-variant hover:bg-surface-variant"
+                  }`}
               >
                 Habit
               </button>
@@ -187,7 +179,7 @@ export default function JadwalPage() {
           </div>
 
           {/* Action Button */}
-          <button 
+          <button
             onClick={() => handleOpenModal(activeTab)}
             className="self-start flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-full font-bold shadow-[0_8px_20px_rgba(var(--primary-rgb),0.3)] hover:shadow-[0_10px_25px_rgba(var(--primary-rgb),0.4)] transition-all transform hover:-translate-y-0.5 cursor-pointer"
           >
@@ -302,25 +294,25 @@ export default function JadwalPage() {
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               {modalType === "treatment" ? (
                 <>
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Nama Treatment</label>
-                    <input required type="text" value={formData.nama} onChange={(e) => setFormData({...formData, nama: e.target.value})} placeholder="Contoh: Facial Peeling" className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
+                    <input required type="text" value={formData.nama} onChange={(e) => setFormData({ ...formData, nama: e.target.value })} placeholder="Contoh: Facial Peeling" className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Tempat</label>
-                    <input required type="text" value={formData.tempat} onChange={(e) => setFormData({...formData, tempat: e.target.value})} placeholder="Contoh: Klinik Estetika" className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
+                    <input required type="text" value={formData.tempat} onChange={(e) => setFormData({ ...formData, tempat: e.target.value })} placeholder="Contoh: Klinik Estetika" className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Tanggal & Waktu</label>
-                    <input required type="datetime-local" style={{ colorScheme: "dark" }} value={formData.hari} onChange={(e) => setFormData({...formData, hari: e.target.value})} className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
+                    <input required type="datetime-local" style={{ colorScheme: "dark" }} value={formData.hari} onChange={(e) => setFormData({ ...formData, hari: e.target.value })} className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Pengingat</label>
-                    <input type="datetime-local" style={{ colorScheme: "dark" }} value={formData.pengingat} onChange={(e) => setFormData({...formData, pengingat: e.target.value})} className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
+                    <input type="datetime-local" style={{ colorScheme: "dark" }} value={formData.pengingat} onChange={(e) => setFormData({ ...formData, pengingat: e.target.value })} className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
                     <span className="text-[10px] text-on-surface-variant/70">Kosongkan untuk pengingat otomatis (1 hari sebelum)</span>
                   </div>
                 </>
@@ -328,24 +320,24 @@ export default function JadwalPage() {
                 <>
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Nama Habit</label>
-                    <input required type="text" value={formData.nama} onChange={(e) => setFormData({...formData, nama: e.target.value})} placeholder="Contoh: Cuci Muka Malam" className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
+                    <input required type="text" value={formData.nama} onChange={(e) => setFormData({ ...formData, nama: e.target.value })} placeholder="Contoh: Cuci Muka Malam" className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Hari</label>
-                    <input required type="text" value={formData.hari} onChange={(e) => setFormData({...formData, hari: e.target.value})} placeholder="Contoh: Senin / Setiap Hari" className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
+                    <input required type="text" value={formData.hari} onChange={(e) => setFormData({ ...formData, hari: e.target.value })} placeholder="Contoh: Senin / Setiap Hari" className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Jam Pelaksanaan</label>
-                    <input required type="time" style={{ colorScheme: "dark" }} value={formData.jam} onChange={(e) => setFormData({...formData, jam: e.target.value})} className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
+                    <input required type="time" style={{ colorScheme: "dark" }} value={formData.jam} onChange={(e) => setFormData({ ...formData, jam: e.target.value })} className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Jam Pengingat</label>
-                    <input type="time" style={{ colorScheme: "dark" }} value={formData.pengingat} onChange={(e) => setFormData({...formData, pengingat: e.target.value})} className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
+                    <input type="time" style={{ colorScheme: "dark" }} value={formData.pengingat} onChange={(e) => setFormData({ ...formData, pengingat: e.target.value })} className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 text-sm text-[var(--dashboard-text)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
                     <span className="text-[10px] text-on-surface-variant/70">Kosongkan untuk pengingat otomatis (1 jam sebelum)</span>
                   </div>
                 </>
               )}
-              
+
               <div className="flex gap-3 mt-4 pt-4 border-t border-[var(--dashboard-border)]">
                 <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-3 rounded-xl font-bold bg-surface-variant text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
                   Batal

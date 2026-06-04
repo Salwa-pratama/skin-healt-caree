@@ -34,13 +34,11 @@ export default function DashboardHeader({
 
   return (
     <header
-      className={`fixed top-0 right-0 flex justify-between items-center px-4 md:px-8 h-16 z-[60] border-b transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
-        isSidebarOpen ? "lg:left-64 left-0" : "left-0"
-      } ${
-        scrolled
+      className={`fixed top-0 right-0 flex justify-between items-center px-4 md:px-8 h-16 z-[60] border-b transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isSidebarOpen ? "lg:left-64 left-0" : "left-0"
+        } ${scrolled
           ? "bg-[var(--dashboard-header-scrolled-bg)] backdrop-blur-xl border-[var(--dashboard-sidebar-border)] shadow-sm"
           : "bg-[var(--dashboard-header-bg)] border-transparent"
-      }`}
+        }`}
     >
       <div className="flex items-center gap-4">
         {/* Hamburger Menu Button - Hidden on Mobile */}

@@ -1,9 +1,7 @@
-"use client";
-
+import NotifPage from "./notif";
 import React from "react";
 import Link from "next/link";
-
-export default function NotifPage() {
+export default function Page() {
   return (
     <div className="bg-surface-container-lowest text-on-surface min-h-screen relative overflow-hidden font-manrope">
       {/* Mock Main Dashboard Content (Dimmed to focus on overlay) */}
@@ -39,7 +37,7 @@ export default function NotifPage() {
               <h2 className="text-3xl font-black tracking-tight text-on-surface">Protokol Pemulihan</h2>
               <p className="text-sm text-on-surface-variant/80 mt-1">4 Tugas krusial menunggu konfirmasi klinis.</p>
             </div>
-            <Link href="/pages/dashboard">
+            <Link href="/pages/dashboard_user">
               <button className="w-10 h-10 rounded-full bg-white/50 flex items-center justify-center hover:bg-white transition-colors">
                 <span className="material-symbols-outlined text-zinc-400">close</span>
               </button>
@@ -138,7 +136,7 @@ export default function NotifPage() {
 
         {/* Bottom Floating Navigation Indicator (Menu Context) */}
         <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 flex gap-4">
-          <Link href="/pages/dashboard">
+          <Link href="/pages/dashboard_user">
             <button className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-zinc-400 hover:text-primary transition-colors">
               <span className="material-symbols-outlined">dashboard</span>
             </button>
@@ -146,7 +144,7 @@ export default function NotifPage() {
           <button className="w-12 h-12 rounded-full neon-accent flex items-center justify-center text-on-primary-container shadow-lg">
             <span className="material-symbols-outlined fill-icon">notifications_active</span>
           </button>
-          <Link href="/pages/history">
+          <Link href="/pages/dashboard_user/history">
             <button className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-zinc-400 hover:text-primary transition-colors">
               <span className="material-symbols-outlined">history</span>
             </button>

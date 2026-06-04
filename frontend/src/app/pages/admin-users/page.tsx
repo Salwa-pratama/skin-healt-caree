@@ -4,7 +4,7 @@ import { useState } from "react";
 import Sidebar from "@/app/components/Sidebar";
 import DashboardHeader from "@/app/components/DashboardHeader";
 import MobileNav from "@/app/components/MobileNav";
-import "../dashboard/dashboard.css";
+import "../dashboard_user/dashboard.css";
 import { useAdminUsers, useDeleteUserMutation } from "@/features/admin/api/admin.api";
 import { useProfile } from "@/features/auth/api/profile.api";
 
@@ -22,16 +22,16 @@ export default function AdminUsers() {
 
   return (
     <div className="bg-[var(--dashboard-bg)] text-[var(--dashboard-text)] antialiased min-h-screen font-manrope transition-colors duration-300">
-      <DashboardHeader 
-        isSidebarOpen={isSidebarOpen} 
-        onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
+      <DashboardHeader
+        isSidebarOpen={isSidebarOpen}
+        onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
       />
 
       <Sidebar activePage="admin-users" isOpen={isSidebarOpen} />
 
       <main className={`transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] pt-20 px-4 sm:px-6 md:px-10 dashboard-animate-in ${isSidebarOpen ? "lg:ml-64" : "lg:ml-0"}`}>
         <div className="max-w-7xl mx-auto flex flex-col pb-32 md:pb-8">
-          
+
           <div className="bg-[var(--dashboard-card-bg)] rounded-3xl p-6 md:p-8 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[var(--dashboard-border)] transition-colors duration-300">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
               <div>

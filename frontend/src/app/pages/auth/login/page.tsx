@@ -32,7 +32,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (Cookies.get("access_token")) {
-      router.replace("/pages/dashboard");
+      router.replace("/pages/dashboard_user");
     }
   }, [router]);
 
@@ -54,7 +54,7 @@ export default function LoginPage() {
             setRedirectCountdown(count);
             if (count <= 0) {
               clearInterval(timer);
-              router.push("/pages/dashboard");
+              router.push("/pages/dashboard_user");
             }
           }, 1000);
         },

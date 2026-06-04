@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Dock, { DockItemData } from "./Dock";
 import { useProfile } from "@/features/auth/api/profile.api";
 
@@ -12,28 +12,29 @@ interface MobileNavProps {
 
 export default function MobileNav({ activePage }: MobileNavProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const { data: user } = useProfile();
 
   const userItems: DockItemData[] = [
     { 
-      icon: <span className={`material-symbols-outlined text-2xl ${activePage === "dashboard" ? "text-white" : "text-slate-400"}`}>grid_view</span>, 
+      icon: <span className={`material-symbols-outlined text-2xl ${pathname === "/pages/dashboard_user" ? "text-white" : "text-slate-400"}`}>grid_view</span>, 
       label: "Home", 
-      onClick: () => router.push("/pages/dashboard") 
+      onClick: () => router.push("/pages/dashboard_user") 
     },
     { 
-      icon: <span className={`material-symbols-outlined text-2xl ${activePage === "scan" ? "text-white" : "text-slate-400"}`}>biotech</span>, 
+      icon: <span className={`material-symbols-outlined text-2xl ${pathname === "/pages/dashboard_user/scan" ? "text-white" : "text-slate-400"}`}>biotech</span>, 
       label: "Scan", 
-      onClick: () => router.push("/pages/scan") 
+      onClick: () => router.push("/pages/dashboard_user/scan") 
     },
     { 
-      icon: <span className={`material-symbols-outlined text-2xl ${activePage === "history" ? "text-white" : "text-slate-400"}`}>history</span>, 
+      icon: <span className={`material-symbols-outlined text-2xl ${pathname === "/pages/dashboard_user/history" ? "text-white" : "text-slate-400"}`}>history</span>, 
       label: "History", 
-      onClick: () => router.push("/pages/history") 
+      onClick: () => router.push("/pages/dashboard_user/history") 
     },
     { 
-      icon: <span className={`material-symbols-outlined text-2xl ${activePage === "setting" ? "text-white" : "text-slate-400"}`}>settings</span>, 
+      icon: <span className={`material-symbols-outlined text-2xl ${pathname === "/pages/dashboard_user/setting" ? "text-white" : "text-slate-400"}`}>settings</span>, 
       label: "Settings", 
-      onClick: () => router.push("/pages/setting") 
+      onClick: () => router.push("/pages/dashboard_user/setting") 
     },
   ];
 

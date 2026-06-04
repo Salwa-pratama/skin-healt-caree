@@ -15,21 +15,21 @@ function NavbarContent() {
         setMounted(true);
     }, []);
 
-    const isSains = pathname === '/pages/sains' || pathname.startsWith('/pages/sains/');
-    const isTentang = pathname === '/pages/tentang' || pathname.startsWith('/pages/tentang/');
+    const isSains = pathname === '/sains' || pathname.startsWith('/sains/');
+    const isTentang = pathname === '/tentang' || pathname.startsWith('/tentang/');
     const isFitur = pathname === '/';
-    const isAppPage = pathname.startsWith('/pages/dashboard') || 
-                      pathname.startsWith('/pages/scan') || 
-                      pathname.startsWith('/pages/history') || 
-                      pathname.startsWith('/pages/profil') || 
-                      pathname.startsWith('/pages/setting') || 
+    const isAppPage = pathname.startsWith('/pages/dashboard') ||
+                      pathname.startsWith('/pages/scan') ||
+                      pathname.startsWith('/pages/history') ||
+                      pathname.startsWith('/pages/profil') ||
+                      pathname.startsWith('/pages/setting') ||
                       pathname.startsWith('/pages/notifikasi');
     if (isAppPage) return null;
 
     const navLinks = [
         { name: 'Fitur', path: '/', active: isFitur },
-        { name: 'Sains', path: '/pages/sains', active: isSains },
-        { name: 'Tentang', path: '/pages/tentang', active: isTentang },
+        { name: 'Sains', path: '/sains', active: isSains },
+        { name: 'Tentang', path: '/tentang', active: isTentang },
     ];
     return (
         <nav className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-2xl border-b border-outline-variant/30 transition-all duration-300">
@@ -157,7 +157,7 @@ function NavbarContent() {
     );
 }
 
-export default function Navbar() {
+export default function Header() {
     return (
         <Suspense fallback={<div className="h-20 bg-surface/70 w-full fixed top-0 z-50 animate-pulse" />}>
             <NavbarContent />

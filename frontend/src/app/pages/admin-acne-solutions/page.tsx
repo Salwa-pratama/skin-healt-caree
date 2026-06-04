@@ -4,7 +4,7 @@ import { useState } from "react";
 import Sidebar from "@/app/components/Sidebar";
 import DashboardHeader from "@/app/components/DashboardHeader";
 import MobileNav from "@/app/components/MobileNav";
-import "../dashboard/dashboard.css";
+import "../dashboard_user/dashboard.css";
 import { useAdminAcneSolutions, useDeleteAcneSolutionMutation } from "@/features/admin/api/admin.api";
 import SolutionFormModal from "./SolutionFormModal";
 
@@ -12,7 +12,7 @@ export default function AdminAcneSolutions() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingData, setEditingData] = useState<any>(null);
-  
+
   const { data: solutions, isLoading } = useAdminAcneSolutions();
   const deleteMutation = useDeleteAcneSolutionMutation();
 
@@ -34,16 +34,16 @@ export default function AdminAcneSolutions() {
 
   return (
     <div className="bg-[var(--dashboard-bg)] text-[var(--dashboard-text)] antialiased min-h-screen font-manrope transition-colors duration-300">
-      <DashboardHeader 
-        isSidebarOpen={isSidebarOpen} 
-        onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
+      <DashboardHeader
+        isSidebarOpen={isSidebarOpen}
+        onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
       />
 
       <Sidebar activePage="admin-acne-solutions" isOpen={isSidebarOpen} />
 
       <main className={`transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] pt-20 px-4 sm:px-6 md:px-10 dashboard-animate-in ${isSidebarOpen ? "lg:ml-64" : "lg:ml-0"}`}>
         <div className="max-w-7xl mx-auto flex flex-col pb-32 md:pb-8">
-          
+
           <div className="bg-[var(--dashboard-card-bg)] rounded-3xl p-6 md:p-8 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[var(--dashboard-border)] transition-colors duration-300">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
               <div>
@@ -83,7 +83,7 @@ export default function AdminAcneSolutions() {
                     <p className="text-xs text-[var(--dashboard-text-secondary)] line-clamp-3 mb-4 leading-relaxed">
                       {solution.description}
                     </p>
-                    
+
                     <div className="flex flex-wrap gap-2">
                       <span className="px-2.5 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-md text-[9px] font-black uppercase tracking-wider">
                         {solution.goodIngredients?.length || 0} Good
@@ -97,7 +97,7 @@ export default function AdminAcneSolutions() {
                     </div>
                   </div>
                 ))}
-                
+
                 {(!solutions || solutions.length === 0) && (
                   <div className="col-span-full text-center py-12 text-on-surface-variant font-medium">
                     Tidak ada data Rekomendasi/Acne Solution.
@@ -111,11 +111,11 @@ export default function AdminAcneSolutions() {
       </main>
 
       <MobileNav activePage="admin-acne-solutions" />
-      
-      <SolutionFormModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        editingData={editingData} 
+
+      <SolutionFormModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        editingData={editingData}
       />
     </div>
   );

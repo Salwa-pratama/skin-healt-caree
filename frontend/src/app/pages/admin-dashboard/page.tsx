@@ -4,7 +4,7 @@ import { useState } from "react";
 import Sidebar from "@/app/components/Sidebar";
 import DashboardHeader from "@/app/components/DashboardHeader";
 import MobileNav from "@/app/components/MobileNav";
-import "../dashboard/dashboard.css"; 
+import "../dashboard_user/dashboard.css";
 import { useAdminStats } from "@/features/admin/api/admin.api";
 
 export default function AdminDashboard() {
@@ -13,9 +13,9 @@ export default function AdminDashboard() {
 
   return (
     <div className="bg-[var(--dashboard-bg)] text-[var(--dashboard-text)] antialiased min-h-screen font-manrope transition-colors duration-300">
-      <DashboardHeader 
-        isSidebarOpen={isSidebarOpen} 
-        onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
+      <DashboardHeader
+        isSidebarOpen={isSidebarOpen}
+        onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
       />
 
       <Sidebar activePage="admin-dashboard" isOpen={isSidebarOpen} />
@@ -80,7 +80,7 @@ export default function AdminDashboard() {
                 <h3 className="font-black text-xs uppercase tracking-widest text-[var(--dashboard-text)] mb-6">
                   Platform Statistics
                 </h3>
-                
+
                 <div className="grid grid-cols-2 gap-4 flex-1">
                   {[
                     { label: "Total Users", val: isLoading ? "..." : (stats?.totalUsers || 0), icon: "group", color: "text-blue-500" },
@@ -117,10 +117,9 @@ export default function AdminDashboard() {
                     { time: "3 hours ago", event: "System Backup", detail: "1.2GB saved", type: "success" },
                   ].map((log, i) => (
                     <div key={i} className="relative pl-6">
-                      <div className={`absolute left-0 top-0 w-1 h-full rounded-full ${
-                        log.type === "success" ? "signature-gradient" : 
+                      <div className={`absolute left-0 top-0 w-1 h-full rounded-full ${log.type === "success" ? "signature-gradient" :
                         log.type === "info" ? "bg-blue-400" : "bg-amber-400"
-                      }`}></div>
+                        }`}></div>
                       <p className="text-[9px] font-black text-on-surface-variant/75 uppercase mb-1">{log.time}</p>
                       <p className="text-xs font-semibold leading-relaxed text-[var(--dashboard-text)]">{log.event}</p>
                       <p className="text-[10px] text-on-surface-variant/60">{log.detail}</p>
