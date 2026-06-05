@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -136,7 +136,7 @@ export default function ProfilePage() {
         }}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Link href="/pages/dashboard" className="flex items-center gap-3">
+          <Link href="/pages/dashboard/user" className="flex items-center gap-3">
             <div className="flex flex-col">
               <h1
                 className="text-lg sm:text-xl font-extrabold tracking-tight"
@@ -157,7 +157,7 @@ export default function ProfilePage() {
             <Link
               className="p-2 transition-colors"
               style={{ color: "var(--dashboard-text-secondary)" }}
-              href="/pages/dashboard"
+              href="/pages/dashboard/admin"
             >
               <span className="material-symbols-outlined text-xl sm:text-2xl">
                 dashboard
@@ -166,14 +166,14 @@ export default function ProfilePage() {
             <Link
               className="hidden sm:block p-2 transition-colors"
               style={{ color: "var(--dashboard-text-secondary)" }}
-              href="/pages/scan"
+              href="/pages/dashboard_user/scan"
             >
               <span className="material-symbols-outlined">biotech</span>
             </Link>
             <Link
               className="hidden sm:block p-2 transition-colors"
               style={{ color: "var(--dashboard-text-secondary)" }}
-              href="/pages/history"
+              href="/pages/dashboard_user/history"
             >
               <span className="material-symbols-outlined">history</span>
             </Link>
@@ -183,7 +183,7 @@ export default function ProfilePage() {
                 color: "var(--dashboard-sidebar-active-text)",
                 background: "var(--dashboard-sidebar-active-bg)",
               }}
-              href="/pages/profil"
+              href="/pages/dashboard_user/profil"
             >
               <span
                 className="material-symbols-outlined text-xl sm:text-2xl"
@@ -216,7 +216,7 @@ export default function ProfilePage() {
             <Link
               className="p-2 transition-colors hover:text-red-500"
               style={{ color: "var(--dashboard-text-secondary)" }}
-              href="/pages/auth/login"
+              href="/pages/dashboard_user"
             >
               <span className="material-symbols-outlined text-xl sm:text-2xl">
                 logout
@@ -267,23 +267,7 @@ export default function ProfilePage() {
                       borderColor: "var(--dashboard-sidebar-active-text)",
                     }}
                   >
-                    {/* {data?.avatar ? (
-                      <img
-                        alt="User profile avatar"
-                        className="w-full h-full object-cover"
-                        src={avatar}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-[#E2E8F0] dark:bg-[#334155] flex items-center justify-center text-[#94A3B8] dark:text-[#64748B]">
-                        <svg
-                          className="w-2/3 h-2/3"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                      </div>
-                    )} */}
+
                     <img
                       alt="User profile avatar"
                       className="w-full h-full object-cover"
@@ -591,7 +575,7 @@ export default function ProfilePage() {
               id="profil-batal-btn"
               type="button"
               onClick={() => {
-                router.push("/pages/dashboard");
+                router.push("/pages/dashboard_user/dashboard_user");
               }}
               className="px-5 py-2 rounded-full text-xs font-semibold transition-all duration-200 hover:opacity-80 active:scale-95"
               style={{ color: "var(--dashboard-text-secondary)" }}
