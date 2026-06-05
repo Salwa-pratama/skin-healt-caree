@@ -31,7 +31,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (Cookies.get("access_token")) {
-      router.replace("/pages/dashboard_user");
+      router.replace("/pages/dashboard");
     }
   }, [router]);
 

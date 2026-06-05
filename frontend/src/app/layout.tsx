@@ -3,9 +3,6 @@ import { Manrope } from "next/font/google"; // Using Manrope for the landing pag
 import { ReactQueryProvider } from "@/lib/react-query-provider";
 import { ThemeProvider } from "@/lib/theme-provider";
 import "./globals.css";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import AuthListener from "./components/AuthListener";
 
 const manrope = Manrope({
   variable: "--font-manrope",
