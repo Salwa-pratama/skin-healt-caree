@@ -216,3 +216,29 @@ body {
   font-family: var(--font-manrope), sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+/* ─── Custom Global Scrollbar ─── */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface-container);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-inverse-primary);
+  border-radius: 10px;
+  border: 2px solid var(--color-surface-container);
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-inverse-primary) var(--color-surface-container);
+}
