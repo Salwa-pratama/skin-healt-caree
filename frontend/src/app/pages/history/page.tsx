@@ -247,7 +247,7 @@ export default function HistoryPage() {
 
                   <div className="mt-8 pt-6 border-t border-[var(--dashboard-border)] flex items-center justify-between">
                     <Link
-                      href="/pages/scan"
+                      href={`/pages/history/${scan.id}`}
                       className="text-primary font-extrabold text-[10px] md:text-xs uppercase tracking-widest hover:translate-x-1 transition-transform flex items-center gap-2"
                     >
                       Lihat Laporan

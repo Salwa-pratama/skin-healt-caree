@@ -39,6 +39,17 @@ export const useGetHistoryQuery = () => {
   });
 };
 
+export const useGetHistoryByIdQuery = (id: number) => {
+  return useQuery({
+    queryKey: ["history", id],
+    queryFn: async () => {
+      const res = await apiClient.get(`/feature/history/${id}`);
+      return res.data;
+    },
+    enabled: !!id,
+  });
+};
+
 export const useDeleteHistoryMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
