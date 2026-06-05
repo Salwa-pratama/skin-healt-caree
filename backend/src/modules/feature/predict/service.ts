@@ -5,7 +5,6 @@ import {
   ServiceResponse,
   ServiceResponseSchema,
 } from "../../../common/models/service_response";
-import { acneRecommendations } from "../../../database/prisma/seeding/rekomendation_seed";
 import { cloudinary } from "../../../utils/cloudinary";
 import { prisma } from "../../../common/lib/prisma";
 
@@ -28,14 +27,36 @@ export class PredictService {
 
       if (result.jerawat) {
         const topPrediction = result.jerawat.toLowerCase();
-        const mainRec = acneRecommendations.find(r => {
+        
+        // Ambil data master rekomendasi dari database
+        const masterSolutions = await prisma.acneSolution.findMany({
+          where: { userId: null as any },
+          include: {
+            goodIngredient: true,
+            badIngredient: true,
+            habits: true,
+            treatments: true
+          }
+        });
+
+        // Pencocokan logika seperti sebelumnya
+        const mainRec = masterSolutions.find(r => {
+          if (!r.type) return false;
           const typeLower = r.type.toLowerCase();
           return typeLower.includes(topPrediction) || topPrediction.includes(typeLower) || 
                  (typeLower === "whitehead / blackhead" && (topPrediction.includes("whitehead") || topPrediction.includes("blackhead")));
         });
 
         if (mainRec) {
-          rekomendasiToReturn = { ...mainRec } as any;
+          // Mapping data dari database ke format response yang diharapkan frontend
+          rekomendasiToReturn = { 
+            type: mainRec.type,
+            description: mainRec.description,
+            goodIngredients: mainRec.goodIngredient.map(g => g.name),
+            badIngredients: mainRec.badIngredient.map(b => b.name),
+            habits: mainRec.habits.map(h => h.name),
+            treatments: mainRec.treatments.map(t => ({ name: t.name, time: t.time }))
+          } as any;
 
           if (result.predictions && result.predictions.length > 1) {
             const sortedPredictions = [...result.predictions].sort((a, b) => {

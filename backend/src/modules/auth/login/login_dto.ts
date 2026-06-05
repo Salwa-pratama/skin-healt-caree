@@ -22,6 +22,7 @@ export const UserResponseSchema = z.object({
   email: z.string(),
   name: z.string(),
   role: z.string(),
+
   createdAt: z.date(),
   updatedAt: z.date(),
 });
@@ -30,6 +31,7 @@ export const LoginDataSchma = z.object({
   user: UserResponseSchema,
   accessToken: z.string(),
   refreshToken: z.string(),
+  redirect_to: z.string(),
 });
 
 // ===== Types =====

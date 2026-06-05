@@ -39,7 +39,7 @@ export class AuthService {
         email: payload.email,
         name: payload.name,
         passwordHash: hashPassword(payload.password),
-        role: "USER",
+        role: "user",
         refreshTokenHash: null,
       });
 
@@ -81,12 +81,23 @@ export class AuthService {
         hashPassword(refreshToken),
       );
 
-     
+      let redirect_to = "/";
+      switch (user.role) {
+        case "user":
+          redirect_to = "/pages/dashboard/user";
+          break;
+        case "admin":
+          redirect_to = "/pages/dashboard/admin";
+          break;
+        default:
+          break;
+      }
 
       return ServiceResponse.success("Login successful", {
         user: sanitizeUser(user),
         accessToken,
         refreshToken,
+        redirect_to,
       });
     } catch (error) {
       console.log("error : ", error);

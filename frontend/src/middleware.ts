@@ -7,7 +7,7 @@ const protectedRoutes = ['/pages/dashboard', '/pages/scan', '/pages/history', '/
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('access_token')?.value;
 
-  const isProtectedRoute = protectedRoutes.some(route => 
+  const isProtectedRoute = protectedRoutes.some(route =>
     request.nextUrl.pathname.startsWith(route)
   );
 
@@ -16,10 +16,10 @@ export function middleware(request: NextRequest) {
     const loginUrl = new URL('/pages/auth/login', request.url);
     return NextResponse.redirect(loginUrl);
   }
-  
+
   if (token && request.nextUrl.pathname.startsWith('/pages/auth')) {
-     const dashboardUrl = new URL('/pages/dashboard', request.url);
-     return NextResponse.redirect(dashboardUrl);
+    const dashboardUrl = new URL('/pages/dashboard', request.url);
+    return NextResponse.redirect(dashboardUrl);
   }
 
   return NextResponse.next();

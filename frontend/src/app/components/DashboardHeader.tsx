@@ -24,6 +24,8 @@ export default function DashboardHeader({
       ? "/assets/profile/female.png"
       : "/assets/profile/male.png";
   const avatarUrl = data?.avatar || defaultAvatar;
+  const redirect_url =
+    data?.role === "admin" ? "/pages/dashboard/admin" : "/pages/dashboard/user";
 
   useEffect(() => {
     setMounted(true);

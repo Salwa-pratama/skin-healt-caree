@@ -17,7 +17,6 @@ const manrope = Manrope({
 
 export default function LoginPage() {
   const router = useRouter();
-  const { theme, toggleTheme } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -32,7 +31,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (Cookies.get("access_token")) {
-      router.replace("/pages/dashboard");
+      router.replace("/pages/dashboard_user");
     }
   }, [router]);
 
@@ -46,15 +45,19 @@ export default function LoginPage() {
     loginMutation.mutate(
       { email, password },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
           setModalType("success");
+          console.log("response : ", data);
+          const redirect_to = data.data.redirect_to;
+          console.log(redirect_to);
           let count = 3;
           const timer = setInterval(() => {
             count -= 1;
             setRedirectCountdown(count);
             if (count <= 0) {
               clearInterval(timer);
-              router.push("/pages/dashboard");
+              // proses redirect
+              router.push(redirect_to);
             }
           }, 1000);
         },
@@ -70,7 +73,6 @@ export default function LoginPage() {
     <div
       className={`login-page ${manrope.variable} font-body selection:bg-[#84F75E]/30 selection:text-[#0a3900] h-screen flex flex-col overflow-hidden auth-animate-in relative pt-14 md:pt-16`}
     >
-
       {/* Main Content */}
       <main className="flex-grow flex flex-col lg:flex-row overflow-hidden">
         {/* Left: Login Form */}
@@ -85,7 +87,9 @@ export default function LoginPage() {
               </div>
               <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold login-text-primary mb-2 tracking-tight leading-tight">
                 Vitalitas Digital <br />
-                <span className="login-text-secondary font-medium">dalam genggaman Anda.</span>
+                <span className="login-text-secondary font-medium">
+                  dalam genggaman Anda.
+                </span>
               </h1>
               <p className="text-xs sm:text-sm login-text-muted font-medium">
                 Masuk untuk mengakses dasbor klinis DermaScan Anda.

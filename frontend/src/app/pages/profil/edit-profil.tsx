@@ -45,8 +45,8 @@ export default function ProfilePage() {
       ? "/assets/profile/female.png"
       : "/assets/profile/male.png";
   const avatarUrl = data?.avatar || defaultAvatar;
-
-
+  const redirect_url =
+    data?.role === "admin" ? "/pages/dashboard/admin" : "/pages/dashboard/user";
 
   useEffect(() => {
     if (data) {
@@ -136,7 +136,7 @@ export default function ProfilePage() {
         }}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Link href="/pages/dashboard" className="flex items-center gap-3">
+          <Link href={redirect_url} className="flex items-center gap-3">
             <div className="flex flex-col">
               <h1
                 className="text-lg sm:text-xl font-extrabold tracking-tight"
@@ -154,44 +154,48 @@ export default function ProfilePage() {
           </Link>
 
           <div className="flex items-center gap-1 sm:gap-2">
-            <Link
-              className="p-2 transition-colors"
-              style={{ color: "var(--dashboard-text-secondary)" }}
-              href="/pages/dashboard"
-            >
-              <span className="material-symbols-outlined text-xl sm:text-2xl">
-                dashboard
-              </span>
-            </Link>
-            <Link
-              className="hidden sm:block p-2 transition-colors"
-              style={{ color: "var(--dashboard-text-secondary)" }}
-              href="/pages/scan"
-            >
-              <span className="material-symbols-outlined">biotech</span>
-            </Link>
-            <Link
-              className="hidden sm:block p-2 transition-colors"
-              style={{ color: "var(--dashboard-text-secondary)" }}
-              href="/pages/history"
-            >
-              <span className="material-symbols-outlined">history</span>
-            </Link>
-            <Link
-              className="p-2 rounded-full"
-              style={{
-                color: "var(--dashboard-sidebar-active-text)",
-                background: "var(--dashboard-sidebar-active-bg)",
-              }}
-              href="/pages/profil"
-            >
-              <span
-                className="material-symbols-outlined text-xl sm:text-2xl"
-                style={{ fontVariationSettings: "'FILL' 1" }}
-              >
-                settings
-              </span>
-            </Link>
+            {data?.role === "user" && (
+              <>
+                <Link
+                  className="p-2 transition-colors"
+                  style={{ color: "var(--dashboard-text-secondary)" }}
+                  href={redirect_url}
+                >
+                  <span className="material-symbols-outlined text-xl sm:text-2xl">
+                    dashboard
+                  </span>
+                </Link>
+                <Link
+                  className="hidden sm:block p-2 transition-colors"
+                  style={{ color: "var(--dashboard-text-secondary)" }}
+                  href={`${redirect_url}/scan`}
+                >
+                  <span className="material-symbols-outlined">biotech</span>
+                </Link>
+                <Link
+                  className="hidden sm:block p-2 transition-colors"
+                  style={{ color: "var(--dashboard-text-secondary)" }}
+                  href={`${redirect_url}/history`}
+                >
+                  <span className="material-symbols-outlined">history</span>
+                </Link>
+                <Link
+                  className="p-2 rounded-full"
+                  style={{
+                    color: "var(--dashboard-sidebar-active-text)",
+                    background: "var(--dashboard-sidebar-active-bg)",
+                  }}
+                  href={`${redirect_url}/settings`}
+                >
+                  <span
+                    className="material-symbols-outlined text-xl sm:text-2xl"
+                    style={{ fontVariationSettings: "'FILL' 1" }}
+                  >
+                    settings
+                  </span>
+                </Link>
+              </>
+            )}
 
             {/* ── Theme Toggle ── */}
             <button
@@ -216,7 +220,7 @@ export default function ProfilePage() {
             <Link
               className="p-2 transition-colors hover:text-red-500"
               style={{ color: "var(--dashboard-text-secondary)" }}
-              href="/pages/auth/login"
+              href={redirect_url}
             >
               <span className="material-symbols-outlined text-xl sm:text-2xl">
                 logout
@@ -267,23 +271,6 @@ export default function ProfilePage() {
                       borderColor: "var(--dashboard-sidebar-active-text)",
                     }}
                   >
-                    {/* {data?.avatar ? (
-                      <img
-                        alt="User profile avatar"
-                        className="w-full h-full object-cover"
-                        src={avatar}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-[#E2E8F0] dark:bg-[#334155] flex items-center justify-center text-[#94A3B8] dark:text-[#64748B]">
-                        <svg
-                          className="w-2/3 h-2/3"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                      </div>
-                    )} */}
                     <img
                       alt="User profile avatar"
                       className="w-full h-full object-cover"
@@ -591,7 +578,7 @@ export default function ProfilePage() {
               id="profil-batal-btn"
               type="button"
               onClick={() => {
-                router.push("/pages/dashboard");
+                router.push("/pages/dashboard_user/dashboard_user");
               }}
               className="px-5 py-2 rounded-full text-xs font-semibold transition-all duration-200 hover:opacity-80 active:scale-95"
               style={{ color: "var(--dashboard-text-secondary)" }}

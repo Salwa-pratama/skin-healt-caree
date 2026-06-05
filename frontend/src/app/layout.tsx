@@ -3,7 +3,8 @@ import { Manrope } from "next/font/google"; // Using Manrope for the landing pag
 import { ReactQueryProvider } from "@/lib/react-query-provider";
 import { ThemeProvider } from "@/lib/theme-provider";
 import "./globals.css";
-import Navbar from "./components/Header";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 import AuthListener from "./components/AuthListener";
 
 const manrope = Manrope({
@@ -12,12 +13,11 @@ const manrope = Manrope({
   weight: ["300", "400", "500", "600", "700", "800"],
 });
 
-
 export const metadata: Metadata = {
   title: "DermaScan - Precise AI Skin Health",
-  description: "Next-generation medical AI for precision skin health analysis and monitoring.",
+  description:
+    "Next-generation medical AI for precision skin health analysis and monitoring.",
 };
-
 
 export default function RootLayout({
   children,
@@ -48,18 +48,13 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body
-        className={`${manrope.variable} antialiased`}
-      >
+      <body className={`${manrope.variable} antialiased`}>
         <ThemeProvider>
           <ReactQueryProvider>
-            <AuthListener />
-            <Navbar />
-            {children}
+            <main>{children}</main>
           </ReactQueryProvider>
         </ThemeProvider>
       </body>
     </html>
   );
 }
-

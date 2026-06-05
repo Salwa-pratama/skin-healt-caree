@@ -2,26 +2,87 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { useLogoutMutation } from "@/features/auth/api/auth.api";
+import { useProfile } from "@/features/auth/api/profile.api";
 
-type ActivePage = "dashboard" | "scan" | "history" | "setting" | "jadwal";
+type ActivePage = string;
 
 interface SidebarProps {
   activePage: ActivePage;
   isOpen?: boolean;
 }
 
-const navItems = [
-  { icon: "dashboard", label: "Dashboard", href: "/pages/dashboard", key: "dashboard" },
-  { icon: "calendar_month", label: "Jadwal", href: "/pages/jadwal", key: "jadwal" },
-  { icon: "biotech", label: "Analysis", href: "/pages/scan", key: "scan" },
-  { icon: "history", label: "History", href: "/pages/history", key: "history" },
-  { icon: "settings", label: "Settings", href: "/pages/setting", key: "setting" },
+const base_url_user = "/pages/dashboard/user";
+const base_url_admin = "/pages/dashboard/admin";
+const userNavItems = [
+  {
+    icon: "dashboard",
+    label: "Dashboard",
+    href: `${base_url_user}`,
+    key: "dashboard",
+  },
+  {
+    icon: "calendar_month",
+    label: "Jadwal",
+    href: `${base_url_user}/jadwal`,
+    key: "jadwal",
+  },
+  {
+    icon: "biotech",
+    label: "Analysis",
+    href: `${base_url_user}/scan`,
+    key: "scan",
+  },
+  {
+    icon: "history",
+    label: "History",
+    href: `${base_url_user}/history`,
+    key: "history",
+  },
+  {
+    icon: "settings",
+    label: "Settings",
+    href: `${base_url_user}/settings`,
+    key: "setting",
+  },
+];
+
+const adminNavItems = [
+  {
+    icon: "dashboard",
+    label: "Dashboard",
+    href: `${base_url_admin}`,
+    key: "admin-dashboard",
+  },
+  {
+    icon: "group",
+    label: "Users",
+    href: `${base_url_admin}/users`,
+    key: "admin-users",
+  },
+  {
+    icon: "medical_services",
+    label: "Acne Solutions",
+    href: `${base_url_admin}/acne-solutions`,
+    key: "admin-acne-solutions",
+  },
+  {
+    icon: "settings",
+    label: "Settings",
+    href: `${base_url_admin}/settings`,
+    key: "setting",
+  },
 ];
 
 export default function Sidebar({ activePage, isOpen = true }: SidebarProps) {
+  const pathname = usePathname();
+  const { data: user } = useProfile();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const logoutMutation = useLogoutMutation();
+
+  const navItems = user?.role === "admin" ? adminNavItems : userNavItems;
 
   const handleLogoutConfirm = () => {
     logoutMutation.mutate();
@@ -30,13 +91,17 @@ export default function Sidebar({ activePage, isOpen = true }: SidebarProps) {
 
   return (
     <>
-      <aside 
+      <aside
         className={`hidden lg:flex flex-col h-screen pt-6 pb-10 bg-[var(--dashboard-sidebar-bg)] fixed left-0 top-0 border-r border-[var(--dashboard-sidebar-border)] z-40 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
-          isOpen ? "w-64 translate-x-0 opacity-100" : "w-0 -translate-x-full opacity-0 pointer-events-none"
+          isOpen
+            ? "w-64 translate-x-0 opacity-100"
+            : "w-0 -translate-x-full opacity-0 pointer-events-none"
         }`}
       >
         {/* Brand */}
-        <div className={`px-8 mb-12 mt-4 transition-opacity duration-300 ${!isOpen ? "lg:opacity-0" : "opacity-100"}`}>
+        <div
+          className={`px-8 mb-12 mt-4 transition-opacity duration-300 ${!isOpen ? "lg:opacity-0" : "opacity-100"}`}
+        >
           <div className="flex flex-col">
             <span className="uppercase tracking-[0.1em] text-[10px] font-extrabold text-on-surface-variant/70">
               Clinical Precision
@@ -47,21 +112,38 @@ export default function Sidebar({ activePage, isOpen = true }: SidebarProps) {
           </div>
         </div>
 
-        {/* Nav Links */}
-        <nav className="flex-1 space-y-1">
+        <nav className="flex-1 space-y-1 relative">
           {navItems.map((item) => {
-            const isActive = activePage === item.key;
+            const isActive = pathname === item.href;
             return (
               <Link
                 key={item.key}
                 href={item.href}
-                className={`flex items-center gap-4 py-4 px-8 border-l-4 transition-all ${
+                className={`relative flex items-center gap-4 py-4 px-8 border-l-4 transition-colors duration-300 z-10 ${
                   isActive
-                    ? "text-[var(--dashboard-sidebar-active-text)] bg-[var(--dashboard-sidebar-active-bg)] border-[var(--dashboard-sidebar-active-text)]"
-                    : "text-on-surface-variant border-transparent hover:text-[var(--dashboard-sidebar-active-text)] hover:bg-[var(--dashboard-sidebar-active-bg)] hover:border-[var(--dashboard-sidebar-active-text)]"
+                    ? "text-[var(--dashboard-sidebar-active-text)] border-transparent"
+                    : "text-on-surface-variant border-transparent hover:text-[var(--dashboard-sidebar-active-text)]"
                 } ${!isOpen ? "justify-center px-0 border-l-0 border-r-4" : ""}`}
               >
-                <span className="material-symbols-outlined text-xl">{item.icon}</span>
+                {isActive && (
+                  <motion.div
+                    layoutId="sidebar-active-indicator"
+                    className={`absolute inset-y-0 bg-[var(--dashboard-sidebar-active-bg)] z-[-1] ${
+                      isOpen
+                        ? "left-[-4px] right-0 border-l-4 border-[var(--dashboard-sidebar-active-text)]"
+                        : "left-0 right-[-4px] border-r-4 border-[var(--dashboard-sidebar-active-text)]"
+                    }`}
+                    initial={false}
+                    transition={{
+                      type: "spring",
+                      stiffness: 350,
+                      damping: 30,
+                    }}
+                  />
+                )}
+                <span className="material-symbols-outlined text-xl">
+                  {item.icon}
+                </span>
                 {isOpen && (
                   <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
                     {item.label}
@@ -73,9 +155,13 @@ export default function Sidebar({ activePage, isOpen = true }: SidebarProps) {
         </nav>
 
         {/* Bottom Section */}
-        <div className={`px-8 mt-auto transition-all duration-300 ${!isOpen ? "px-2" : ""}`}>
+        <div
+          className={`px-8 mt-auto transition-all duration-300 ${!isOpen ? "px-2" : ""}`}
+        >
           <div className="mt-8 flex flex-col gap-2">
-            <div className={`flex items-center gap-4 text-on-surface-variant py-4 cursor-pointer hover:text-[var(--dashboard-sidebar-active-text)] ${!isOpen ? "justify-center px-0" : ""}`}>
+            <div
+              className={`flex items-center gap-4 text-on-surface-variant py-4 cursor-pointer hover:text-[var(--dashboard-sidebar-active-text)] ${!isOpen ? "justify-center px-0" : ""}`}
+            >
               <span className="material-symbols-outlined">help</span>
               {isOpen && (
                 <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
@@ -91,7 +177,9 @@ export default function Sidebar({ activePage, isOpen = true }: SidebarProps) {
               <span className="material-symbols-outlined">logout</span>
               {isOpen && (
                 <span className="uppercase tracking-[0.1em] text-[11px] font-extrabold">
-                  {logoutMutation.isPending ? "Logging out..." : "Logout Session"}
+                  {logoutMutation.isPending
+                    ? "Logging out..."
+                    : "Logout Session"}
                 </span>
               )}
             </button>
