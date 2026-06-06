@@ -7,21 +7,41 @@ import {
 } from "../../../common/models/service_response";
 import { cloudinary } from "../../../utils/cloudinary";
 import { prisma } from "../../../common/lib/prisma";
+import { SubscriptionService } from "../subscription/service";
 
 export class PredictService {
   constructor(
     private readonly repository: PredictRepository = new PredictRepository(),
+    private readonly subscriptionService: SubscriptionService = new SubscriptionService(),
   ) {}
 
   async predictAsync(
+    userId: number,
     fileBuffer: Buffer,
     mimetype: string
   ): Promise<ServiceResponseSchema<PredictResponseSchema | null>> {
     try {
+      // 1. Check scan limit first
+      let activeSub;
+      try {
+        activeSub = await this.subscriptionService.checkScanLimit(userId);
+      } catch (limitError: any) {
+        return ServiceResponse.failure(
+          limitError.message || "Batas upload scan telah habis",
+          null,
+          limitError.status || StatusCodes.FORBIDDEN
+        );
+      }
+
+      // 2. Call prediction using plan model
       const result = await this.repository.sendToFlaskAsync(
         fileBuffer,
         mimetype,
+        activeSub.plan.model
       );
+
+      // 3. Increment scan count on success
+      await this.subscriptionService.incrementScanCount(activeSub.id, activeSub.currentMonthScans);
 
       let rekomendasiToReturn = undefined;
 

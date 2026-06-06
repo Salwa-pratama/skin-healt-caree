@@ -2,10 +2,12 @@ import { HistoryRepository } from "./repository";
 import { cloudinary } from "../../../utils/cloudinary";
 import { prisma } from "../../../common/lib/prisma";
 import { acneRecommendations } from "../../../database/prisma/seeding/rekomendation_seed";
+import { SubscriptionService } from "../subscription/service";
 
 export class HistoryService {
   constructor(
     private readonly repository: HistoryRepository = new HistoryRepository(),
+    private readonly subscriptionService: SubscriptionService = new SubscriptionService(),
   ) {}
 
   async saveHistoryAsync(
@@ -14,6 +16,9 @@ export class HistoryService {
     jerawat: string,
     predictionsInput: any,
   ) {
+    // Check subscription history saved limit
+    await this.subscriptionService.checkHistoryLimit(userId);
+
     let predictions = [];
 
     // Handle predictions input which could be a JSON string or an object/array

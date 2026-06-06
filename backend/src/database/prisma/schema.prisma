@@ -28,6 +28,7 @@ model UserPublic {
   acnesolutions        AcneSolution[]
   jadwalTreatments     JadwalTreatment[]
   jadwalHabits         JadwalHabit[]
+  userSubscriptions    UserSubscription[]
 }
 
 // ================= ACNE PROBLEM =================
@@ -139,4 +140,40 @@ model JadwalHabit {
   users     UserPublic[] // Many-to-many dengan UserPublic
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
+}
+
+// ================= SUBSCRIPTION =================
+model Subscription {
+  id               Int      @id @default(autoincrement())
+  planName         String   @unique @map("plan_name")
+  model            String
+  maxScansPerMonth Int      @map("max_scans_per_month")
+  maxTodoCards     Int      @map("max_todo_cards")
+  maxHistorySaved  Int      @map("max_history_saved")
+  price            Int
+
+  // relation
+  userSubscriptions UserSubscription[]
+
+  @@map("subscriptions")
+}
+
+// ================= USER SUBSCRIPTION =================
+model UserSubscription {
+  id                String   @id @default(uuid())
+  userId            Int      @map("user_id")
+  planId            Int      @map("plan_id")
+  status            String   @default("active")
+  startDate         DateTime @default(now()) @map("start_date")
+  dueDate           DateTime @map("due_date")
+  currentMonthScans Int      @default(0) @map("current_month_scans")
+
+  // relation
+  user UserPublic   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan Subscription @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("user_subscriptions")
 }

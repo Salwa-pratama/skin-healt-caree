@@ -1,12 +1,15 @@
 import { TodoRepository } from "./repository";
 import { CreateTreatmentDTO, UpdateTreatmentDTO, CreateHabitDTO, UpdateHabitDTO } from "./dto";
 import { StatusCodes } from "http-status-codes";
+import { SubscriptionService } from "../subscription/service";
 
 export class TodoService {
   private repository: TodoRepository;
+  private subscriptionService: SubscriptionService;
 
   constructor() {
     this.repository = new TodoRepository();
+    this.subscriptionService = new SubscriptionService();
   }
 
   // ================= JADWAL TREATMENT =================
@@ -27,6 +30,9 @@ export class TodoService {
   }
 
   async createTreatment(userId: number, data: CreateTreatmentDTO) {
+    // Check subscription todo card limit
+    await this.subscriptionService.checkTodoLimit(userId);
+
     // Otomatis hitung pengingat = 1 hari sebelum hari treatment jika tidak disediakan
     const calculatedReminder = data.pengingat || new Date(new Date(data.hari).getTime() - 24 * 60 * 60 * 1000).toISOString();
 
@@ -76,6 +82,9 @@ export class TodoService {
   }
 
   async createHabit(userId: number, data: CreateHabitDTO) {
+    // Check subscription todo card limit
+    await this.subscriptionService.checkTodoLimit(userId);
+
     // Otomatis hitung pengingat = 1 jam sebelum jam pelaksanaan jika tidak disediakan
     const calculatedReminder = data.pengingat || this.calculateHabitReminder(data.jam);
 
