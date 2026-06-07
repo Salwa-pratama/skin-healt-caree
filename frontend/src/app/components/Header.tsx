@@ -19,11 +19,11 @@ function NavbarContent() {
     const isTentang = pathname === '/tentang' || pathname.startsWith('/tentang/');
     const isFitur = pathname === '/';
     const isAppPage = pathname.startsWith('/pages/dashboard') ||
-                      pathname.startsWith('/pages/scan') ||
-                      pathname.startsWith('/pages/history') ||
-                      pathname.startsWith('/pages/profil') ||
-                      pathname.startsWith('/pages/setting') ||
-                      pathname.startsWith('/pages/notifikasi');
+        pathname.startsWith('/pages/scan') ||
+        pathname.startsWith('/pages/history') ||
+        pathname.startsWith('/pages/profil') ||
+        pathname.startsWith('/pages/setting') ||
+        pathname.startsWith('/pages/notifikasi');
     if (isAppPage) return null;
 
     const navLinks = [

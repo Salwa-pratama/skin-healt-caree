@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePredictMutation } from "@/features/scan/api/scan.api";
 import { useSaveHistoryMutation } from "@/features/history/api/history.api";
@@ -47,6 +48,11 @@ const isSkinImage = (img: HTMLImageElement | HTMLVideoElement | HTMLCanvasElemen
 };
 
 export default function Analisis() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState<"live" | "upload">("live");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -75,6 +81,7 @@ export default function Analisis() {
     title: string;
     message: string;
     type: "success" | "error" | "info";
+    showDontRemindOption?: boolean;
   }>({
     isOpen: false,
     title: "",
@@ -82,8 +89,8 @@ export default function Analisis() {
     type: "info"
   });
 
-  const showModal = (title: string, message: string, type: "success" | "error" | "info" = "info") => {
-    setModalConfig({ isOpen: true, title, message, type });
+  const showModal = (title: string, message: string, type: "success" | "error" | "info" = "info", showDontRemindOption: boolean = false) => {
+    setModalConfig({ isOpen: true, title, message, type, showDontRemindOption });
   };
   const predictMutation = usePredictMutation();
   const saveHistoryMutation = useSaveHistoryMutation();
@@ -142,7 +149,10 @@ export default function Analisis() {
           }, 150);
         } catch (err) {
           console.error("Gagal akses kamera:", err);
-          alert("Gagal mengakses kamera. Pastikan izin kamera telah diberikan.");
+          const hideCameraAlert = localStorage.getItem("hideCameraAlert");
+          if (!hideCameraAlert) {
+            showModal("Akses Kamera", "Gagal mengakses kamera. Pastikan izin kamera telah diberikan.", "error", true);
+          }
         }
       }
     };
@@ -294,7 +304,7 @@ export default function Analisis() {
         },
         onError: (err: any) => {
           console.error("Live Analysis Error:", err);
-          alert("Gagal melakukan analisis kulit. Pastikan koneksi server tersedia.");
+          showModal("Analisis Gagal", "Gagal melakukan analisis kulit. Pastikan koneksi server tersedia.", "error");
           setIsAnalyzing(false);
         }
       });
@@ -1007,8 +1017,8 @@ export default function Analisis() {
       )}
 
       {/* Custom Modal Popup */}
-      {modalConfig.isOpen && (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
+      {mounted && modalConfig.isOpen && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
           <div className="bg-[var(--dashboard-card-bg)] rounded-[32px] shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-300">
             <div className="p-8 flex flex-col items-center text-center">
               <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 ${modalConfig.type === "success" ? "bg-green-100 text-green-600" :
@@ -1022,9 +1032,28 @@ export default function Analisis() {
               <h3 className="text-2xl font-black text-[var(--dashboard-text)] mb-2 tracking-tight">
                 {modalConfig.title}
               </h3>
-              <p className="text-sm text-[var(--dashboard-text-secondary)] font-medium leading-relaxed mb-8 px-4">
+              <p className={`text-sm text-[var(--dashboard-text-secondary)] font-medium leading-relaxed px-4 ${modalConfig.showDontRemindOption ? 'mb-4' : 'mb-8'}`}>
                 {modalConfig.message}
               </p>
+              {modalConfig.showDontRemindOption && (
+                <div className="flex items-center gap-2 mb-6">
+                  <input
+                    type="checkbox"
+                    id="dontRemind"
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        localStorage.setItem("hideCameraAlert", "true");
+                      } else {
+                        localStorage.removeItem("hideCameraAlert");
+                      }
+                    }}
+                    className="w-4 h-4 text-primary bg-slate-100 border-slate-300 rounded focus:ring-primary cursor-pointer"
+                  />
+                  <label htmlFor="dontRemind" className="text-xs text-[var(--dashboard-text-secondary)] font-medium cursor-pointer">
+                    Jangan tampilkan pesan ini lagi
+                  </label>
+                </div>
+              )}
               <button
                 onClick={() => setModalConfig({ ...modalConfig, isOpen: false })}
                 className={`w-full py-4 rounded-2xl font-black text-sm tracking-widest uppercase transition-all active:scale-95 ${modalConfig.type === "success" ? "bg-primary text-white shadow-lg shadow-primary/20 hover:bg-[#1c6d00]" :
@@ -1036,7 +1065,8 @@ export default function Analisis() {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

@@ -14,7 +14,13 @@ export class PredictController {
       return;
     }
 
-    const result = await this.service.predictAsync(file.buffer, file.mimetype);
+    const userId = (req as any).user?.userId || (req as any).user?.id;
+    if (!userId) {
+      res.status(401).json({ success: false, message: "Unauthorized - User tidak ditemukan dalam token" });
+      return;
+    }
+
+    const result = await this.service.predictAsync(Number(userId), file.buffer, file.mimetype);
     res.status(result.statusCode).json(result);
   };
 }
