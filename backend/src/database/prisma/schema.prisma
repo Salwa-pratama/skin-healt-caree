@@ -160,7 +160,7 @@ model Subscription {
 
 // ================= USER SUBSCRIPTION =================
 model UserSubscription {
-  id                String   @id @default(uuid())
+  id                Int      @id @default(autoincrement())
   userId            Int      @map("user_id")
   planId            Int      @map("plan_id")
   status            String   @default("active")
