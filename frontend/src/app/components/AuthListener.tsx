@@ -16,11 +16,11 @@ export default function AuthListener() {
       "/pages/dashboard/user/history",
       "/pages/dashboard/user/setting",
       "/pages/dashboard/user/profil",
-      "/pages/dashboard/user/notifikasi"
+      "/pages/dashboard/user/notifikasi",
     ];
 
     const isProtectedRoute = protectedRoutes.some((route) =>
-      pathname?.startsWith(route)
+      pathname?.startsWith(route),
     );
 
     const checkToken = () => {
@@ -29,7 +29,9 @@ export default function AuthListener() {
       if (isProtectedRoute) {
         const isSessionActive = sessionStorage.getItem("session_active");
         if (!isSessionActive) {
-          console.warn("🔒 AuthListener: Sesi baru terdeteksi (sessionStorage kosong). Menghapus token...");
+          console.warn(
+            "🔒 AuthListener: Sesi baru terdeteksi (sessionStorage kosong). Menghapus token...",
+          );
           Cookies.remove("access_token", { path: "/" });
           window.location.href = "/pages/auth/login";
           return;
@@ -37,7 +39,9 @@ export default function AuthListener() {
       }
 
       if (isProtectedRoute && !token) {
-        console.warn("🔒 AuthListener: Token tidak ditemukan di halaman terproteksi. Mengarahkan ke halaman login...");
+        console.warn(
+          "🔒 AuthListener: Token tidak ditemukan di halaman terproteksi. Mengarahkan ke halaman login...",
+        );
         window.location.href = "/pages/auth/login";
       }
     };
@@ -48,7 +52,9 @@ export default function AuthListener() {
     // 1. Mendengarkan event storage untuk sinkronisasi logout antar tab
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === "logout-event") {
-        console.log("🔔 AuthListener: Menerima sinyal logout dari tab lain. Mengeluarkan sesi...");
+        console.log(
+          "🔔 AuthListener: Menerima sinyal logout dari tab lain. Mengeluarkan sesi...",
+        );
         window.location.href = "/pages/auth/login";
       }
     };
