@@ -11,6 +11,17 @@ import MobileNav from "@/app/components/MobileNav";
 import "./scan.css";
 import "../dashboard/dashboard.css";
 
+// Suppress Mediapipe INFO logs that are printed as errors in WebAssembly
+if (typeof console !== "undefined") {
+  const originalConsoleError = console.error;
+  console.error = (...args: any[]) => {
+    if (typeof args[0] === "string" && args[0].includes("INFO: Created TensorFlow Lite XNNPACK delegate for CPU")) {
+      return;
+    }
+    originalConsoleError(...args);
+  };
+}
+
 const isSkinImage = (img: HTMLImageElement | HTMLVideoElement | HTMLCanvasElement): boolean => {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
