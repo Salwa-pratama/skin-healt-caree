@@ -183,7 +183,7 @@ export default function HistoryPage() {
               Anda belum pernah melakukan pemindaian kulit atau pencarian tidak
               mencocokkan apa pun. Mulai pemindaian pertama Anda sekarang!
             </p>
-            <Link href="/pages/scan">
+            <Link href="/pages/dashboard/user/scan">
               <button className="signature-gradient text-white px-8 py-3 rounded-full font-extrabold tracking-wide hover:scale-[0.98] active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 text-sm">
                 Mulai Scan Baru
               </button>
