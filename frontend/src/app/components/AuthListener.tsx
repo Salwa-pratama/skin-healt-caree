@@ -11,12 +11,12 @@ export default function AuthListener() {
   useEffect(() => {
     // Daftar halaman terproteksi yang membutuhkan token valid
     const protectedRoutes = [
-      "/pages/dashboard",
-      "/pages/scan",
-      "/pages/history",
-      "/pages/setting",
-      "/pages/profil",
-      "/pages/notifikasi"
+      "/pages/dashboard/user",
+      "/pages/dashboard/user/scan",
+      "/pages/dashboard/user/history",
+      "/pages/dashboard/user/setting",
+      "/pages/dashboard/user/profil",
+      "/pages/dashboard/user/notifikasi"
     ];
 
     const isProtectedRoute = protectedRoutes.some((route) =>
@@ -25,7 +25,7 @@ export default function AuthListener() {
 
     const checkToken = () => {
       const token = Cookies.get("access_token");
-      
+
       if (isProtectedRoute) {
         const isSessionActive = sessionStorage.getItem("session_active");
         if (!isSessionActive) {
