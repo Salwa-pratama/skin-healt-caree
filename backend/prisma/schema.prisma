@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//  ================= User Schema =================
+model UserPublic {
+  id               Int     @id @default(autoincrement())
+  email            String  @unique
+  name             String
+  role             String  @default("user")
+  phone            String?
+  passwordHash     String
+  refreshTokenHash String?
+  skintype         String  @default("normal")
+
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relation
+  acneProblems         AcneProblem[]
+  acneProblemSolutions AcneProblemSolution[]
+  acnesolutions        AcneSolution[]
+  jadwalTreatments     JadwalTreatment[]
+  jadwalHabits         JadwalHabit[]
+  userSubscriptions    UserSubscription[]
+}
+
+// ================= ACNE PROBLEM =================
+model AcneProblem {
+  id          Int      @id @default(autoincrement())
+  citra       String
+  name        String
+  predictions Json?
+  createdAt   DateTime @default(now())
+
+  userId               Int
+  user                 UserPublic            @relation(fields: [userId], references: [id])
+  // relation
+  acneProblemSolutions AcneProblemSolution[]
+}
+
+// ================= ACNE SOLUTION =================
+model AcneSolution {
+  id Int @id @default(autoincrement())
+
+  type        String?
+  description String?
+
+  // Menambahkan relasi ke user
+  userId Int?
+  user   UserPublic? @relation(fields: [userId], references: [id])
+
+  // relation
+  goodIngredient       GoodIngredient[]
+  badIngredient        BadIngredient[]
+  habits               Habit[]
+  treatments           Treatment[]
+  acneProblemSolutions AcneProblemSolution[]
+}
+
+// ================= TREATMENTS =================
+model Treatment {
+  id   Int    @id @default(autoincrement())
+  name String
+  time String
+
+  // relation
+  acneSolutions AcneSolution[]
+}
+
+// ================= HABITS =================
+model Habit {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  // relation
+  acneSolutions AcneSolution[]
+}
+
+// ================= ACNE PROBLEM SOLUTION (PIVOT) =================
+model AcneProblemSolution {
+  id Int @id @default(autoincrement())
+
+  acneSolutionId Int
+  acneProblemId  Int
+
+  userId       Int
+  // relation
+  user         UserPublic   @relation(fields: [userId], references: [id])
+  acneSolution AcneSolution @relation(fields: [acneSolutionId], references: [id])
+  acneProblem  AcneProblem  @relation(fields: [acneProblemId], references: [id])
+
+  // Intuk menghindrari duplikasi pivot
+  @@unique([acneProblemId, acneSolutionId])
+}
+
+// ================= GOOD INGREDIENT =================
+model GoodIngredient {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  // relation
+  acneSolutions AcneSolution[]
+}
+
+// ================= BAD INGREDIENT =================
+model BadIngredient {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  // relation
+  acneSolutions AcneSolution[]
+}
+
+// ================= JADWAL TREATMENT =================
+model JadwalTreatment {
+  id        String       @id @default(uuid())
+  hari      DateTime // tipe Date
+  tempat    String // tempat treatment (string)
+  nama      String // nama (string)
+  pengingat DateTime // pengingat (date, satu hari sebelum treatment)
+  users     UserPublic[] // Many-to-many dengan UserPublic
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+// ================= JADWAL HABIT =================
+model JadwalHabit {
+  id        String       @id @default(uuid())
+  nama      String // nama (string)
+  hari      String // hari (string)
+  jam       String // jam (time, contoh: "22:00")
+  pengingat String // pengingat (time, contoh: "21:00", satu jam sebelum jam)
+  users     UserPublic[] // Many-to-many dengan UserPublic
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+// ================= SUBSCRIPTION =================
+model Subscription {
+  id               Int      @id @default(autoincrement())
+  planName         String   @unique @map("plan_name")
+  model            String
+  maxScansPerMonth Int      @map("max_scans_per_month")
+  maxTodoCards     Int      @map("max_todo_cards")
+  maxHistorySaved  Int      @map("max_history_saved")
+  price            Int
+
+  // relation
+  userSubscriptions UserSubscription[]
+
+  @@map("subscriptions")
+}
+
+// ================= USER SUBSCRIPTION =================
+model UserSubscription {
+  id                Int      @id @default(autoincrement())
+  userId            Int      @map("user_id")
+  planId            Int      @map("plan_id")
+  status            String   @default("active")
+  startDate         DateTime @default(now()) @map("start_date")
+  dueDate           DateTime @map("due_date")
+  currentMonthScans Int      @default(0) @map("current_month_scans")
+
+  // relation
+  user UserPublic   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan Subscription @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("user_subscriptions")
+}

@@ -1,4 +1,4 @@
-import { UserResponse } from "../modules/auth/login/login_dto";
+import { UserResponse } from "../modules/auth/dto/auth.dto";
 
 import bcrypt from "bcryptjs";
 
