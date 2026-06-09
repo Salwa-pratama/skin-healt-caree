@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:1915/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://skin-healt-caree.vercel.app/api",
   headers: {
     "Content-Type": "application/json",
   },
