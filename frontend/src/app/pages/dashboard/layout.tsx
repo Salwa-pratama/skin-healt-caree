@@ -1,4 +1,5 @@
 "use client";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Footer from "./components/Footer";
 import Sidebar from "@/app/components/Sidebar";
@@ -6,6 +7,19 @@ import DashboardHeader from "@/app/components/DashboardHeader";
 import "./dashboard.css";
 export default function Layout({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const pathname = usePathname();
+    const isSubscriptionPage = pathname?.includes("/subscription");
+
+    if (isSubscriptionPage) {
+        return (
+            <body className="bg-[var(--dashboard-bg)] text-[var(--dashboard-text)] antialiased min-h-screen font-manrope transition-colors duration-300">
+                <main className="transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] dashboard-animate-in">
+                    {children}
+                </main>
+            </body>
+        );
+    }
+
     return (
         <body className="bg-[var(--dashboard-bg)] text-[var(--dashboard-text)] antialiased min-h-screen font-manrope transition-colors duration-300">
             <DashboardHeader

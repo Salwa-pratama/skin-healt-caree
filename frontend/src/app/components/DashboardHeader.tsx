@@ -68,16 +68,15 @@ export default function DashboardHeader({
       </div>
 
       <div className="flex items-center gap-2 md:gap-4">
-        <div className="relative hidden sm:block">
-          <input
-            className="bg-[var(--dashboard-bg)] border-none rounded-full py-1.5 px-5 text-[11px] w-40 lg:w-56 text-[var(--dashboard-text)] placeholder-on-surface-variant/50 focus:ring-2 focus:ring-primary transition-all outline-none"
-            placeholder="Search medical data..."
-            type="text"
-          />
-          <span className="material-symbols-outlined absolute right-3.5 top-1.5 text-on-surface-variant text-sm">
-            search
-          </span>
-        </div>
+        {data?.role !== "admin" && (
+          <Link 
+            href="/pages/dashboard/user/subscription"
+            className="hidden sm:flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-4 py-1.5 rounded-full font-bold text-[11px] uppercase tracking-wider shadow-md transition-all hover:scale-105 active:scale-95"
+          >
+            <span className="material-symbols-outlined text-[16px]">workspace_premium</span>
+            Subscription
+          </Link>
+        )}
 
         {/* Theme Toggle Button */}
         <button
