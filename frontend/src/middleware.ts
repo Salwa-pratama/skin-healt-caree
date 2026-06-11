@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (token && request.nextUrl.pathname.startsWith('/pages/auth')) {
-    const dashboardUrl = new URL('/pages/dashboard', request.url);
+    const dashboardUrl = new URL('/pages/dashboard/user', request.url);
     return NextResponse.redirect(dashboardUrl);
   }
 
