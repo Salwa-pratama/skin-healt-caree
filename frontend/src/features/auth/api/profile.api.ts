@@ -14,8 +14,18 @@ export const useProfile = () => {
 export const useUpdateProfileMutation = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (payload: { name?: string; phone?: string; skintype?: string }) => {
-            const response = await apiClient.put("/feature/profile", payload);
+        mutationFn: async (payload: { name?: string; phone?: string; skintype?: string; file?: File | null }) => {
+            const formData = new FormData();
+            if (payload.name) formData.append("name", payload.name);
+            if (payload.phone) formData.append("phone", payload.phone);
+            if (payload.skintype) formData.append("skintype", payload.skintype);
+            if (payload.file) formData.append("file", payload.file);
+
+            const response = await apiClient.put("/feature/profile", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
             return response.data;
         },
         onSuccess: () => {
