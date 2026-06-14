@@ -8,6 +8,7 @@ import {
   useUpdateProfileMutation,
 } from "@/features/auth/api/profile.api";
 import { useTheme } from "@/lib/theme-provider";
+import AvatarCropModal from "@/app/components/AvatarCropModal";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -21,6 +22,27 @@ export default function ProfilePage() {
   const [avatar, setAvatar] = useState("");
   const [skintype, setSkintype] = useState("Normal");
   const updateProfileMutation = useUpdateProfileMutation();
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFileUrl, setSelectedFileUrl] = useState<string | null>(null);
+  const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+  const [tempImageUrl, setTempImageUrl] = useState<string | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setTempImageUrl(URL.createObjectURL(file));
+      setIsCropModalOpen(true);
+    }
+    e.target.value = '';
+  };
+
+  const handleCropComplete = (croppedFile: File) => {
+    setSelectedFile(croppedFile);
+    setSelectedFileUrl(URL.createObjectURL(croppedFile));
+    setIsCropModalOpen(false);
+    setTempImageUrl(null);
+  };
 
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
@@ -64,6 +86,7 @@ export default function ProfilePage() {
         name,
         phone,
         skintype: skintypeMap[skintype] || "normal",
+        file: selectedFile,
       },
       {
         onSuccess: () => {
@@ -274,20 +297,26 @@ export default function ProfilePage() {
                     <img
                       alt="User profile avatar"
                       className="w-full h-full object-cover"
-                      src={avatarUrl}
+                      src={selectedFileUrl || avatarUrl}
                     />
                   </div>
-                  <button
-                    className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 p-2 sm:p-3 rounded-full shadow-lg hover:scale-105 active:scale-90 transition-transform"
+                  <label
+                    className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 p-2 sm:p-3 rounded-full shadow-lg hover:scale-105 active:scale-90 transition-transform cursor-pointer flex items-center justify-center"
                     style={{
                       background: "var(--dashboard-sidebar-active-text)",
                       color: theme === "dark" ? "#042100" : "#ffffff",
                     }}
                   >
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleFileChange}
+                    />
                     <span className="material-symbols-outlined text-lg sm:text-base">
                       photo_camera
                     </span>
-                  </button>
+                  </label>
                 </div>
 
                 {/* Form Fields */}
@@ -730,6 +759,18 @@ export default function ProfilePage() {
           }
         `}</style>
       </main>
+      
+      {/* ── Crop Modal ── */}
+      {isCropModalOpen && tempImageUrl && (
+        <AvatarCropModal
+          imageSrc={tempImageUrl}
+          onClose={() => {
+            setIsCropModalOpen(false);
+            setTempImageUrl(null);
+          }}
+          onCropComplete={handleCropComplete}
+        />
+      )}
     </div>
   );
 }
