@@ -25,6 +25,7 @@ export const useSaveHistoryMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["history"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 };
@@ -59,6 +60,7 @@ export const useDeleteHistoryMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["history"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 };

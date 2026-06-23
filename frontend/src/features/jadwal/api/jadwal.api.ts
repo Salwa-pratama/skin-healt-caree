@@ -30,6 +30,7 @@ export const useCreateTreatmentMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["treatments"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 };
@@ -56,6 +57,7 @@ export const useDeleteTreatmentMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["treatments"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 };
@@ -81,6 +83,7 @@ export const useCreateHabitMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["habits"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 };
@@ -107,6 +110,7 @@ export const useDeleteHabitMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["habits"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 };

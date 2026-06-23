@@ -27,6 +27,14 @@ export default function DashboardHeader({
   const redirect_url =
     data?.role === "admin" ? "/pages/dashboard/admin" : "/pages/dashboard/user";
 
+  const activeSub = data?.userSubscriptions?.[0];
+  const activePlanName = activeSub?.plan?.planName?.toLowerCase() || "pasien";
+  
+  let ringColorClass = "border-primary"; // fallback
+  if (activePlanName.includes("dokter")) ringColorClass = "border-amber-500";
+  else if (activePlanName.includes("peneliti")) ringColorClass = "border-purple-500";
+  else if (activePlanName.includes("pasien")) ringColorClass = "border-cyan-500";
+
   useEffect(() => {
     setMounted(true);
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -107,7 +115,7 @@ export default function DashboardHeader({
         </button>
 
         <Link href="/pages/profil">
-          <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-primary hover:scale-105 transition-transform cursor-pointer shadow-sm flex items-center justify-center">
+          <div className={`w-8 h-8 rounded-full overflow-hidden border-2 hover:scale-105 transition-transform cursor-pointer shadow-sm flex items-center justify-center ${ringColorClass}`}>
             <img
               alt="Profile"
               src={avatarUrl}

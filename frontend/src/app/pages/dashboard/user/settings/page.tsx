@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import MobileNav from "@/app/components/MobileNav";
 import { useProfile } from "@/features/auth/api/profile.api";
+import Link from "next/link";
 
 export default function SettingPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -40,6 +41,19 @@ export default function SettingPage() {
       : "/assets/profile/male.png";
 
   const avatarUrl = data?.avatar || defaultAvatar;
+
+  const activeSub = data?.userSubscriptions?.[0];
+  const activePlanName = activeSub?.plan?.planName || "Pasien";
+  const dueDate = activeSub?.dueDate ? new Date(activeSub.dueDate).toLocaleDateString("id-ID", { day: 'numeric', month: 'long', year: 'numeric' }) : "-";
+
+  let ringHexColor = "var(--dashboard-sidebar-active-text)";
+  if (activePlanName.toLowerCase().includes("dokter")) {
+    ringHexColor = "#f59e0b"; // amber-500
+  } else if (activePlanName.toLowerCase().includes("peneliti")) {
+    ringHexColor = "#a855f7"; // purple-500
+  } else if (activePlanName.toLowerCase().includes("pasien")) {
+    ringHexColor = "#06b6d4"; // cyan-500
+  }
 
   return (
     <>
@@ -95,7 +109,10 @@ export default function SettingPage() {
               </div>
               <div className="flex flex-col sm:flex-row gap-6 items-center">
                 <div className="relative group cursor-pointer">
-                  <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-primary shadow-sm transition-transform group-hover:scale-105">
+                  <div 
+                    className="w-20 h-20 rounded-full overflow-hidden border-2 shadow-sm transition-transform group-hover:scale-105"
+                    style={{ borderColor: ringHexColor }}
+                  >
                     <img
                       alt="Profile Edit"
                       className="w-full h-full object-cover"
@@ -126,7 +143,7 @@ export default function SettingPage() {
                     <input
                       className="bg-[var(--dashboard-bg)] border-none rounded-xl px-4 py-3 text-[var(--dashboard-text)] font-semibold focus:ring-2 focus:ring-primary transition-all text-xs outline-none"
                       type="text"
-                      value={data?.name}
+                      defaultValue={data?.name}
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
@@ -136,7 +153,7 @@ export default function SettingPage() {
                     <input
                       className="bg-[var(--dashboard-bg)] border-none rounded-xl px-4 py-3 text-[var(--dashboard-text)] font-semibold focus:ring-2 focus:ring-primary transition-all text-xs outline-none"
                       type="email"
-                      value={data?.email}
+                      defaultValue={data?.email}
                     />
                   </div>
                 </div>
@@ -217,6 +234,39 @@ export default function SettingPage() {
 
           {/* Column Right: Security & Privacy */}
           <div className="lg:col-span-12 xl:col-span-5 flex flex-col gap-8">
+            {/* Section: Subscription */}
+            <section className="bg-[var(--dashboard-card-bg)] rounded-2xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] border border-[var(--dashboard-border)] card-hover">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="bg-primary/10 p-2 rounded-xl">
+                  <span className="material-symbols-outlined text-primary text-xl">
+                    card_membership
+                  </span>
+                </div>
+                <h3 className="text-lg font-black tracking-tight text-[var(--dashboard-text)]">
+                  Paket Langganan
+                </h3>
+              </div>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between p-4 bg-[var(--dashboard-bg)] rounded-xl gap-4 hover:bg-[var(--dashboard-border)] transition-colors">
+                  <div className="flex flex-col">
+                    <span className="font-bold text-[var(--dashboard-text)] text-sm capitalize">
+                      Paket {activePlanName}
+                    </span>
+                    {activePlanName.toLowerCase() !== "pasien" && (
+                      <span className="text-[9px] text-on-surface-variant font-bold uppercase tracking-wider mt-0.5">
+                        Berlaku s.d. {dueDate}
+                      </span>
+                    )}
+                  </div>
+                  <Link href="/pages/dashboard/user/subscription">
+                    <button className="bg-[var(--dashboard-card-bg)] px-4 py-1.5 rounded-lg text-[9px] font-black text-primary border border-primary/20 hover:bg-primary hover:text-on-primary transition-all uppercase tracking-widest">
+                      Upgrade
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </section>
+
             {/* Section 3: Keamanan */}
             <section className="bg-[var(--dashboard-card-bg)] rounded-2xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] border border-[var(--dashboard-border)] card-hover">
               <div className="flex items-center gap-3 mb-6">

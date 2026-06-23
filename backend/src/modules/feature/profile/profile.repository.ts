@@ -12,6 +12,12 @@ export class ProfileRepository {
         id: true, email: true, name: true, role: true,
         phone: true, skintype: true, avatar: true,
         createdAt: true, updatedAt: true,
+        userSubscriptions: {
+          where: { status: 'active' },
+          include: {
+            plan: true,
+          },
+        },
       },
     });
   }

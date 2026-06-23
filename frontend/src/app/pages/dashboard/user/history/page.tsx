@@ -8,6 +8,7 @@ import {
   useGetHistoryQuery,
   useDeleteHistoryMutation,
 } from "@/features/history/api/history.api";
+import { useProfile } from "@/features/auth/api/profile.api";
 
 const SkeletonCard = () => (
   <div className="bg-[var(--dashboard-card-bg)] rounded-[2rem] p-6 md:p-8 border border-[var(--dashboard-border)] animate-pulse space-y-6">
@@ -46,10 +47,16 @@ export default function HistoryPage() {
   });
 
   // Real-time API query
+  const { data: profile } = useProfile();
   const { data: historyRes, isLoading, isError } = useGetHistoryQuery();
   const deleteMutation = useDeleteHistoryMutation();
 
+  const activeSub = profile?.userSubscriptions?.[0];
+  const maxHistorySaved = activeSub?.plan?.maxHistorySaved ?? '∞';
+  
   const listHistory = historyRes?.data || [];
+  const currentHistorySaved = listHistory.length;
+  const isLimitReached = typeof maxHistorySaved === 'number' && currentHistorySaved >= maxHistorySaved;
 
   // Filter list by acne name or ID
   const filteredHistory = listHistory.filter((scan: any) => {
@@ -145,9 +152,19 @@ export default function HistoryPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="flex gap-3">
-            <Link href="/pages/scan">
-              <button className="signature-gradient text-white px-8 py-3 rounded-full font-extrabold tracking-wide hover:scale-[0.98] active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 text-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <div className="flex items-center gap-2 bg-[var(--dashboard-card-bg)] px-4 py-2.5 rounded-full border border-[var(--dashboard-border)] shadow-sm">
+              <span className="material-symbols-outlined text-primary text-sm">save</span>
+              <span className="text-xs font-bold text-on-surface-variant tracking-wider uppercase">
+                Riwayat: <span className={`ml-1 font-black ${isLimitReached ? 'text-red-500' : 'text-[var(--dashboard-text)]'}`}>{currentHistorySaved}</span> / {maxHistorySaved > 1000 ? 'Unlimited' : maxHistorySaved}
+              </span>
+            </div>
+            
+            <Link href="/pages/dashboard/user/scan">
+              <button 
+                className={`signature-gradient text-white px-8 py-3 rounded-full font-extrabold tracking-wide hover:scale-[0.98] active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 text-sm ${isLimitReached ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`}
+                title={isLimitReached ? "Batas riwayat tercapai" : ""}
+              >
                 <span className="material-symbols-outlined text-lg">add</span>
                 Baru
               </button>
