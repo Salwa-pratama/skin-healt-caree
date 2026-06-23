@@ -114,7 +114,7 @@ export default function SettingPage() {
                     <input
                       className="bg-[var(--dashboard-bg)] border-none rounded-xl px-4 py-3 text-[var(--dashboard-text)] font-semibold focus:ring-2 focus:ring-primary transition-all text-xs outline-none"
                       type="text"
-                      value={data?.name}
+                      defaultValue={data?.name}
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
@@ -122,7 +122,7 @@ export default function SettingPage() {
                     <input
                       className="bg-[var(--dashboard-bg)] border-none rounded-xl px-4 py-3 text-[var(--dashboard-text)] font-semibold focus:ring-2 focus:ring-primary transition-all text-xs outline-none"
                       type="email"
-                      value={data?.email}
+                      defaultValue={data?.email}
                     />
                   </div>
                 </div>
