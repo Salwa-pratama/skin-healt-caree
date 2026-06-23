@@ -4,6 +4,8 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiConsumes } from '@nestjs/swagg
 import { ProfileService } from './profile.service';
 import { AuthGuard } from '../../../common/guards/auth.guard';
 import { User } from '../../../common/decorators/user.decorator';
+import { ApiBody } from '@nestjs/swagger';
+import { UpdateProfileDto } from './dto/profile.dto';
 
 @ApiTags('Profile')
 @Controller('feature/profile')
@@ -23,7 +25,31 @@ export class ProfileController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Update profil saya' })
-  async updateMe(@UploadedFile() file: Express.Multer.File, @Body() body: any, @User() user: any) {
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'File foto profil (opsional)',
+        },
+        name: {
+          type: 'string',
+          description: 'Nama pengguna (opsional)',
+        },
+        phone: {
+          type: 'string',
+          description: 'Nomor HP pengguna (opsional)',
+        },
+        skintype: {
+          type: 'string',
+          description: 'Tipe Kulit (opsional)',
+        },
+      },
+    },
+  })
+  async updateMe(@UploadedFile() file: Express.Multer.File, @Body() body: UpdateProfileDto, @User() user: any) {
     try {
       const updatedProfile = await this.service.updateProfile(Number(user.userId), body, file?.buffer);
       return { status: "success", message: "Profile updated successfully", data: updatedProfile };
