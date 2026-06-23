@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 // Protected path pattern
 const protectedRoutes = ['/pages/dashboard', '/pages/scan', '/pages/history', '/pages/setting'];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const token = request.cookies.get('access_token')?.value;
 
   const isProtectedRoute = protectedRoutes.some(route =>

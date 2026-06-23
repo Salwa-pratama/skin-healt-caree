@@ -5,6 +5,17 @@ import Footer from "./components/Footer";
 import Sidebar from "@/app/components/Sidebar";
 import DashboardHeader from "@/app/components/DashboardHeader";
 import "./dashboard.css";
+// Suppress Mediapipe INFO logs that are printed as errors in WebAssembly
+if (typeof console !== "undefined") {
+  const originalConsoleError = console.error;
+  console.error = (...args: any[]) => {
+    if (typeof args[0] === "string" && args[0].includes("INFO: Created TensorFlow Lite XNNPACK delegate for CPU")) {
+      return;
+    }
+    originalConsoleError(...args);
+  };
+}
+
 export default function Layout({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const pathname = usePathname();
