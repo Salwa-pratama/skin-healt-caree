@@ -45,7 +45,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${manrope.variable} antialiased`}>
+      <body className={`${manrope.variable} antialiased`} suppressHydrationWarning>
         <ThemeProvider>
           <ReactQueryProvider>
             <main>{children}</main>

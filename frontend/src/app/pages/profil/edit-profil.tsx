@@ -70,6 +70,23 @@ export default function ProfilePage() {
   const redirect_url =
     data?.role === "admin" ? "/pages/dashboard/admin" : "/pages/dashboard/user";
 
+  const activeSub = data?.userSubscriptions?.[0];
+  const activePlanName = activeSub?.plan?.planName?.toLowerCase() || "pasien";
+
+  let ringHexColor = "var(--dashboard-sidebar-active-text)";
+  let subLabelBg = "bg-[#84F75E]/20 text-[#1C6D00] dark:bg-[#84F75E]/20 dark:text-[#84F75E]";
+  
+  if (activePlanName.includes("dokter")) {
+    ringHexColor = "#f59e0b"; // amber-500
+    subLabelBg = "bg-amber-500/20 text-amber-700 dark:text-amber-400";
+  } else if (activePlanName.includes("peneliti")) {
+    ringHexColor = "#a855f7"; // purple-500
+    subLabelBg = "bg-purple-500/20 text-purple-700 dark:text-purple-400";
+  } else if (activePlanName.includes("pasien")) {
+    ringHexColor = "#06b6d4"; // cyan-500
+    subLabelBg = "bg-cyan-500/20 text-cyan-700 dark:text-cyan-400";
+  }
+
   useEffect(() => {
     if (data) {
       setName(data?.name || "");
@@ -287,36 +304,45 @@ export default function ProfilePage() {
             >
               <div className="flex flex-col md:flex-row gap-8 sm:gap-12 items-center md:items-start">
                 {/* Avatar */}
-                <div className="relative group flex-shrink-0">
-                  <div
-                    className="w-32 h-32 sm:w-48 sm:h-48 rounded-full overflow-hidden border-4 shadow-lg animate-none"
-                    style={{
-                      borderColor: "var(--dashboard-sidebar-active-text)",
-                    }}
-                  >
-                    <img
-                      alt="User profile avatar"
-                      className="w-full h-full object-cover"
-                      src={selectedFileUrl || avatarUrl}
-                    />
+                <div className="relative group flex-shrink-0 flex flex-col items-center">
+                  <div className="relative">
+                    <div
+                      className="w-32 h-32 sm:w-48 sm:h-48 rounded-full overflow-hidden border-4 shadow-lg animate-none"
+                      style={{
+                        borderColor: ringHexColor,
+                      }}
+                    >
+                      <img
+                        alt="User profile avatar"
+                        className="w-full h-full object-cover"
+                        src={selectedFileUrl || avatarUrl}
+                      />
+                    </div>
+                    <label
+                      className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 p-2 sm:p-3 rounded-full shadow-lg hover:scale-105 active:scale-90 transition-transform cursor-pointer flex items-center justify-center"
+                      style={{
+                        background: ringHexColor,
+                        color: "#ffffff",
+                      }}
+                    >
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleFileChange}
+                      />
+                      <span className="material-symbols-outlined text-lg sm:text-base">
+                        photo_camera
+                      </span>
+                    </label>
                   </div>
-                  <label
-                    className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 p-2 sm:p-3 rounded-full shadow-lg hover:scale-105 active:scale-90 transition-transform cursor-pointer flex items-center justify-center"
-                    style={{
-                      background: "var(--dashboard-sidebar-active-text)",
-                      color: theme === "dark" ? "#042100" : "#ffffff",
-                    }}
-                  >
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleFileChange}
-                    />
-                    <span className="material-symbols-outlined text-lg sm:text-base">
-                      photo_camera
-                    </span>
-                  </label>
+                  
+                  {/* Subscription Badge */}
+                  {data?.role === "user" && (
+                    <div className={`mt-6 px-4 py-1.5 rounded-full text-center font-bold text-xs uppercase tracking-wider ${subLabelBg} border border-current shadow-sm`}>
+                      Paket {activePlanName}
+                    </div>
+                  )}
                 </div>
 
                 {/* Form Fields */}

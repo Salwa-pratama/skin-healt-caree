@@ -12,16 +12,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
     if (isSubscriptionPage) {
         return (
-            <body className="bg-[var(--dashboard-bg)] text-[var(--dashboard-text)] antialiased min-h-screen font-manrope transition-colors duration-300">
+            <div className="bg-[var(--dashboard-bg)] text-[var(--dashboard-text)] antialiased min-h-screen font-manrope transition-colors duration-300">
                 <main className="transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] dashboard-animate-in">
                     {children}
                 </main>
-            </body>
+            </div>
         );
     }
 
     return (
-        <body className="bg-[var(--dashboard-bg)] text-[var(--dashboard-text)] antialiased min-h-screen font-manrope transition-colors duration-300">
+        <div className="bg-[var(--dashboard-bg)] text-[var(--dashboard-text)] antialiased min-h-screen font-manrope transition-colors duration-300">
             <DashboardHeader
                 isSidebarOpen={isSidebarOpen}
                 onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -33,6 +33,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 {children}
             </main>
             <Footer />
-        </body>
+        </div>
     )
 }

@@ -14,6 +14,7 @@ import {
   useUpdateHabitMutation,
   useDeleteHabitMutation,
 } from "@/features/jadwal/api/jadwal.api";
+import { useProfile } from "@/features/auth/api/profile.api";
 import { JadwalTreatment, JadwalHabit } from "@/features/jadwal/types";
 import { format, parseISO } from "date-fns";
 import { id as localeID } from "date-fns/locale";
@@ -23,8 +24,14 @@ export default function JadwalPage() {
   const [activeTab, setActiveTab] = useState<"treatment" | "habit">("treatment");
 
   // Queries
+  const { data: profile } = useProfile();
   const { data: treatments = [], isLoading: loadingTreatments } = useGetTreatmentsQuery();
   const { data: habits = [], isLoading: loadingHabits } = useGetHabitsQuery();
+
+  const activeSub = profile?.userSubscriptions?.[0];
+  const maxTodoCards = activeSub?.plan?.maxTodoCards ?? '∞';
+  const currentTotalTodos = treatments.length + habits.length;
+  const isLimitReached = typeof maxTodoCards === 'number' && currentTotalTodos >= maxTodoCards;
 
   // Mutations
   const createTreatment = useCreateTreatmentMutation();
@@ -178,14 +185,33 @@ export default function JadwalPage() {
             </div>
           </div>
 
-          {/* Action Button */}
-          <button
-            onClick={() => handleOpenModal(activeTab)}
-            className="self-start flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-full font-bold shadow-[0_8px_20px_rgba(var(--primary-rgb),0.3)] hover:shadow-[0_10px_25px_rgba(var(--primary-rgb),0.4)] transition-all transform hover:-translate-y-0.5 cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-sm">add</span>
-            Tambah {activeTab === "treatment" ? "Treatment" : "Habit"}
-          </button>
+          {/* Action Button & Limit Info */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 self-start">
+            <button
+              onClick={() => {
+                if (isLimitReached) {
+                  setToastMessage(`Batas maksimal kartu Jadwal (${maxTodoCards}) telah tercapai.`);
+                  return;
+                }
+                handleOpenModal(activeTab);
+              }}
+              className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold shadow-lg transition-all transform cursor-pointer ${
+                isLimitReached 
+                  ? "bg-surface-variant text-on-surface-variant/50 cursor-not-allowed hover:shadow-none" 
+                  : "bg-primary text-on-primary shadow-[0_8px_20px_rgba(var(--primary-rgb),0.3)] hover:shadow-[0_10px_25px_rgba(var(--primary-rgb),0.4)] hover:-translate-y-0.5"
+              }`}
+            >
+              <span className="material-symbols-outlined text-sm">add</span>
+              Tambah {activeTab === "treatment" ? "Treatment" : "Habit"}
+            </button>
+            
+            <div className="flex items-center gap-2 bg-[var(--dashboard-card-bg)] px-4 py-2.5 rounded-full border border-[var(--dashboard-border)] shadow-sm">
+              <span className="material-symbols-outlined text-primary text-sm">analytics</span>
+              <span className="text-xs font-bold text-on-surface-variant tracking-wider uppercase">
+                Penggunaan Kartu: <span className={`ml-1 font-black ${isLimitReached ? 'text-red-500' : 'text-[var(--dashboard-text)]'}`}>{currentTotalTodos}</span> / {maxTodoCards > 1000 ? 'Unlimited' : maxTodoCards}
+              </span>
+            </div>
+          </div>
 
           {/* Content Area */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

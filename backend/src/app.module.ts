@@ -14,6 +14,7 @@ import { ProfileModule } from './modules/feature/profile/profile.module';
 import { TodoModule } from './modules/feature/todo/todo.module';
 import { AcneSolutionModule } from './modules/feature/acne-solution/acne-solution.module';
 import { AdminModule } from './modules/feature/admin/admin.module';
+import { PaymentModule } from './modules/feature/payment/payment.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AdminModule } from './modules/feature/admin/admin.module';
     TodoModule,
     AcneSolutionModule,
     AdminModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [

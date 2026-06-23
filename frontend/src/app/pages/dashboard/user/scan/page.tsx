@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePredictMutation } from "@/features/scan/api/scan.api";
 import { useSaveHistoryMutation } from "@/features/history/api/history.api";
+import { useProfile } from "@/features/auth/api/profile.api";
 import { FaceLandmarker, FilesetResolver, DrawingUtils } from "@mediapipe/tasks-vision";
 
 import MobileNav from "@/app/components/MobileNav";
@@ -89,6 +90,12 @@ export default function Analisis() {
     type: "info"
   });
 
+  const { data: profile } = useProfile();
+  const activeSub = profile?.userSubscriptions?.[0];
+  const maxScansPerMonth = activeSub?.plan?.maxScansPerMonth ?? '∞';
+  const currentScans = activeSub?.currentMonthScans ?? 0;
+  const isLimitReached = typeof maxScansPerMonth === 'number' && currentScans >= maxScansPerMonth;
+
   const showModal = (title: string, message: string, type: "success" | "error" | "info" = "info", showDontRemindOption: boolean = false) => {
     setModalConfig({ isOpen: true, title, message, type, showDontRemindOption });
   };
@@ -148,7 +155,7 @@ export default function Analisis() {
             }
           }, 150);
         } catch (err) {
-          console.error("Gagal akses kamera:", err);
+          console.warn("Kamera tidak diizinkan atau tidak tersedia:", err);
           const hideCameraAlert = localStorage.getItem("hideCameraAlert");
           if (!hideCameraAlert) {
             showModal("Akses Kamera", "Gagal mengakses kamera. Pastikan izin kamera telah diberikan.", "error", true);
@@ -418,7 +425,7 @@ export default function Analisis() {
             <span className="label-small uppercase tracking-[0.2em] text-primary font-extrabold text-[10px] md:text-xs">
               Ringkasan Analisis Pasien
             </span>
-            <h1 className="text-3xl md:text-5xl font-extrabold text-on-background mt-2 tracking-tight">
+              <h1 className="text-3xl md:text-5xl font-extrabold text-on-background mt-2 tracking-tight">
               {predictionResult ? (
                 "Hasil Analisis"
               ) : (
@@ -426,9 +433,19 @@ export default function Analisis() {
               )}
             </h1>
           </div>
-          {/* Mode Segmented Control */}
-          {!predictionResult && (
-            <div className="bg-surface-container-high p-0.5 rounded-xl flex w-fit">
+          
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            {/* Limit Badge */}
+            <div className="flex items-center gap-2 bg-[var(--dashboard-card-bg)] px-4 py-2.5 rounded-full border border-[var(--dashboard-border)] shadow-sm">
+              <span className="material-symbols-outlined text-primary text-sm">radar</span>
+              <span className="text-[10px] sm:text-xs font-bold text-on-surface-variant tracking-wider uppercase">
+                Penggunaan Scan: <span className={`ml-1 font-black ${isLimitReached ? 'text-red-500' : 'text-[var(--dashboard-text)]'}`}>{currentScans}</span> / {maxScansPerMonth > 1000 ? 'Unlimited' : maxScansPerMonth}
+              </span>
+            </div>
+
+            {/* Mode Segmented Control */}
+            {!predictionResult && (
+              <div className="bg-surface-container-high p-0.5 rounded-xl flex w-fit">
               <button
                 className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all duration-300 flex items-center gap-1.5 ${activeTab === "live"
                   ? "tab-active"
@@ -454,7 +471,8 @@ export default function Analisis() {
                 Unggah Foto
               </button>
             </div>
-          )}
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-12 gap-6 md:gap-8">
@@ -502,11 +520,17 @@ export default function Analisis() {
                             </div>
                           )}
                           <button
-                            onClick={captureImage}
-                            disabled={isAnalyzing}
-                            className={`w-16 h-16 rounded-full border-4 border-white flex items-center justify-center group active:scale-90 transition-all`}
+                            onClick={() => {
+                              if (isLimitReached) {
+                                showModal("Limit Tercapai", `Batas maksimal scan bulanan Anda (${maxScansPerMonth}) telah habis. Silakan upgrade paket berlangganan.`, "error");
+                                return;
+                              }
+                              captureImage();
+                            }}
+                            disabled={isAnalyzing || isLimitReached}
+                            className={`w-16 h-16 rounded-full border-4 ${isLimitReached ? 'border-gray-500' : 'border-white'} flex items-center justify-center group active:scale-90 transition-all ${isLimitReached ? 'cursor-not-allowed opacity-50' : ''}`}
                           >
-                            <div className={`w-12 h-12 rounded-full ${isAnalyzing ? 'bg-slate-400' : 'bg-primary'} group-hover:scale-110 transition-transform flex items-center justify-center`}>
+                            <div className={`w-12 h-12 rounded-full ${isLimitReached ? 'bg-gray-600' : isAnalyzing ? 'bg-slate-400' : 'bg-primary'} group-hover:scale-110 transition-transform flex items-center justify-center`}>
                               <span className="material-symbols-outlined text-white">
                                 {isAnalyzing ? 'sync' : 'camera'}
                               </span>
@@ -614,9 +638,15 @@ export default function Analisis() {
                             Batal
                           </button>
                           <button
-                            onClick={handleSubmit}
-                            disabled={isAnalyzing || isValidating}
-                            className="flex-1 py-3 bg-primary text-white rounded-xl font-bold hover:bg-[#1c6d00] transition-colors disabled:opacity-50"
+                            onClick={() => {
+                              if (isLimitReached) {
+                                showModal("Limit Tercapai", `Batas maksimal scan bulanan Anda (${maxScansPerMonth}) telah habis. Silakan upgrade paket berlangganan.`, "error");
+                                return;
+                              }
+                              handleSubmit();
+                            }}
+                            disabled={isAnalyzing || isValidating || isLimitReached}
+                            className={`flex-1 py-3 bg-primary text-white rounded-xl font-bold transition-colors disabled:opacity-50 ${isLimitReached ? 'bg-gray-500 hover:bg-gray-500 cursor-not-allowed' : 'hover:bg-[#1c6d00]'}`}
                           >
                             {isValidating ? "Validasi..." : isAnalyzing ? "Sedang Proses Prediksi..." : "Proses Analisis"}
                           </button>

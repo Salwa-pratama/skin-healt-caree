@@ -4,11 +4,17 @@ import { RegisterDto, LoginDto } from './dto/auth.dto';
 import { hashPassword, sanitizeUser, verifyPassword } from '../../utils/password_util';
 import { generateTokens } from '../../utils/token_utils';
 
+
 @Injectable()
 export class AuthService {
-  constructor(private repository: AuthRepository) {}
+  constructor(private repository: AuthRepository) { }
+
+
 
   async registerAsync(payload: RegisterDto) {
+    const dueDate = new Date()
+    dueDate.setFullYear(dueDate.getFullYear() + 100)
+
     try {
       const existing = await this.repository.findByEmailAsync(payload.email);
       if (existing) {
@@ -21,6 +27,19 @@ export class AuthService {
         passwordHash: hashPassword(payload.password),
         role: "user",
         refreshTokenHash: null,
+
+        userSubscriptions: {
+
+          create: {
+            status: 'active',
+            startDate: new Date(),
+            dueDate: dueDate,
+            currentMonthScans: 0,
+            plan: {
+              connect: { planName: "pasien" }
+            }
+          }
+        }
       });
 
       return {
