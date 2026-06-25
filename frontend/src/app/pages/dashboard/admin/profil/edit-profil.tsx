@@ -201,17 +201,11 @@ export default function ProfilePage() {
               <span className="material-symbols-outlined">history</span>
             </Link>
             <Link
-              className="p-2 rounded-full"
-              style={{
-                color: "var(--dashboard-sidebar-active-text)",
-                background: "var(--dashboard-sidebar-active-bg)",
-              }}
-              href="/pages/dashboard_user/profil"
+              className="p-2 transition-colors"
+              style={{ color: "var(--dashboard-text-secondary)" }}
+              href="/pages/dashboard/admin/settings"
             >
-              <span
-                className="material-symbols-outlined text-xl sm:text-2xl"
-                style={{ fontVariationSettings: "'FILL' 1" }}
-              >
+              <span className="material-symbols-outlined text-xl sm:text-2xl">
                 settings
               </span>
             </Link>
@@ -604,7 +598,7 @@ export default function ProfilePage() {
               id="profil-batal-btn"
               type="button"
               onClick={() => {
-                router.push("/pages/dashboard_user/dashboard_user");
+                router.push("/pages/dashboard/admin");
               }}
               className="px-5 py-2 rounded-full text-xs font-semibold transition-all duration-200 hover:opacity-80 active:scale-95"
               style={{ color: "var(--dashboard-text-secondary)" }}

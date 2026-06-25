@@ -488,11 +488,11 @@ export default function RegisterPage() {
       </footer>
 
       {toast && (
-        <div className={`fixed bottom-6 right-6 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 z-50 animate-in slide-in-from-bottom-5 ${toast.type === "success" ? "bg-green-100 text-green-800 border border-green-200" : "bg-red-100 text-red-800 border border-red-200"}`}>
-          <span className="material-symbols-outlined text-2xl">
+        <div className={`fixed top-24 right-6 px-4 py-3 rounded-lg shadow-2xl flex items-center gap-2 z-[100] animate-slide-in-right ${toast.type === "success" ? "bg-green-100 text-green-800 border border-green-200" : "bg-red-100 text-red-800 border border-red-200"}`}>
+          <span className="material-symbols-outlined text-xl">
             {toast.type === "success" ? "check_circle" : "error"}
           </span>
-          <span className="font-bold text-sm tracking-wide">{toast.message}</span>
+          <span className="font-bold text-xs tracking-wide">{toast.message}</span>
         </div>
       )}
     </div>
