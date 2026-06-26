@@ -368,8 +368,7 @@ export default function SettingPage() {
           </div>
         </div>
 
-        {/* Sticky Footer Action */}
-        <footer className="mt-12 pt-8 border-t border-[var(--dashboard-border)] flex flex-col md:flex-row items-center justify-between gap-6 pb-32 lg:pb-12">
+        <footer className="mt-12 pt-8 border-t border-[var(--dashboard-border)] flex flex-col md:flex-row items-center justify-between gap-6 pb-8 lg:pb-0">
           <div className="flex items-center gap-3 text-[var(--dashboard-text-secondary)] bg-[var(--dashboard-bg)] px-4 py-2 rounded-xl group hover:bg-[var(--dashboard-border)] transition-colors">
             <span className="material-symbols-outlined text-primary text-lg transition-transform group-hover:rotate-12">
               verified_user
