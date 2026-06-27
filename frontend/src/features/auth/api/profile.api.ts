@@ -18,7 +18,11 @@ export const useUpdateProfileMutation = () => {
             const formData = new FormData();
             if (payload.name) formData.append("name", payload.name);
             if (payload.phone) formData.append("phone", payload.phone);
-            if (payload.skintype) formData.append("skintype", payload.skintype);
+            if (payload.skintype) {
+                formData.append("skintype", payload.skintype);
+                formData.append("skinType", payload.skintype);
+                formData.append("skin_type", payload.skintype);
+            }
             if (payload.file) formData.append("file", payload.file);
 
             const response = await apiClient.put("/feature/profile", formData, {
