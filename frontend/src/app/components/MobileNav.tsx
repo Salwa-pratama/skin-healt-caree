@@ -42,22 +42,27 @@ export default function MobileNav({ activePage }: MobileNavProps) {
     { 
       icon: <span className={`material-symbols-outlined text-2xl ${activePage === "admin-dashboard" ? "text-white" : "text-slate-400"}`}>grid_view</span>, 
       label: "Home", 
-      onClick: () => router.push("/pages/admin-dashboard") 
+      onClick: () => router.push("/pages/dashboard/admin") 
     },
     { 
       icon: <span className={`material-symbols-outlined text-2xl ${activePage === "admin-users" ? "text-white" : "text-slate-400"}`}>group</span>, 
       label: "Users", 
-      onClick: () => router.push("/pages/admin-users") 
+      onClick: () => router.push("/pages/dashboard/admin/users") 
     },
     { 
       icon: <span className={`material-symbols-outlined text-2xl ${activePage === "admin-acne-solutions" ? "text-white" : "text-slate-400"}`}>medical_services</span>, 
       label: "Solutions", 
-      onClick: () => router.push("/pages/admin-acne-solutions") 
+      onClick: () => router.push("/pages/dashboard/admin/acne-solutions") 
+    },
+    { 
+      icon: <span className={`material-symbols-outlined text-2xl ${activePage === "admin-subscriptions" ? "text-white" : "text-slate-400"}`}>subscriptions</span>, 
+      label: "Subscriptions", 
+      onClick: () => router.push("/pages/dashboard/admin/subscriptions") 
     },
     { 
       icon: <span className={`material-symbols-outlined text-2xl ${activePage === "setting" ? "text-white" : "text-slate-400"}`}>settings</span>, 
       label: "Settings", 
-      onClick: () => router.push("/pages/setting") 
+      onClick: () => router.push("/pages/dashboard/admin/settings") 
     },
   ];
 
