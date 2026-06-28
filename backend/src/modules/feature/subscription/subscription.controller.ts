@@ -67,6 +67,41 @@ export class SubscriptionController {
     return { status: "success", statusCode: 200, message: "Berhasil hapus paket", data: null };
   }
 
+  @Get('users')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Mendapatkan daftar semua langganan user (Admin)' })
+  async getAllUserSubscriptions() {
+    return {
+      status: "success",
+      statusCode: 200,
+      data: await this.subscriptionService.getAllUserSubscriptions(),
+      message: "Berhasil mengambil daftar langganan semua user"
+    };
+  }
+
+  @Put('users/:id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update langganan user (Admin)' })
+  async updateUserSubscription(@Param('id', ParseIntPipe) id: number, @Body() body: any) {
+    return {
+      status: "success",
+      statusCode: 200,
+      data: await this.subscriptionService.updateUserSubscription(id, body),
+      message: "Berhasil update langganan user"
+    };
+  }
+
+  @Delete('users/:id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Hapus langganan user (Admin)' })
+  async deleteUserSubscription(@Param('id', ParseIntPipe) id: number) {
+    await this.subscriptionService.deleteUserSubscription(id);
+    return { status: "success", statusCode: 200, message: "Berhasil hapus langganan user", data: null };
+  }
+
   @Get('my-subscription')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()

@@ -4,76 +4,110 @@ import { useState } from "react";
 import MobileNav from "@/app/components/MobileNav";
 import "../../dashboard.css";
 
-// Dummy data for subscriptions
-const DUMMY_SUBSCRIPTIONS = [
-  {
-    id: "SUB-001",
-    userName: "Budi Santoso",
-    email: "budi@example.com",
-    plan: "Premium",
-    status: "Active",
-    startDate: "2026-01-15",
-    endDate: "2026-07-15",
-    amount: "Rp 150.000"
-  },
-  {
-    id: "SUB-002",
-    userName: "Siti Aminah",
-    email: "siti@example.com",
-    plan: "Basic",
-    status: "Expired",
-    startDate: "2025-12-01",
-    endDate: "2026-01-01",
-    amount: "Rp 50.000"
-  },
-  {
-    id: "SUB-003",
-    userName: "Andi Wijaya",
-    email: "andi@example.com",
-    plan: "Pro",
-    status: "Active",
-    startDate: "2026-05-10",
-    endDate: "2027-05-10",
-    amount: "Rp 500.000"
-  },
-  {
-    id: "SUB-004",
-    userName: "Dewi Lestari",
-    email: "dewi@example.com",
-    plan: "Premium",
-    status: "Pending",
-    startDate: "2026-06-20",
-    endDate: "2026-12-20",
-    amount: "Rp 150.000"
-  },
-  {
-    id: "SUB-005",
-    userName: "Reza Rahadian",
-    email: "reza@example.com",
-    plan: "Basic",
-    status: "Active",
-    startDate: "2026-06-01",
-    endDate: "2026-07-01",
-    amount: "Rp 50.000"
-  }
-];
-
-const DUMMY_PACKAGES = [
-  { id: "PKG-1", name: "Basic", price: "Rp 50.000", duration: "1 Month", status: "Active", features: ["Basic analysis", "History logs"] },
-  { id: "PKG-2", name: "Premium", price: "Rp 150.000", duration: "3 Months", status: "Active", features: ["Advanced analysis", "Priority support", "Download reports"] },
-  { id: "PKG-3", name: "Pro", price: "Rp 500.000", duration: "1 Year", status: "Active", features: ["All Premium features", "API Access", "Custom branding"] }
-];
+import { useAdminSubscriptions, useAdminPackages, useUpdateUserSubscriptionMutation, useCreatePackageMutation, useUpdatePackageMutation, useDeletePackageMutation } from "@/features/admin/api/subscription.api";
 
 export default function AdminSubscriptions() {
-  const [subscriptions] = useState(DUMMY_SUBSCRIPTIONS);
+  const { data: subscriptionsData, isLoading: isLoadingSubs } = useAdminSubscriptions();
+  const { data: packagesData, isLoading: isLoadingPkgs } = useAdminPackages();
+  
+  const updateUserSub = useUpdateUserSubscriptionMutation();
+  const createPkg = useCreatePackageMutation();
+  const updatePkg = useUpdatePackageMutation();
+  const deletePkg = useDeletePackageMutation();
+
+  const subscriptions = subscriptionsData || [];
+  const packages = packagesData || [];
+
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState<"users" | "packages">("users");
 
-  const filteredSubscriptions = subscriptions.filter(sub => 
-    sub.userName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    sub.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    sub.id.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Modal states
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<"view" | "edit">("view");
+  const [selectedSub, setSelectedSub] = useState<any>(null);
+  
+  // Form state for edit
+  const [editForm, setEditForm] = useState<any>(null);
+
+  const handleOpenModal = (sub: any, mode: "view" | "edit") => {
+    setSelectedSub(sub);
+    setModalMode(mode);
+    setEditForm({ ...sub });
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedSub(null);
+    setEditForm(null);
+  };
+
+  const handleSaveEdit = async () => {
+    if (editForm) {
+      await updateUserSub.mutateAsync({
+        id: editForm.id,
+        data: {
+          status: editForm.status,
+          planName: editForm.plan?.planName || editForm.plan
+        }
+      });
+    }
+    handleCloseModal();
+  };
+
+
+  // Package Modal states
+  const [isPkgModalOpen, setIsPkgModalOpen] = useState(false);
+  const [pkgModalMode, setPkgModalMode] = useState<"add" | "edit">("add");
+  const [selectedPkg, setSelectedPkg] = useState<any>(null);
+  const [pkgForm, setPkgForm] = useState<any>({ name: "", price: "", duration: "", status: "Active", features: "" });
+
+  const handleOpenPkgModal = (pkg: any = null, mode: "add" | "edit" = "add") => {
+    setSelectedPkg(pkg);
+    setPkgModalMode(mode);
+    if (mode === "edit" && pkg) {
+      setPkgForm({ ...pkg, features: pkg.features.join("\n") });
+    } else {
+      setPkgForm({ name: "", price: "", duration: "", status: "Active", features: "" });
+    }
+    setIsPkgModalOpen(true);
+  };
+
+  const handleClosePkgModal = () => {
+    setIsPkgModalOpen(false);
+    setSelectedPkg(null);
+  };
+
+  const handleSavePkg = async () => {
+    const featuresList = pkgForm.features.split("\n").filter((f: string) => f.trim() !== "");
+    const payload = {
+      planName: pkgForm.planName,
+      price: Number(pkgForm.price),
+      durationMonths: Number(pkgForm.durationMonths),
+      status: pkgForm.status
+    };
+    
+    if (pkgModalMode === "add") {
+      await createPkg.mutateAsync(payload);
+    } else {
+      await updatePkg.mutateAsync({ id: editForm.id || pkgForm.id, data: payload });
+    }
+    handleClosePkgModal();
+  };
+
+  const handleDeletePkg = async (id: number) => {
+    if (confirm("Apakah Anda yakin ingin menghapus paket ini?")) {
+      await deletePkg.mutateAsync(id);
+    }
+  };
+
+  const filteredSubscriptions = subscriptions.filter((sub: any) => {
+    const searchLower = searchTerm.toLowerCase();
+    const nameMatch = sub.user?.name?.toLowerCase().includes(searchLower) || false;
+    const emailMatch = sub.user?.email?.toLowerCase().includes(searchLower) || false;
+    const idMatch = String(sub.id).includes(searchLower);
+    return nameMatch || emailMatch || idMatch;
+  });
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -170,7 +204,7 @@ export default function AdminSubscriptions() {
                       />
                     </div>
                   ) : (
-                    <button className="flex items-center justify-center gap-2 px-4 py-3 bg-primary text-white rounded-2xl text-sm font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 w-full">
+                    <button onClick={() => handleOpenPkgModal(null, "add")} className="flex items-center justify-center gap-2 px-4 py-3 bg-primary text-white rounded-2xl text-sm font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 w-full">
                       <span className="material-symbols-outlined text-[20px]">add</span>
                       Tambah Paket
                     </button>
@@ -214,34 +248,42 @@ export default function AdminSubscriptions() {
                       className="border-b border-[var(--dashboard-border)] hover:bg-[var(--dashboard-bg)] transition-colors group"
                     >
                       <td className="py-5 px-4 text-sm font-extrabold text-[var(--dashboard-text)]">
-                        {sub.id}
+                        SUB-{sub.id}
                       </td>
                       <td className="py-5 px-4">
                         <div className="flex flex-col">
-                          <span className="text-sm font-bold text-[var(--dashboard-text)]">{sub.userName}</span>
-                          <span className="text-[10px] font-semibold text-on-surface-variant/60">{sub.email}</span>
+                          <span className="text-sm font-bold text-[var(--dashboard-text)]">{sub.user?.name || "Unknown"}</span>
+                          <span className="text-[10px] font-semibold text-on-surface-variant/60">{sub.user?.email || "-"}</span>
                         </div>
                       </td>
                       <td className="py-5 px-4">
-                        {getPlanBadge(sub.plan)}
+                        {getPlanBadge(sub.plan?.planName || "-")}
                       </td>
                       <td className="py-5 px-4">
-                        {getStatusBadge(sub.status)}
+                        {getStatusBadge(sub.status || "active")}
                       </td>
                       <td className="py-5 px-4">
                         <div className="flex flex-col">
-                          <span className="text-[11px] font-bold text-[var(--dashboard-text)]">{sub.startDate}</span>
-                          <span className="text-[10px] font-semibold text-on-surface-variant/60">to {sub.endDate}</span>
+                          <span className="text-[11px] font-bold text-[var(--dashboard-text)]">{new Date(sub.startDate).toLocaleDateString()}</span>
+                          <span className="text-[10px] font-semibold text-on-surface-variant/60">to {new Date(sub.dueDate).toLocaleDateString()}</span>
                         </div>
                       </td>
                       <td className="py-5 px-4 text-right">
-                        <span className="text-sm font-black text-[var(--dashboard-text)]">{sub.amount}</span>
+                        <span className="text-sm font-black text-[var(--dashboard-text)]">Rp {sub.plan?.price?.toLocaleString() || 0}</span>
                       </td>
                       <td className="py-5 px-4 text-center">
-                        <button className="p-2 rounded-xl text-primary hover:bg-primary/10 transition-colors" title="View Details">
+                        <button 
+                          onClick={() => handleOpenModal(sub, "view")}
+                          className="p-2 rounded-xl text-primary hover:bg-primary/10 transition-colors" 
+                          title="View Details"
+                        >
                           <span className="material-symbols-outlined text-[20px]">visibility</span>
                         </button>
-                        <button className="p-2 rounded-xl text-on-surface-variant hover:bg-surface-variant transition-colors ml-1" title="Edit">
+                        <button 
+                          onClick={() => handleOpenModal(sub, "edit")}
+                          className="p-2 rounded-xl text-on-surface-variant hover:bg-surface-variant transition-colors ml-1" 
+                          title="Edit"
+                        >
                           <span className="material-symbols-outlined text-[20px]">edit</span>
                         </button>
                       </td>
@@ -261,41 +303,190 @@ export default function AdminSubscriptions() {
             </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {DUMMY_PACKAGES.map((pkg) => (
+                {packages.map((pkg: any) => (
                   <div key={pkg.id} className="bg-[var(--dashboard-bg)] rounded-3xl p-6 border border-[var(--dashboard-border)] hover:border-primary/50 transition-colors group relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                      <button className="p-2 bg-[var(--dashboard-card-bg)] rounded-xl text-on-surface-variant hover:text-primary transition-colors shadow-sm" title="Edit">
+                      <button onClick={() => handleOpenPkgModal(pkg, "edit")} className="p-2 bg-[var(--dashboard-card-bg)] rounded-xl text-on-surface-variant hover:text-primary transition-colors shadow-sm" title="Edit">
                         <span className="material-symbols-outlined text-[18px]">edit</span>
                       </button>
-                      <button className="p-2 bg-[var(--dashboard-card-bg)] rounded-xl text-on-surface-variant hover:text-rose-500 transition-colors shadow-sm" title="Delete">
+                      <button onClick={() => handleDeletePkg(pkg.id)} className="p-2 bg-[var(--dashboard-card-bg)] rounded-xl text-on-surface-variant hover:text-rose-500 transition-colors shadow-sm" title="Delete">
                         <span className="material-symbols-outlined text-[18px]">delete</span>
                       </button>
                     </div>
                     
                     <div className="mb-4">
-                      <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 mb-4 inline-block">{pkg.status}</span>
-                      <h3 className="text-xl font-black text-[var(--dashboard-text)]">{pkg.name}</h3>
+                      <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 mb-4 inline-block">{pkg.status || "active"}</span>
+                      <h3 className="text-xl font-black text-[var(--dashboard-text)] uppercase">{pkg.planName}</h3>
                       <div className="flex items-end gap-1 mt-2">
-                        <span className="text-2xl font-black text-[var(--dashboard-text)]">{pkg.price}</span>
-                        <span className="text-xs font-bold text-on-surface-variant/70 mb-1">/ {pkg.duration}</span>
+                        <span className="text-2xl font-black text-[var(--dashboard-text)]">Rp {pkg.price?.toLocaleString()}</span>
+                        <span className="text-xs font-bold text-on-surface-variant/70 mb-1">/ {pkg.durationMonths} Bulan</span>
                       </div>
-                    </div>
-                    
-                    <div className="space-y-3 mt-6 pt-6 border-t border-[var(--dashboard-border)]">
-                      {pkg.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-center gap-3">
-                          <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                            <span className="material-symbols-outlined text-[12px] font-bold">check</span>
-                          </div>
-                          <span className="text-sm font-medium text-on-surface-variant">{feature}</span>
-                        </div>
-                      ))}
                     </div>
                   </div>
                 ))}
               </div>
             )}
           </div>
+          
+          {/* Modal */}
+          {isModalOpen && selectedSub && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+              <div className="bg-[var(--dashboard-card-bg)] rounded-3xl p-6 md:p-8 shadow-2xl w-full max-w-md border border-[var(--dashboard-border)]">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-black text-[var(--dashboard-text)] uppercase tracking-tight">
+                    {modalMode === "view" ? "Detail Langganan" : "Edit Langganan"}
+                  </h2>
+                  <button onClick={handleCloseModal} className="text-on-surface-variant hover:text-[var(--dashboard-text)] transition-colors">
+                    <span className="material-symbols-outlined">close</span>
+                  </button>
+                </div>
+                
+                {modalMode === "view" ? (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant/70">ID</label>
+                      <p className="font-bold text-[var(--dashboard-text)]">{selectedSub.id}</p>
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant/70">User</label>
+                      <p className="font-bold text-[var(--dashboard-text)]">{selectedSub.userName}</p>
+                      <p className="text-xs text-on-surface-variant">{selectedSub.email}</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant/70 mb-1 block">Plan</label>
+                        {getPlanBadge(selectedSub.plan)}
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant/70 mb-1 block">Status</label>
+                        {getStatusBadge(selectedSub.status)}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant/70">Start Date</label>
+                        <p className="font-bold text-[var(--dashboard-text)]">{selectedSub.startDate}</p>
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant/70">End Date</label>
+                        <p className="font-bold text-[var(--dashboard-text)]">{selectedSub.endDate}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant/70">Amount</label>
+                      <p className="font-black text-xl text-[var(--dashboard-text)]">{selectedSub.amount}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-xs font-bold text-on-surface-variant mb-1 block">Plan Name</label>
+                      <select 
+                        value={editForm.plan?.planName || editForm.plan}
+                        onChange={(e) => setEditForm({...editForm, plan: e.target.value})}
+                        className="w-full p-3 bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl text-sm font-semibold text-[var(--dashboard-text)] focus:outline-none focus:ring-2 focus:ring-primary"
+                      >
+                        <option value="pasien">Pasien</option>
+                        <option value="dokter">Dokter</option>
+                        <option value="peneliti">Peneliti</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-on-surface-variant mb-1 block">Status</label>
+                      <select 
+                        value={editForm.status}
+                        onChange={(e) => setEditForm({...editForm, status: e.target.value})}
+                        className="w-full p-3 bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl text-sm font-semibold text-[var(--dashboard-text)] focus:outline-none focus:ring-2 focus:ring-primary"
+                      >
+                        <option value="Active">Active</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Expired">Expired</option>
+                      </select>
+                    </div>
+
+                    <div className="flex justify-end gap-3 mt-6">
+                      <button onClick={handleCloseModal} className="px-4 py-2 rounded-xl text-sm font-bold text-on-surface-variant hover:bg-surface-variant transition-colors">
+                        Batal
+                      </button>
+                      <button onClick={handleSaveEdit} className="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
+                        Simpan
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Package Modal */}
+          {isPkgModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+              <div className="bg-[var(--dashboard-card-bg)] rounded-3xl p-6 md:p-8 shadow-2xl w-full max-w-md border border-[var(--dashboard-border)]">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-black text-[var(--dashboard-text)] uppercase tracking-tight">
+                    {pkgModalMode === "add" ? "Tambah Paket Baru" : "Edit Paket"}
+                  </h2>
+                  <button onClick={handleClosePkgModal} className="text-on-surface-variant hover:text-[var(--dashboard-text)] transition-colors">
+                    <span className="material-symbols-outlined">close</span>
+                  </button>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-xs font-bold text-on-surface-variant mb-1 block">Nama Paket</label>
+                    <input 
+                      type="text"
+                      value={pkgForm.planName}
+                      onChange={(e) => setPkgForm({...pkgForm, planName: e.target.value})}
+                      placeholder="e.g. Pasien, Dokter"
+                      className="w-full p-3 bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl text-sm font-semibold text-[var(--dashboard-text)] focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs font-bold text-on-surface-variant mb-1 block">Harga (Rp)</label>
+                      <input 
+                        type="number"
+                        value={pkgForm.price}
+                        onChange={(e) => setPkgForm({...pkgForm, price: e.target.value})}
+                        placeholder="e.g. 50000"
+                        className="w-full p-3 bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl text-sm font-semibold text-[var(--dashboard-text)] focus:outline-none focus:ring-2 focus:ring-primary"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-on-surface-variant mb-1 block">Durasi (Bulan)</label>
+                      <input 
+                        type="number"
+                        value={pkgForm.durationMonths}
+                        onChange={(e) => setPkgForm({...pkgForm, durationMonths: e.target.value})}
+                        placeholder="e.g. 1"
+                        className="w-full p-3 bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl text-sm font-semibold text-[var(--dashboard-text)] focus:outline-none focus:ring-2 focus:ring-primary"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-on-surface-variant mb-1 block">Status</label>
+                    <select 
+                      value={pkgForm.status}
+                      onChange={(e) => setPkgForm({...pkgForm, status: e.target.value})}
+                      className="w-full p-3 bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] rounded-xl text-sm font-semibold text-[var(--dashboard-text)] focus:outline-none focus:ring-2 focus:ring-primary"
+                    >
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                    </select>
+                  </div>
+                  <div className="flex justify-end gap-3 mt-6">
+                    <button onClick={handleClosePkgModal} className="px-4 py-2 rounded-xl text-sm font-bold text-on-surface-variant hover:bg-surface-variant transition-colors">
+                      Batal
+                    </button>
+                    <button onClick={handleSavePkg} className="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
+                      Simpan
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </main>
 
