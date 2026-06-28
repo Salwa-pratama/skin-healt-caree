@@ -242,7 +242,7 @@ export default function AdminSubscriptions() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredSubscriptions.map((sub) => (
+                  {filteredSubscriptions.map((sub: any) => (
                     <tr
                       key={sub.id}
                       className="border-b border-[var(--dashboard-border)] hover:bg-[var(--dashboard-bg)] transition-colors group"
