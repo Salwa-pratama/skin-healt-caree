@@ -94,7 +94,7 @@ export default function Analisis() {
   const activeSub = profile?.userSubscriptions?.[0];
   const maxScansPerMonth = activeSub?.plan?.maxScansPerMonth ?? '∞';
   const currentScans = activeSub?.currentMonthScans ?? 0;
-  const isLimitReached = typeof maxScansPerMonth === 'number' && currentScans >= maxScansPerMonth;
+  const isLimitReached = typeof maxScansPerMonth === 'number' && maxScansPerMonth !== -1 && currentScans >= maxScansPerMonth;
 
   const showModal = (title: string, message: string, type: "success" | "error" | "info" = "info", showDontRemindOption: boolean = false) => {
     setModalConfig({ isOpen: true, title, message, type, showDontRemindOption });
@@ -439,7 +439,7 @@ export default function Analisis() {
             <div className="flex items-center gap-2 bg-[var(--dashboard-card-bg)] px-4 py-2.5 rounded-full border border-[var(--dashboard-border)] shadow-sm">
               <span className="material-symbols-outlined text-primary text-sm">radar</span>
               <span className="text-[10px] sm:text-xs font-bold text-on-surface-variant tracking-wider uppercase whitespace-nowrap flex items-center">
-                Penggunaan Scan: <span className={`mx-1 font-black ${isLimitReached ? 'text-red-500' : 'text-[var(--dashboard-text)]'}`}>{currentScans}</span> / <span className="ml-1 font-black text-[var(--dashboard-text)] text-sm leading-none flex items-center">{maxScansPerMonth > 1000 || maxScansPerMonth === "∞" ? '∞' : maxScansPerMonth}</span>
+                Penggunaan Scan: <span className={`mx-1 font-black ${isLimitReached ? 'text-red-500' : 'text-[var(--dashboard-text)]'}`}>{currentScans}</span> / <span className="ml-1 font-black text-[var(--dashboard-text)] text-sm leading-none flex items-center">{maxScansPerMonth === -1 || maxScansPerMonth > 1000 || maxScansPerMonth === "∞" ? '∞' : maxScansPerMonth}</span>
               </span>
             </div>
 

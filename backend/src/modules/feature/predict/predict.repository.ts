@@ -12,7 +12,10 @@ export class PredictRepository {
         contentType: mimetype,
       });
 
-      const FLASK_URL = process.env.FLASK_API_URL || "http://127.0.0.1:5000/api/predict";
+      let FLASK_URL = process.env.FLASK_URL || process.env.FLASK_API_URL || "http://127.0.0.1:5000/api/predict";
+      if (!FLASK_URL.endsWith('/api/predict')) {
+        FLASK_URL = FLASK_URL.replace(/\/$/, '') + '/api/predict';
+      }
       const response = await axios.post(FLASK_URL, form, {
         headers: { ...form.getHeaders() },
         params: { model: planModel }

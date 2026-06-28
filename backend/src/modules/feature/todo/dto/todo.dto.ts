@@ -14,7 +14,7 @@ export class UpdateTreatmentDto extends createZodDto(UpdateTreatmentSchema) {}
 
 export const CreateHabitSchema = z.object({
   nama: z.string().min(1, "Nama habit tidak boleh kosong"),
-  hari: z.array(z.string()).min(1, "Pilih setidaknya 1 hari"),
+  hari: z.string().min(1, "Hari tidak boleh kosong"),
   jam: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Format jam harus HH:mm (contoh: 08:30)"),
   pengingat: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).optional(),
 });

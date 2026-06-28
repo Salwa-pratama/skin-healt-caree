@@ -18,6 +18,7 @@ export default function HomeDashboard() {
     const activeSub = profile?.userSubscriptions?.[0];
     const maxHistorySaved = activeSub?.plan?.maxHistorySaved ?? '∞';
     const currentHistorySaved = history.length;
+    const isLimitReached = typeof maxHistorySaved === 'number' && maxHistorySaved !== -1 && currentHistorySaved >= maxHistorySaved;
     const planName = activeSub?.plan?.name || "Gratis";
     const skinType = profile?.skin_type || profile?.skinType || profile?.skintype || "Belum diatur";
     const name = profile?.name || "Pengguna";
@@ -128,16 +129,16 @@ export default function HomeDashboard() {
                                     Kuota History
                                 </h4>
                                 <span className="text-xs font-black text-[var(--dashboard-text)]">
-                                    {currentHistorySaved} <span className="text-on-surface-variant/50 text-[10px]">/ {maxHistorySaved > 1000 ? '∞' : maxHistorySaved}</span>
+                                    {currentHistorySaved} <span className="text-on-surface-variant/50 text-[10px]">/ {maxHistorySaved === -1 || maxHistorySaved > 1000 ? '∞' : maxHistorySaved}</span>
                                 </span>
                             </div>
                             <div className="w-full h-2 bg-[var(--dashboard-bg)] rounded-full overflow-hidden">
                                 <div
-                                    className={`h-full ${typeof maxHistorySaved === 'number' && currentHistorySaved >= maxHistorySaved ? 'bg-red-500' : 'bg-primary'}`}
-                                    style={{ width: typeof maxHistorySaved === 'number' && maxHistorySaved > 0 ? `${Math.min((currentHistorySaved / maxHistorySaved) * 100, 100)}%` : '10%' }}
+                                    className={`h-full ${isLimitReached ? 'bg-red-500' : 'bg-primary'}`}
+                                    style={{ width: maxHistorySaved === -1 ? '100%' : (typeof maxHistorySaved === 'number' && maxHistorySaved > 0 ? `${Math.min((currentHistorySaved / maxHistorySaved) * 100, 100)}%` : '10%') }}
                                 ></div>
                             </div>
-                            {typeof maxHistorySaved === 'number' && currentHistorySaved >= maxHistorySaved && (
+                            {isLimitReached && (
                                 <p className="text-[9px] mt-2 text-red-500 font-bold uppercase tracking-wide">
                                     Batas kuota riwayat tercapai.
                                 </p>

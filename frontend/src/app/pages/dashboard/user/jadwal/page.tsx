@@ -31,7 +31,7 @@ export default function JadwalPage() {
   const activeSub = profile?.userSubscriptions?.[0];
   const maxTodoCards = activeSub?.plan?.maxTodoCards ?? '∞';
   const currentTotalTodos = treatments.length + habits.length;
-  const isLimitReached = typeof maxTodoCards === 'number' && currentTotalTodos >= maxTodoCards;
+  const isLimitReached = typeof maxTodoCards === 'number' && maxTodoCards !== -1 && currentTotalTodos >= maxTodoCards;
 
   // Mutations
   const createTreatment = useCreateTreatmentMutation();
@@ -208,7 +208,7 @@ export default function JadwalPage() {
             <div className="flex items-center gap-2 bg-[var(--dashboard-card-bg)] px-4 py-2.5 rounded-full border border-[var(--dashboard-border)] shadow-sm">
               <span className="material-symbols-outlined text-primary text-sm">analytics</span>
               <span className="text-xs font-bold text-on-surface-variant tracking-wider uppercase">
-                Penggunaan Kartu: <span className={`ml-1 font-black ${isLimitReached ? 'text-red-500' : 'text-[var(--dashboard-text)]'}`}>{currentTotalTodos}</span> / {maxTodoCards > 1000 ? 'Unlimited' : maxTodoCards}
+                Penggunaan Kartu: <span className={`ml-1 font-black ${isLimitReached ? 'text-red-500' : 'text-[var(--dashboard-text)]'}`}>{currentTotalTodos}</span> / {maxTodoCards === -1 || maxTodoCards > 1000 ? 'Unlimited' : maxTodoCards}
               </span>
             </div>
           </div>

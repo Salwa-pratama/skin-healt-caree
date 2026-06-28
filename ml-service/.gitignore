@@ -1,0 +1,22 @@
+# Environments
+venv/
+.venv/
+env/
+.env
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Models and Training Data
+train-model/
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.pkl
+
+# OS Files
+.DS_Store
+Thumbs.db

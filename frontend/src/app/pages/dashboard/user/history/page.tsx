@@ -56,7 +56,7 @@ export default function HistoryPage() {
   
   const listHistory = historyRes?.data || [];
   const currentHistorySaved = listHistory.length;
-  const isLimitReached = typeof maxHistorySaved === 'number' && currentHistorySaved >= maxHistorySaved;
+  const isLimitReached = typeof maxHistorySaved === 'number' && maxHistorySaved !== -1 && currentHistorySaved >= maxHistorySaved;
 
   // Filter list by acne name or ID
   const filteredHistory = listHistory.filter((scan: any) => {
@@ -156,7 +156,7 @@ export default function HistoryPage() {
             <div className="flex items-center gap-2 bg-[var(--dashboard-card-bg)] px-4 py-2.5 rounded-full border border-[var(--dashboard-border)] shadow-sm">
               <span className="material-symbols-outlined text-primary text-sm">save</span>
               <span className="text-xs font-bold text-on-surface-variant tracking-wider uppercase">
-                Riwayat: <span className={`ml-1 font-black ${isLimitReached ? 'text-red-500' : 'text-[var(--dashboard-text)]'}`}>{currentHistorySaved}</span> / {maxHistorySaved > 1000 ? 'Unlimited' : maxHistorySaved}
+                Riwayat: <span className={`ml-1 font-black ${isLimitReached ? 'text-red-500' : 'text-[var(--dashboard-text)]'}`}>{currentHistorySaved}</span> / {maxHistorySaved === -1 || maxHistorySaved > 1000 ? 'Unlimited' : maxHistorySaved}
               </span>
             </div>
             
