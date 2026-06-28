@@ -2,9 +2,26 @@
 
 
 import MobileNav from "@/app/components/MobileNav";
+import { useGetTreatmentsQuery, useGetHabitsQuery } from "@/features/jadwal/api/jadwal.api";
+import { useGetHistoryQuery } from "@/features/history/api/history.api";
+import { useProfile } from "@/features/auth/api/profile.api";
+import Link from "next/link";
 
 
 export default function HomeDashboard() {
+    const { data: treatments = [], isLoading: isLoadingTreatments } = useGetTreatmentsQuery();
+    const { data: habits = [], isLoading: isLoadingHabits } = useGetHabitsQuery();
+    const { data: historyRes, isLoading: isLoadingHistory } = useGetHistoryQuery();
+    const history = historyRes?.data || [];
+
+    const { data: profile, isLoading: isLoadingProfile } = useProfile();
+    const activeSub = profile?.userSubscriptions?.[0];
+    const maxHistorySaved = activeSub?.plan?.maxHistorySaved ?? '∞';
+    const currentHistorySaved = history.length;
+    const planName = activeSub?.plan?.name || "Gratis";
+    const skinType = profile?.skin_type || profile?.skinType || profile?.skintype || "Belum diatur";
+    const name = profile?.name || "Pengguna";
+    const photo = profile?.avatar || profile?.foto_profil || "";
 
     return (
         <>
@@ -12,224 +29,252 @@ export default function HomeDashboard() {
             {/* Main Content Area - Responsive Bento Grid */}
             <MobileNav activePage="dashboard" />
 
-            <div className="max-w-7xl mx-auto flex flex-col pb-32 md:pb-8">
-                <div className="grid grid-cols-12 gap-4 lg:gap-5">
-                    {/* Left Column: Health Index & Modules */}
-                    <div className="col-span-12 lg:col-span-4 flex flex-col gap-4">
-                        {/* Health Index Card */}
-                        <div className="bg-[var(--dashboard-card-bg)] rounded-3xl p-5 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[var(--dashboard-border)] transition-colors duration-300">
-                            <span className="uppercase tracking-widest text-[10px] font-extrabold text-on-surface-variant/70">
-                                Health Index
-                            </span>
-                            <div className="flex items-baseline gap-1 mt-2">
-                                <span className="text-4xl sm:text-5xl font-extrabold text-[var(--dashboard-text)] tracking-tight">
-                                    94
-                                </span>
-                                <span className="text-lg font-bold text-on-surface-variant/60">/100</span>
-                            </div>
-                            <div className="mt-6">
-                                <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary-container text-on-primary-container rounded-full text-[10px] font-black uppercase tracking-wider">
-                                    <span className="material-symbols-outlined text-sm">
-                                        trending_up
-                                    </span>
-                                    Luminous Score
-                                </span>
-                            </div>
-                            <p className="mt-3 text-[var(--dashboard-text-secondary)] text-[10px] leading-relaxed font-medium">
-                                Your skin barrier is operating at peak efficiency. Cellular
-                                regeneration is up 12% from last scan.
-                            </p>
-                        </div>
-
-                        {/* Stacked Metric Cards */}
-                        <div className="space-y-4">
-                            {[
-                                {
-                                    icon: "water_drop",
-                                    label: "Hydration",
-                                    val: "82%",
-                                    color: "bg-blue-400",
-                                },
-                                {
-                                    icon: "opacity",
-                                    label: "Oil Level",
-                                    val: "45%",
-                                    color: "bg-amber-400",
-                                },
-                                {
-                                    icon: "emergency",
-                                    label: "Acne Severity",
-                                    val: "8%",
-                                    color: "bg-rose-400",
-                                },
-                            ].map((m) => (
-                                <div
-                                    key={m.label}
-                                    className="bg-[var(--dashboard-card-bg)] rounded-xl p-3 flex items-center justify-between border border-[var(--dashboard-border)] hover:shadow-md transition-all duration-300"
-                                >
-                                    <div className="flex items-center gap-4">
-                                        <div
-                                            className={`w-10 h-10 rounded-full flex items-center justify-center ${m.color.replace("bg-", "bg-")}/10 text-${m.color.replace("bg-", "text-")}`}
-                                        >
-                                            <span className="material-symbols-outlined">
-                                                {m.icon}
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-xs uppercase tracking-tight text-[var(--dashboard-text)]">
-                                                {m.label}
-                                            </h4>
-                                            <span className="text-[10px] text-on-surface-variant/80">
-                                                Optimal ({m.val})
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="w-16 h-1.5 bg-[var(--dashboard-bg)] rounded-full overflow-hidden">
-                                        <div
-                                            className={`h-full ${m.color}`}
-                                            style={{ width: m.val }}
-                                        ></div>
+            <div className="max-w-7xl mx-auto flex flex-col pb-4 w-full flex-1">
+                <div className="flex flex-col lg:flex-row gap-4 lg:gap-5 items-stretch flex-1">
+                    {/* Left Column: Profile & Subscription */}
+                    <div className="w-full lg:w-4/12 flex flex-col gap-4">
+                        {/* Profile Card */}
+                        <div className="bg-[var(--dashboard-card-bg)] rounded-3xl p-6 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[var(--dashboard-border)] transition-colors duration-300 flex-1 flex flex-col">
+                            {isLoadingProfile ? (
+                                <div className="animate-pulse flex items-center gap-4">
+                                    <div className="w-16 h-16 rounded-full bg-slate-200 dark:bg-slate-800 flex-shrink-0"></div>
+                                    <div className="flex-1 space-y-2">
+                                        <div className="h-6 w-1/2 bg-slate-200 dark:bg-slate-800 rounded"></div>
+                                        <div className="h-4 w-1/3 bg-slate-200 dark:bg-slate-800 rounded"></div>
                                     </div>
                                 </div>
-                            ))}
+                            ) : (
+                                <>
+                                    <div className="flex items-center gap-5">
+                                        <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-primary/20 bg-slate-100 flex-shrink-0 relative flex items-center justify-center">
+                                            <span className="material-symbols-outlined text-4xl text-slate-400 absolute z-0">person</span>
+                                            {photo && (
+                                                <img 
+                                                    src={photo.startsWith('http') ? photo : `https://skin-healt-caree.vercel.app${photo.startsWith('/') ? '' : '/'}${photo}`} 
+                                                    alt={name} 
+                                                    className="w-full h-full object-cover relative z-10"
+                                                    onError={(e) => {
+                                                        e.currentTarget.style.display = 'none';
+                                                    }}
+                                                />
+                                            )}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="text-[10px] uppercase tracking-widest font-extrabold text-on-surface-variant/70 mb-1">
+                                                Selamat Datang
+                                            </p>
+                                            <h2 className="text-2xl font-extrabold text-[var(--dashboard-text)] tracking-tight leading-tight truncate" title={name}>
+                                                Halo, {name.split(' ')[0]}!
+                                            </h2>
+                                        </div>
+                                    </div>
+                                    <div className="mt-6 pt-5 border-t border-[var(--dashboard-border)]/50">
+                                        <h3 className="text-[14px] sm:text-[15px] font-bold flex items-center gap-2 mb-4 text-[var(--dashboard-text)]">
+                                            <span className="material-symbols-outlined text-primary text-[18px]">science</span>
+                                            Informasi Klinis
+                                        </h3>
+                                        
+                                        <div className="flex flex-wrap gap-4 sm:gap-6">
+                                            <div className="flex flex-col gap-2">
+                                                <p className="text-[9px] font-extrabold uppercase tracking-widest text-on-surface-variant/70">
+                                                    Tipe Kulit
+                                                </p>
+                                                <span className="inline-block px-5 py-1.5 bg-primary text-[#042100] rounded-full text-xs font-bold shadow-sm capitalize">
+                                                    {skinType === "Belum diatur" ? "Kering" : skinType}
+                                                </span>
+                                            </div>
+                                            
+                                            <div className="flex flex-col gap-2">
+                                                <p className="text-[9px] font-extrabold uppercase tracking-widest text-on-surface-variant/70">
+                                                    Masalah Utama
+                                                </p>
+                                                <span className="inline-block px-5 py-1.5 bg-primary text-[#042100] rounded-full text-xs font-bold shadow-sm capitalize">
+                                                    {profile?.masalahUtama || profile?.masalah_utama || "Jerawat"}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="mt-auto pt-6">
+                                        <Link href="/pages/dashboard/user/profil" className="w-full flex items-center justify-between p-3 rounded-xl bg-[var(--dashboard-bg)] hover:bg-[var(--dashboard-border)] border border-[var(--dashboard-border)] transition-all group shadow-sm">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                                                    <span className="material-symbols-outlined text-[16px]">manage_accounts</span>
+                                                </div>
+                                                <div className="flex flex-col text-left">
+                                                    <span className="text-[10px] font-black uppercase tracking-widest text-[var(--dashboard-text)]">Profil Pengguna</span>
+                                                    <span className="text-[9px] font-medium text-on-surface-variant/60">Lihat & Kelola Akun</span>
+                                                </div>
+                                            </div>
+                                            <span className="material-symbols-outlined text-on-surface-variant/40 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
+                                        </Link>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+
+                        {/* Subscription Card */}
+                        <div className="bg-[var(--dashboard-card-bg)] rounded-3xl p-5 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[var(--dashboard-border)] transition-colors duration-300">
+                            <div className="flex justify-between items-center mb-4">
+                                <span className="uppercase tracking-widest text-[10px] font-extrabold text-on-surface-variant/70">
+                                    Paket Langganan
+                                </span>
+                                <span className="text-[10px] font-black uppercase text-primary tracking-widest bg-primary/10 px-2 py-1 rounded-md">
+                                    {planName}
+                                </span>
+                            </div>
+                            
+                            <div className="mb-2 flex justify-between items-end">
+                                <h4 className="font-bold text-xs uppercase tracking-tight text-[var(--dashboard-text)]">
+                                    Kuota History
+                                </h4>
+                                <span className="text-xs font-black text-[var(--dashboard-text)]">
+                                    {currentHistorySaved} <span className="text-on-surface-variant/50 text-[10px]">/ {maxHistorySaved > 1000 ? '∞' : maxHistorySaved}</span>
+                                </span>
+                            </div>
+                            <div className="w-full h-2 bg-[var(--dashboard-bg)] rounded-full overflow-hidden">
+                                <div
+                                    className={`h-full ${typeof maxHistorySaved === 'number' && currentHistorySaved >= maxHistorySaved ? 'bg-red-500' : 'bg-primary'}`}
+                                    style={{ width: typeof maxHistorySaved === 'number' && maxHistorySaved > 0 ? `${Math.min((currentHistorySaved / maxHistorySaved) * 100, 100)}%` : '10%' }}
+                                ></div>
+                            </div>
+                            {typeof maxHistorySaved === 'number' && currentHistorySaved >= maxHistorySaved && (
+                                <p className="text-[9px] mt-2 text-red-500 font-bold uppercase tracking-wide">
+                                    Batas kuota riwayat tercapai.
+                                </p>
+                            )}
                         </div>
                     </div>
 
-                    {/* Center Column: 3D Mapping */}
-                    <div className="col-span-12 md:col-span-7 lg:col-span-5">
-                        <div className="bg-[var(--dashboard-card-bg)] rounded-3xl min-h-[400px] h-full relative overflow-hidden border border-[var(--dashboard-sidebar-border)] shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center p-4 transition-colors duration-300">
-                            <div className="absolute inset-0 opacity-10 pointer-events-none">
-                                <img
-                                    alt="abstract structure"
-                                    className="w-full h-full object-cover"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgdchXZ8soA87R5RhxJim1MSnjpf0830UuO3dlKX3BaS3yji2-VENXs5CV4h-iaeVZVCMCc-agQL0VbDnpSU5phJTmNxQ17cSRPoMmS_BtoB1J_oUIDX3tp2hYjtAPJ51-u6TeUL5sWUcM-IjsK2C2LcHE7FY5fPfHUC5xwxq9QaayJqTFlrsfWoUheXDyQROuxwP0uUW2rbF8b3kCVGuEfSZhGOqvH4utvf0Balt5no2Nj1zyGXKI5JNSCCbOAgDQNyqs9LklsKPr"
-                                />
-                            </div>
-                            <div className="relative z-10 w-full aspect-square max-w-[280px] flex items-center justify-center">
-                                <div className="absolute w-48 h-48 bg-primary/10 rounded-full blur-[60px]"></div>
-                                <img
-                                    alt="3d skin map"
-                                    className="w-full h-full object-contain relative z-10"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXkK_8J3lLkaIAN5ftmP3B9xd8sBehnVBmvt6RPv6uCWKDzLZIXdfBz8LI34OWXVXk0uWqDDdE73WlJyo2Q_yTUWBz5v8PUFjET8OYXWUconCG6znXzVknD_R7Sqt_6BDu8MeUYotTzAS6IzHvSId6QMTZ2HXNTStQUVYJVZ7O5ZpdOxG49V4vKaK9wpJNdOA-B4RM3lJ2W6zzAxRaLC1BDWLV0JsWE5e7ZVB-4poPJ-IDUxM9P7IwtAhMEFOIUGCAdjvOyJHkROID"
-                                />
-                                {/* Overlay labels */}
-                                <div className="absolute top-4 right-4 bg-[var(--dashboard-card-bg)]/90 backdrop-blur p-3 rounded-xl shadow-lg border border-[var(--dashboard-border)] flex flex-col transition-colors">
-                                    <span className="text-[8px] font-black text-primary uppercase">
-                                        Zone Alpha
-                                    </span>
-                                    <span className="text-[10px] font-extrabold whitespace-nowrap text-[var(--dashboard-text)]">
-                                        Active Regeneration
-                                    </span>
+                    {/* Center Column: Scan CTA */}
+                    <div className="w-full lg:w-5/12 flex flex-col">
+                        <div className="bg-[var(--dashboard-card-bg)] rounded-3xl w-full flex-1 min-h-[300px] relative overflow-hidden border border-[var(--dashboard-sidebar-border)] shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center p-8 transition-colors duration-300 group hover:border-primary/30">
+                            {/* Decorative Background Elements */}
+                            <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.07] pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary via-transparent to-transparent"></div>
+                            
+                            <div className="relative z-10 w-full flex flex-col items-center text-center">
+                                <div className="w-24 h-24 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 ease-out">
+                                    <span className="material-symbols-outlined text-5xl">face_retouching_natural</span>
                                 </div>
-                                <div className="absolute bottom-12 left-0 bg-[var(--dashboard-card-bg)]/90 backdrop-blur p-3 rounded-xl shadow-lg border border-[var(--dashboard-border)] flex flex-col transition-colors">
-                                    <span className="text-[8px] font-black text-on-surface-variant/70 uppercase">
-                                        Zone Delta
-                                    </span>
-                                    <span className="text-[10px] font-extrabold whitespace-nowrap text-[var(--dashboard-text)]">
-                                        Pore Refinement 82%
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="mt-auto relative z-10 text-center">
-                                <span className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant/50">
-                                    Live 3D Dermal Mapping
+                                <span className="text-[10px] uppercase tracking-[0.3em] font-black text-primary mb-2">
+                                    AI Derma Mapping
                                 </span>
-                                <div className="flex gap-2 mt-4 justify-center">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                                    <div className="w-1.5 h-1.5 rounded-full bg-on-surface-variant/20"></div>
-                                    <div className="w-1.5 h-1.5 rounded-full bg-on-surface-variant/20"></div>
-                                </div>
+                                <h2 className="text-3xl sm:text-4xl font-black text-[var(--dashboard-text)] mb-4 tracking-tight">
+                                    Mulai Analisis <br/>Wajah 3D
+                                </h2>
+                                <p className="text-xs text-on-surface-variant/70 max-w-[250px] mb-8 leading-relaxed font-medium">
+                                    Pindai wajah Anda untuk mendapatkan prediksi kondisi jerawat dan panduan perawatan akurat.
+                                </p>
+                                
+                                <Link href="/pages/dashboard/user/scan" className="w-full flex justify-center">
+                                    <button className="w-full max-w-[200px] py-4 bg-primary text-on-primary rounded-full font-black text-xs uppercase tracking-widest shadow-[0_10px_30px_rgba(132,247,94,0.3)] hover:shadow-[0_15px_40px_rgba(132,247,94,0.4)] hover:-translate-y-1 transition-all duration-300">
+                                        Scan Sekarang
+                                    </button>
+                                </Link>
                             </div>
                         </div>
                     </div>
 
                     {/* Right Column: AI & Progress */}
-                    <div className="col-span-12 md:col-span-5 lg:col-span-3 flex flex-col gap-4">
-                        {/* AI Prescriptive */}
-                        <div className="bg-[var(--dashboard-card-bg)] rounded-3xl p-5 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[var(--dashboard-sidebar-border)] transition-colors duration-300">
-                            <div className="flex items-center gap-2 mb-6 text-primary">
-                                <span className="material-symbols-outlined text-[20px]">
-                                    auto_awesome
-                                </span>
-                                <h3 className="font-black text-xs uppercase tracking-widest">
-                                    AI Prescriptive
-                                </h3>
-                            </div>
-                            <div className="space-y-6">
-                                <div className="relative pl-6">
-                                    <div className="absolute left-0 top-0 w-1 h-full signature-gradient rounded-full"></div>
-                                    <p className="text-[9px] font-black text-on-surface-variant/75 uppercase mb-1">
-                                        Morning Routine
-                                    </p>
-                                    <p className="text-xs font-semibold leading-relaxed text-[var(--dashboard-text)]">
-                                        Increase SPF-50 application; UV sensitivity rising.
-                                    </p>
+                    <div className="w-full lg:w-3/12 flex flex-col gap-4">
+                        {/* Jadwal & Habit */}
+                        <div className="bg-[var(--dashboard-card-bg)] rounded-3xl p-5 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[var(--dashboard-sidebar-border)] transition-colors duration-300 flex flex-col flex-1 overflow-hidden min-h-[220px]">
+                            <div className="flex justify-between items-center mb-4">
+                                <div className="flex items-center gap-2 text-primary">
+                                    <span className="material-symbols-outlined text-[20px]">
+                                        event_note
+                                    </span>
+                                    <h3 className="font-black text-xs uppercase tracking-widest">
+                                        Jadwal & Habit
+                                    </h3>
                                 </div>
-                                <div className="relative pl-6">
-                                    <div className="absolute left-0 top-0 w-1 h-full bg-on-surface-variant/10 rounded-full"></div>
-                                    <p className="text-[9px] font-black text-on-surface-variant/75 uppercase mb-1">
-                                        Evening Treatment
-                                    </p>
-                                    <p className="text-xs font-semibold leading-relaxed text-[var(--dashboard-text)]">
-                                        Apply Niacinamide serum for pore control.
-                                    </p>
-                                </div>
+                                <Link href="/pages/dashboard/user/jadwal" className="text-[9px] font-black text-on-surface-variant hover:text-primary transition-colors uppercase tracking-widest">
+                                    Lihat Semua
+                                </Link>
                             </div>
-                            <button className="mt-4 w-full py-3 text-[9px] font-black uppercase tracking-widest text-primary border-2 border-primary rounded-full hover:bg-primary hover:text-on-primary transition-all cursor-pointer">
-                                View Routine
-                            </button>
+                            
+                            <div className="space-y-4 overflow-y-auto custom-scrollbar pr-2 flex-grow">
+                                {isLoadingTreatments || isLoadingHabits ? (
+                                    <div className="animate-pulse space-y-4">
+                                        <div className="h-12 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
+                                        <div className="h-12 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
+                                    </div>
+                                ) : treatments.length === 0 && habits.length === 0 ? (
+                                    <div className="text-center py-4 flex flex-col items-center justify-center h-full">
+                                        <span className="material-symbols-outlined text-3xl text-on-surface-variant/40 mb-2">event_busy</span>
+                                        <p className="text-xs text-on-surface-variant/70">Belum ada jadwal aktif.</p>
+                                    </div>
+                                ) : (
+                                    <>
+                                        {treatments.slice(0, 2).map((t: any) => (
+                                            <div key={`t-${t.id}`} className="relative pl-4 border-l-2 border-primary/50">
+                                                <p className="text-[9px] font-black text-on-surface-variant/75 uppercase mb-1">
+                                                    {t.hari} • Treatment
+                                                </p>
+                                                <p className="text-xs font-semibold text-[var(--dashboard-text)] truncate" title={`${t.nama} di ${t.tempat}`}>
+                                                    {t.nama}
+                                                </p>
+                                            </div>
+                                        ))}
+                                        {habits.slice(0, 2).map((h: any) => (
+                                            <div key={`h-${h.id}`} className="relative pl-4 border-l-2 border-amber-400/50">
+                                                <p className="text-[9px] font-black text-on-surface-variant/75 uppercase mb-1">
+                                                    {h.hari} • Habit ({h.jam})
+                                                </p>
+                                                <p className="text-xs font-semibold text-[var(--dashboard-text)] truncate" title={h.nama}>
+                                                    {h.nama}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </>
+                                )}
+                            </div>
                         </div>
 
-                        {/* Weekly Progress */}
-                        <div className="bg-[var(--dashboard-card-bg)] rounded-3xl p-5 border border-[var(--dashboard-sidebar-border)] shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col transition-colors duration-300">
-                            <h3 className="font-black text-xs uppercase tracking-widest text-[var(--dashboard-text)] mb-6">
-                                Weekly Progress
-                            </h3>
-                            <div className="flex items-end justify-between gap-1 h-32 md:flex-1">
-                                {[60, 45, 80, 70, 95, 85, 98].map((h, i) => (
-                                    <div
-                                        key={i}
-                                        className={`w-full rounded-t-lg transition-all ${i === 6 ? "signature-gradient h-full shadow-[0_-4px_12px_rgba(132,247,94,0.3)]" : "bg-primary/20 hover:bg-primary"}`}
-                                        style={{ height: `${h}%` }}
-                                    ></div>
-                                ))}
+                        {/* History Scan */}
+                        <div className="bg-[var(--dashboard-card-bg)] rounded-3xl p-5 border border-[var(--dashboard-sidebar-border)] shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col transition-colors duration-300 flex-1 overflow-hidden min-h-[220px]">
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="font-black text-xs uppercase tracking-widest text-[var(--dashboard-text)]">
+                                    Riwayat Terakhir
+                                </h3>
+                                <Link href="/pages/dashboard/user/history" className="text-[9px] font-black text-on-surface-variant hover:text-primary transition-colors uppercase tracking-widest">
+                                    Detail
+                                </Link>
                             </div>
-                            <div className="flex justify-between mt-4">
-                                <span className="text-[8px] font-black text-on-surface-variant/75">
-                                    MON
-                                </span>
-                                <span className="text-[8px] font-black text-[var(--dashboard-text)]">
-                                    SUN
-                                </span>
+                            <div className="space-y-3 overflow-y-auto custom-scrollbar pr-1 flex-grow">
+                                {isLoadingHistory ? (
+                                    <div className="animate-pulse space-y-3">
+                                        <div className="h-14 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
+                                        <div className="h-14 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
+                                        <div className="h-14 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
+                                    </div>
+                                ) : history.length === 0 ? (
+                                    <div className="text-center py-6 flex flex-col items-center justify-center h-full">
+                                        <span className="material-symbols-outlined text-3xl text-on-surface-variant/40 mb-2">history</span>
+                                        <p className="text-xs text-on-surface-variant/70">Belum ada riwayat scan.</p>
+                                    </div>
+                                ) : (
+                                    history.slice(0, 3).map((scan: any) => (
+                                        <Link key={scan.id} href={`/pages/dashboard/user/history/${scan.id}`} className="flex items-center gap-3 p-2 hover:bg-[var(--dashboard-bg)] rounded-xl transition-colors border border-transparent hover:border-[var(--dashboard-border)] group">
+                                            <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-slate-200">
+                                                <img src={scan.citra} alt={scan.name} className="w-full h-full object-cover" />
+                                            </div>
+                                            <div className="overflow-hidden flex-grow">
+                                                <p className="text-[10px] font-extrabold uppercase tracking-widest text-[var(--dashboard-text)] truncate group-hover:text-primary transition-colors">
+                                                    {scan.name}
+                                                </p>
+                                                <p className="text-[9px] text-on-surface-variant/70 truncate">
+                                                    {new Date(scan.createdAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })}
+                                                </p>
+                                            </div>
+                                            <span className="material-symbols-outlined text-sm text-on-surface-variant/30 group-hover:text-primary transition-colors">chevron_right</span>
+                                        </Link>
+                                    ))
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Footer Stats Row - Responsive Grid */}
-                <div className="mt-auto py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 border-t border-[var(--dashboard-border)] transition-colors">
-                    {[
-                        { label: "Active Flora", val: "92.4%", progress: 92 },
-                        { label: "Cell Turnover", val: "14 Days", progress: 60 },
-                        { label: "UV Protection", val: "Superior", progress: 88 },
-                        { label: "Lab Precision", val: "Grade A", progress: 100 },
-                    ].map((s) => (
-                        <div key={s.label} className="flex flex-col gap-2">
-                            <span className="text-[9px] font-black text-on-surface-variant/75 uppercase tracking-widest">
-                                {s.label}
-                            </span>
-                            <span className="text-lg font-black text-[var(--dashboard-text)]">
-                                {s.val}
-                            </span>
-                            <div className="w-full h-1.5 bg-[var(--dashboard-border)] rounded-full overflow-hidden">
-                                <div
-                                    className="h-full bg-primary transition-all"
-                                    style={{ width: `${s.progress}%` }}
-                                ></div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
             </div>
 
 
