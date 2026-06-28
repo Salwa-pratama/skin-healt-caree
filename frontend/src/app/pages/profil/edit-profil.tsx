@@ -179,7 +179,7 @@ export default function ProfilePage() {
           <Link href={redirect_url} className="flex items-center gap-3">
             <div className="flex flex-col">
               <h1
-                className="text-lg sm:text-xl font-extrabold tracking-tight"
+                className="text-base xs:text-lg sm:text-xl font-extrabold tracking-tight whitespace-nowrap"
                 style={{ color: "var(--dashboard-text)" }}
               >
                 Luminous Lab
@@ -193,38 +193,38 @@ export default function ProfilePage() {
             </div>
           </Link>
 
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-0.5 sm:gap-2">
             {data?.role === "user" && (
               <>
                 <Link
-                  className="p-2 transition-colors"
+                  className="p-1 sm:p-2 transition-colors"
                   style={{ color: "var(--dashboard-text-secondary)" }}
                   href={redirect_url}
                 >
-                  <span className="material-symbols-outlined text-xl sm:text-2xl">
+                  <span className="material-symbols-outlined text-lg sm:text-2xl">
                     dashboard
                   </span>
                 </Link>
                 <Link
-                  className="hidden sm:block p-2 transition-colors"
+                  className="p-1 sm:p-2 transition-colors"
                   style={{ color: "var(--dashboard-text-secondary)" }}
                   href={`${redirect_url}/scan`}
                 >
-                  <span className="material-symbols-outlined">biotech</span>
+                  <span className="material-symbols-outlined text-lg sm:text-2xl">biotech</span>
                 </Link>
                 <Link
-                  className="hidden sm:block p-2 transition-colors"
+                  className="p-1 sm:p-2 transition-colors"
                   style={{ color: "var(--dashboard-text-secondary)" }}
                   href={`${redirect_url}/history`}
                 >
-                  <span className="material-symbols-outlined">history</span>
+                  <span className="material-symbols-outlined text-lg sm:text-2xl">history</span>
                 </Link>
                 <Link
-                  className="p-2 transition-colors"
+                  className="p-1 sm:p-2 transition-colors"
                   style={{ color: "var(--dashboard-text-secondary)" }}
                   href={`${redirect_url}/settings`}
                 >
-                  <span className="material-symbols-outlined text-xl sm:text-2xl">
+                  <span className="material-symbols-outlined text-lg sm:text-2xl">
                     settings
                   </span>
                 </Link>
@@ -236,27 +236,27 @@ export default function ProfilePage() {
               id="profil-theme-toggle"
               onClick={toggleTheme}
               aria-label="Toggle dark/light mode"
-              className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
+              className="p-1 sm:p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
               style={{
                 color: "var(--dashboard-sidebar-active-text)",
                 background: "var(--dashboard-sidebar-active-bg)",
               }}
             >
-              <span className="material-symbols-outlined text-xl sm:text-2xl">
+              <span className="material-symbols-outlined text-lg sm:text-2xl">
                 {theme === "dark" ? "light_mode" : "dark_mode"}
               </span>
             </button>
 
             <div
-              className="h-6 w-px mx-1 sm:mx-2"
+              className="h-5 sm:h-6 w-px mx-0.5 sm:mx-2"
               style={{ background: "var(--dashboard-border)" }}
             />
             <Link
-              className="p-2 transition-colors hover:text-red-500"
+              className="p-1 sm:p-2 transition-colors hover:text-red-500"
               style={{ color: "var(--dashboard-text-secondary)" }}
               href={redirect_url}
             >
-              <span className="material-symbols-outlined text-xl sm:text-2xl">
+              <span className="material-symbols-outlined text-lg sm:text-2xl">
                 logout
               </span>
             </Link>
