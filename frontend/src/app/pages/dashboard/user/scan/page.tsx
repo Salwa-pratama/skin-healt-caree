@@ -438,8 +438,8 @@ export default function Analisis() {
             {/* Limit Badge */}
             <div className="flex items-center gap-2 bg-[var(--dashboard-card-bg)] px-4 py-2.5 rounded-full border border-[var(--dashboard-border)] shadow-sm">
               <span className="material-symbols-outlined text-primary text-sm">radar</span>
-              <span className="text-[10px] sm:text-xs font-bold text-on-surface-variant tracking-wider uppercase">
-                Penggunaan Scan: <span className={`ml-1 font-black ${isLimitReached ? 'text-red-500' : 'text-[var(--dashboard-text)]'}`}>{currentScans}</span> / {maxScansPerMonth > 1000 ? 'Unlimited' : maxScansPerMonth}
+              <span className="text-[10px] sm:text-xs font-bold text-on-surface-variant tracking-wider uppercase whitespace-nowrap flex items-center">
+                Penggunaan Scan: <span className={`mx-1 font-black ${isLimitReached ? 'text-red-500' : 'text-[var(--dashboard-text)]'}`}>{currentScans}</span> / <span className="ml-1 font-black text-[var(--dashboard-text)] text-sm leading-none flex items-center">{maxScansPerMonth > 1000 || maxScansPerMonth === "∞" ? '∞' : maxScansPerMonth}</span>
               </span>
             </div>
 
@@ -693,73 +693,14 @@ export default function Analisis() {
               </div>
             </div>
 
-            {/* Metrics Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-[var(--dashboard-card-bg)] rounded-lg p-6 flex flex-col gap-4">
-                <div className="flex justify-between items-center">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface/30">
-                    Profil Komposisi
-                  </p>
-                </div>
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] p-3 rounded-xl text-center">
-                    <p className="text-[10px] font-bold text-[var(--dashboard-text-secondary)] mb-2">
-                      Kering
-                    </p>
-                    <div className="h-1 bg-[var(--dashboard-border)] rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-primary/60"
-                        style={{ width: "33%" }}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="bg-primary/10 border border-primary/20 p-3 rounded-xl text-center">
-                    <p className="text-[10px] font-bold text-primary mb-2">
-                      Berjerawat
-                    </p>
-                    <div className="h-1 bg-[var(--dashboard-border)] rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-primary"
-                        style={{ width: "88%" }}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="bg-[var(--dashboard-bg)] border border-[var(--dashboard-border)] p-3 rounded-xl text-center">
-                    <p className="text-[10px] font-bold text-[var(--dashboard-text-secondary)] mb-2">
-                      Berminyak
-                    </p>
-                    <div className="h-1 bg-[var(--dashboard-border)] rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-primary/60"
-                        style={{ width: "50%" }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-[var(--dashboard-card-bg)] rounded-lg p-6 flex items-center justify-between">
-                <div className="flex flex-col">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--dashboard-text-secondary)]/50 mb-2">
-                    Tingkat Hidrasi
-                  </p>
-                  <p className="text-4xl font-black text-[var(--dashboard-text)]">
-                    84<span className="text-primary text-xl ml-1">%</span>
-                  </p>
-                </div>
-                <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/25 flex items-center justify-center text-primary shadow-sm hover:scale-105 transition-transform cursor-pointer">
-                  <span className="material-symbols-outlined text-3xl font-black">
-                    water_drop
-                  </span>
-                </div>
-              </div>
-            </div>
+
           </div>
 
           {/* Right Column: Sidebar Analysis */}
-          <div className="col-span-12 lg:col-span-4 flex flex-col gap-6 md:gap-8">
+          <div className="col-span-12 lg:col-span-4 flex flex-col gap-6 md:gap-0 justify-between md:h-[600px]">
 
             {/* Concerns List */}
-            <div className="bg-[var(--dashboard-card-bg)] rounded-lg p-6 md:p-8 flex flex-col h-[520px]">
+            <div className="bg-[var(--dashboard-card-bg)] rounded-lg p-6 md:p-8 flex flex-col flex-grow overflow-hidden mb-0 md:mb-4">
               <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar space-y-8">
                 {/* Masalah Terdeteksi Section */}
                 <section>
