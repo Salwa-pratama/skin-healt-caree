@@ -88,6 +88,12 @@ export class PaymentService {
           quantity: duration,
           name: `Berlangganan ${plan.planName} (${duration} Bulan)`,
         },
+        ...(activePlanPrice > 0 ? [{
+          id: `discount-upgrade`,
+          price: -activePlanPrice,
+          quantity: 1,
+          name: `Potongan Harga (Upgrade)`,
+        }] : []),
       ],
     };
 
