@@ -69,6 +69,12 @@ const adminNavItems = [
     key: "admin-acne-solutions",
   },
   {
+    icon: "subscriptions",
+    label: "Subscriptions",
+    href: `${base_url_admin}/subscriptions`,
+    key: "admin-subscriptions",
+  },
+  {
     icon: "settings",
     label: "Settings",
     href: `${base_url_admin}/settings`,

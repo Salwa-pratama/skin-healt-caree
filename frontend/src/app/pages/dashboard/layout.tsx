@@ -19,7 +19,7 @@ if (typeof console !== "undefined") {
 export default function Layout({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const pathname = usePathname();
-    const isSubscriptionPage = pathname?.includes("/subscription");
+    const isSubscriptionPage = pathname?.includes("/subscription") && !pathname?.includes("/admin/subscriptions");
 
     if (isSubscriptionPage) {
         return (

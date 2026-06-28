@@ -38,6 +38,16 @@ export class SubscriptionRepository {
     });
   }
 
+  async findAllUserSubscriptions() {
+    return this.prisma.userSubscription.findMany({
+      include: { 
+        plan: true,
+        user: { select: { name: true, email: true } }
+      },
+      orderBy: { id: 'desc' }
+    });
+  }
+
   async deactivateAllActiveSubscriptions(userId: number) {
     return this.prisma.userSubscription.updateMany({
       where: { userId, status: "active" },
@@ -51,6 +61,10 @@ export class SubscriptionRepository {
 
   async updateSubscription(id: number, data: any) {
     return this.prisma.userSubscription.update({ where: { id }, data, include: { plan: true } });
+  }
+
+  async deleteUserSubscription(id: number) {
+    return this.prisma.userSubscription.delete({ where: { id } });
   }
 
   async countUserTodoCards(userId: number) {

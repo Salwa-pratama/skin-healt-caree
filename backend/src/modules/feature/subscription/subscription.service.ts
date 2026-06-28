@@ -40,6 +40,26 @@ export class SubscriptionService {
     return { success: true };
   }
 
+  async getAllUserSubscriptions() {
+    return this.repository.findAllUserSubscriptions();
+  }
+
+  async updateUserSubscription(id: number, data: any) {
+    let updateData = { ...data };
+    if (data.planName) {
+      const plan = await this.repository.findPlanByName(data.planName.toLowerCase());
+      if (plan) {
+        updateData.planId = plan.id;
+      }
+      delete updateData.planName;
+    }
+    return this.repository.updateSubscription(id, updateData);
+  }
+
+  async deleteUserSubscription(id: number) {
+    return this.repository.deleteUserSubscription(id);
+  }
+
   async getOrUpdateActiveSubscription(userId: number) {
     const now = new Date();
     let activeSub = await this.repository.findActiveSubscription(userId);
